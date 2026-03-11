@@ -1,4 +1,4 @@
-import { LayoutDashboard, ChevronLeft } from 'lucide-react'
+import { LayoutDashboard, ChevronLeft, Workflow, NotepadTextIcon } from 'lucide-react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -23,12 +23,12 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
     },
     {
       name: "Workspaces",
-      icon: <LayoutDashboard size={20} />,
+      icon: <Workflow size={20} />,
       link: "/your-workspaces",
     },
      {
       name: "Boards",
-      icon: <LayoutDashboard size={20} />,
+      icon: <NotepadTextIcon size={20} />,
       link: "/your-boards",
     },
   ]

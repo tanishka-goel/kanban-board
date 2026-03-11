@@ -34,11 +34,11 @@ const Login = () => {
       const responseData = await dispatch(loginThunk(credentials)).unwrap();
       if (responseData.user.role === "admin" ||responseData.user.role === "Admin"  ) {
         navigate("/admin/dashboard", {replace:true})
-        console.log(`Welcome ${responseData.user.first_name}`);
+       // console.log(`Welcome ${responseData.user.first_name}`);
         toast.success(`Welcome ${responseData.user.first_name}`)
       } else {
         navigate("/for-you", {replace:true})
-        console.log(`Welcome ${responseData.user.first_name} ${responseData.user.last_name}`);
+        //console.log(`Welcome ${responseData.user.first_name} ${responseData.user.last_name}`);
         toast.success(`Welcome ${responseData.user.first_name}`)
       }
     } catch (error) {

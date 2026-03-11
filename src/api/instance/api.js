@@ -29,7 +29,8 @@ BaseApi.interceptors.response.use(
         }
         return response;
     },
-    (error)=>{
+   async (error)=>{
+    
         // console.log("API Error :", error.message);
         toast.error(`Network Error: Couldn't fetch details - ${error.message}`);
         return Promise.reject(error);
