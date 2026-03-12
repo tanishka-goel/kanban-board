@@ -2,12 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../../api/auth.api";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("token")|| false,
   error: null,
   isLoading: false,
-  token: null,
-  username: null,
-  role: null,
+  token: localStorage.getItem("token")|| null,
+  user: JSON.parse(localStorage.getItem("user"))||null,
+  role: localStorage.getItem("role") ||null,
 };
 
 export const loginThunk = createAsyncThunk(
@@ -26,7 +26,22 @@ export const loginThunk = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  extraReducers: (builder) => {
+
+  reducers:{
+    logout :(state)=>{
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      localStorage.removeItem("role")
+
+      state.error=null;
+      state.isAuthenticated= false;
+      state.isLoading = false;
+      state.user=null;
+      state.token=null;
+      state.role=null;
+    }
+  },
+    extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
         state.error = null;
@@ -38,8 +53,12 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
-        state.username = action.payload.user.username;
+        state.user = action.payload.user;
         state.role = action.payload.user.role;
+
+        localStorage.setItem("token", action.payload.token)
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        localStorage.setItem("role", action.payload.user.role)
       })
 
       .addCase(loginThunk.rejected, (state, action) => {
@@ -49,4 +68,5 @@ const authSlice = createSlice({
   },
 });
 
+export const {logout} = authSlice.actions;
 export default authSlice.reducer;

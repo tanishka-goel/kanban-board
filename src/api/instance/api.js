@@ -13,9 +13,15 @@ export const BaseApi = axios.create({
 
 BaseApi.interceptors.request.use(
      (config)=>{
+        const token = localStorage.getItem("token")
+
+        if(token){
+            config.headers.Authorization = `Bearer ${token}`
+        }
         console.log("Request sent : ",config.url )
         return config;
     },
+
     (error)=>{
         console.log("Request Error", error);
         return Promise.reject(error);

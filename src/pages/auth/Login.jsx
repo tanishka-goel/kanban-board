@@ -142,15 +142,6 @@ const Login = () => {
               Sign In
             </button>
 
-            <div className="flex items-center justify-center gap-1.5 pt-4 text-sm font-medium text-gray-500">
-              <p>Don't have an account?</p>
-              <Link
-                to="/register"
-                className="text-primary hover:text-darkest font-bold underline decoration-2 underline-offset-4 transition-all duration-200"
-              >
-                Sign Up
-              </Link>
-            </div>
           </form>
         </div>
       </div>
