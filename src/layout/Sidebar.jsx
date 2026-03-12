@@ -1,4 +1,4 @@
-import { LayoutDashboard, ChevronLeft, Workflow, NotepadTextIcon } from 'lucide-react'
+import { LayoutDashboard, ChevronLeft, Workflow, NotepadTextIcon, Bell, Users, ActivitySquareIcon } from 'lucide-react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -12,6 +12,21 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       name: "Dashboard",
       icon: <LayoutDashboard size={20} />,
       link: "/admin/dashboard",
+    },
+     {
+      name: "Users",
+      icon: <Users size={20} />,
+      link: "/admin/manage-users",
+    },
+    {
+      name: "Workspaces",
+      icon: <Workflow size={20} />,
+      link: "/admin/all-workspaces",
+    },
+    {
+      name: "Activity",
+      icon: <ActivitySquareIcon size={20} />,
+      link: "/activity",
     },
   ]
 
@@ -31,6 +46,16 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <NotepadTextIcon size={20} />,
       link: "/your-boards",
     },
+    {
+      name: "Activity",
+      icon: <ActivitySquareIcon size={20} />,
+      link: "/activity",
+    },
+    // {
+    //   name: "Notifications",
+    //   icon: <Bell size={20} />,
+    //   link: "/notifications",
+    // },
   ]
 
   const pagesToDisplay = role === "admin" ? AdminPages : UserPages
