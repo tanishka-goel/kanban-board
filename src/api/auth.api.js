@@ -4,7 +4,7 @@ import { SHA256 } from "crypto-js";
 
 export async function loginUser({ username, password }) {
   try {
-    const res = await BaseApi.get("/api/collections/profiles/records");
+    const res = await BaseApi.get("/collections/profiles/records");
     //console.log("Raw data", res)
     const allUsers = res.data.data;
     //console.log(" data", allUsers)

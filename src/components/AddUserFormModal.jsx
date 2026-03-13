@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "@/components/shared/FormInput";
 import NewButton from "./shared/NewButton";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { userSchema } from "@/validation/schemas/userSchema";
 
 const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
   const [formdata, setFormdata] = useState({
@@ -13,33 +13,60 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
     first_name: "",
     last_name: "",
   });
-
+const [errors, setErrors] = useState({});
   const isEditMode = !!selectedUser;
 
   useEffect(() => {
     if (selectedUser) {
+      const userData = selectedUser.data ?? selectedUser;
       setFormdata({
-        role: selectedUser.role||"",
-        email: selectedUser.email||"",
-        password: selectedUser.password||"",
-        username: selectedUser.username||"",
-        first_name: selectedUser.first_name||"",
-        last_name: selectedUser.last_name||"",
+        role: userData.role || "",
+        email: userData.email || "",
+        password: userData.password || "",
+        username: userData.username || "",
+        first_name: userData.first_name || "",
+        last_name: userData.last_name || "",
       });
     }
   }, [selectedUser]);
 
    const handleChange = (e) => {
-    setFormdata((prev) => ({
-  ...prev,
-  [e.target.name]: e.target.value,
-}));
+    const { name, value } = e.target;
+    setFormdata((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e) =>{
-    e.preventDefault()
-     onUserAddition(formdata);
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const dataToValidate =
+      isEditMode && !formdata.password.trim()
+        ? { ...formdata, password: undefined }
+        : formdata;
+
+    const schema = isEditMode
+      ? userSchema.partial({ password: true })
+      : userSchema;
+
+    const result = schema.safeParse(dataToValidate);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      const firstErrors = Object.fromEntries(
+        Object.entries(fieldErrors).map(([key, msgs]) => [key, msgs?.[0] ?? ""])
+      );
+      setErrors(firstErrors);
+      toast.error("Please fill all the fields correctly");
+      return;
+    }
+
+    setErrors({});
+    onUserAddition({
+      ...result.data,
+      role: result.data.role.trim().toLowerCase(),
+    });
+  };
+
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -48,7 +75,6 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
           <h1 className="text-xl font-semibold text-gray-800">
             {isEditMode ? "Edit User" : "Add User"}
           </h1>
-
           <NewButton
             className="bg-red-600 hover:bg-red-700 text-white h-8 w-8 flex items-center justify-center rounded-md"
             text={"X"}
@@ -56,7 +82,7 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form noValidate onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               labelTitle={"First Name"}
@@ -65,15 +91,16 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
               required
               inputValue={formdata.first_name}
               onChange={handleChange}
+              error={errors.first_name} 
             />
-
             <FormInput
               labelTitle={"Last Name"}
               placeholder={"Enter last name"}
               name="last_name"
               required
-               inputValue={formdata.last_name}
+              inputValue={formdata.last_name}
               onChange={handleChange}
+              error={errors.last_name}
             />
           </div>
 
@@ -83,8 +110,9 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
             name="email"
             required
             type="email"
-             inputValue={formdata.email}
-              onChange={handleChange}
+            inputValue={formdata.email}
+            onChange={handleChange}
+            error={errors.email}
           />
 
           <FormInput
@@ -92,53 +120,38 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
             placeholder={"Enter username"}
             name="username"
             required
-             inputValue={formdata.username}
-              onChange={handleChange}
+            inputValue={formdata.username}
+            onChange={handleChange}
+            error={errors.username}
           />
 
           <FormInput
             labelTitle={"Password"}
             placeholder={"Enter password"}
             name="password"
-            required
+            required={!isEditMode}
             type="password"
-             inputValue={formdata.password}
-              onChange={handleChange}
+            inputValue={formdata.password}
+            onChange={handleChange}
+            error={errors.password}
           />
 
-          <div className="space-y-2 pt-2">
-            <Label className="text-sm font-medium text-gray-700">
-              User Role
-            </Label>
-
-            <RadioGroup
-  value={formdata.role}
-  onValueChange={(value) =>
-    setFormdata((prev) => ({
-      ...prev,
-      role: value,
-    }))
-  }
-  className="flex gap-6 pt-1"
->
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="user" id="user" />
-                <Label htmlFor="user">User</Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="admin" id="admin" />
-                <Label htmlFor="admin">Admin</Label>
-              </div>
-            </RadioGroup>
-          </div>
+          <FormInput
+            labelTitle={"User Role"}
+            placeholder={"Enter role (e.g. user/admin)"}
+            name="role"
+            required
+            inputValue={formdata.role}
+            onChange={handleChange}
+            error={errors.role}
+          />
 
           <div className="pt-4 flex justify-end">
             <NewButton
-  type="submit"
-  text={isEditMode ? "Update User" : "Add User"}
-  className="bg-secondary hover:bg-emerald-800 text-white px-5 py-2 rounded-lg"
-/>
+              type="submit"
+              text={isEditMode ? "Update User" : "Add User"}
+              className="bg-secondary hover:bg-emerald-800 text-white px-5 py-2 rounded-lg"
+            />
           </div>
         </form>
       </div>

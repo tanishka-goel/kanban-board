@@ -6,7 +6,7 @@ export const BaseApi = axios.create({
     timeout:5000,
     headers: {
   'Content-Type': 'application/json',
-  'x-api-key': import.meta.env.VITE_REQRES_PUBLIC_KEY,
+  'x-api-key': import.meta.env.VITE_REQRES_ADMIN_KEY,
   'X-Reqres-Env': 'dev' 
 }
 })

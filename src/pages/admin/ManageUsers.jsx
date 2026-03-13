@@ -1,18 +1,34 @@
 import Search from "@/components/shared/Search";
-import { useUsers } from "@/queries/users.query";
+import { useAddUser, useUsers, useEditUser } from "@/queries/users.query";
 import { Edit, Trash2 } from "lucide-react";
 import NewButton from "@/components/shared/NewButton";
 import { useState } from "react";
 import AddUserFormModal from "@/components/AddUserFormModal";
+import { toast } from "sonner";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
-  const [openUserModal, setOpenUserModal] = useState(false)
+  const { mutate: addUser } = useAddUser();
+  const { mutate: editUser } = useEditUser();
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   if (isLoading) return <p>Loading users...</p>;
   if (error) return <p>Error fetching users</p>;
 
   const users = data?.filter((user) => user.data.role === "user");
+
+  
+
+  const handleAddClick = () => {
+    setSelectedUser(null);
+    setOpenUserModal(true);
+  };
+
+  const handleEditClick = (user) => {
+    setSelectedUser(user);
+    setOpenUserModal(true);
+  };
 
   return (
     <div className="p-4 md:p-6">
@@ -22,16 +38,48 @@ const ManageUsers = () => {
         </h1>
 
         <div className="flex justify-around items-center gap-4">
-        <Search />
-        <NewButton onClick={()=>{setOpenUserModal(true)}} text={"Add Users"}/>
-       
+          <Search />
+          <NewButton onClick={handleAddClick} text={"Add Users"} />
         </div>
-       
       </div>
-      {openUserModal && 
-      <AddUserFormModal
-      closeModal={()=>setOpenUserModal(false)}
-      />}
+      {openUserModal && (
+        <AddUserFormModal
+          selectedUser={selectedUser}
+          closeModal={() => setOpenUserModal(false)}
+          onUserAddition={(formData) => {
+            if (selectedUser) {
+              editUser(
+                { id: selectedUser.id, newData: formData },
+                {
+                  onSuccess: () => {
+                    toast.success("User updated successfully");
+                    setOpenUserModal(false);
+                  },
+                  onError: (error) => {
+                    toast.error(
+                      error?.response?.data?.error ||
+                        "Failed to update user. Please try again.",
+                    );
+                  },
+                },
+              );
+            } else {
+              addUser(formData, {
+                onSuccess: () => {
+                  toast.success("User added successfully");
+                  setOpenUserModal(false);
+                },
+                onError: (error) => {
+                  toast.error(
+                    error?.response?.data?.error ||
+                      "Failed to add user. Please try again.",
+                  );
+                },
+              });
+            }
+          }}
+        />
+      )}
 
       <div className="hidden md:grid grid-cols-5 px-6 ml-13 py-3 text-sm font-semibold text-gray-500">
         <p>Name</p>
@@ -64,12 +112,10 @@ const ManageUsers = () => {
               </div>
             </div>
 
-            <p className="text-sm md:ml-20 text-gray-600">
-             0
-            </p>
+            <p className="text-sm md:ml-20 text-gray-600">0</p>
 
-            <p className="text-sm md:ml-13 text-gray-600">
-              {user.data.createdAt ?? "—"}
+            <p className="text-sm md:ml-5 font-medium  text-gray-600">
+              {user.created_at.slice(0,10) ?? "—"}
             </p>
 
             <p className="uppercase md:ml-2 font-semibold border border-purple-700 text-purple-500 text-xs bg-purple-300/20 px-3 py-1 rounded-2xl w-fit">
@@ -77,15 +123,16 @@ const ManageUsers = () => {
             </p>
 
             <div className="flex md:ml-10 items-center gap-2 md:justify-center">
-              <button 
-              onClick={()=>setOpenUserModal(true)}
-              className="text-primary bg-green-100 hover:bg-green-200 p-1.5 rounded-lg">
+              <button
+                onClick={() => handleEditClick(user)}
+                className="text-primary bg-green-100 hover:bg-green-200 p-1.5 rounded-lg"
+              >
                 <Edit size={18} />
               </button>
               <button className="text-red-600 bg-red-100 hover:bg-red-200 p-1.5 rounded-lg">
                 <Trash2 size={18} />
               </button>
-            </div> 
+            </div>
           </div>
         ))}
       </div>

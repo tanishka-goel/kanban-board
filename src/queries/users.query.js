@@ -1,6 +1,7 @@
 
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { createUsers, getUsers } from "@/api/users.api";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createUsers, getUsers, updateUsers } from "@/api/users.api";
+import { SHA256 } from "crypto-js";
 
 export const useUsers = () => {
   return useQuery({
@@ -13,10 +14,25 @@ export const useUsers = () => {
 };
 
 export const useAddUser = () =>{
+  const queryClient = useQueryClient();
     return useMutation({
-        queryFn:createUsers,
+        mutationFn: async (userdata) =>{
+          const hashedpass = SHA256(userdata.password).toString();
+
+          return createUsers({...userdata, password:hashedpass})
+        },
         onSuccess:() =>{
-            QueryClient.invalidateQueries(["users"]);
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         }
     })
 }
+
+export const useEditUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateUsers,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] }); 
+    },
+  });
+};
