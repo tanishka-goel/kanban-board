@@ -8,8 +8,13 @@ import Profile from "@/pages/Profile";
 import AllWorkspace from "@/pages/user/AllWorkspace";
 import Activity from "@/pages/Activity";
 import ManageUsers from "@/pages/admin/ManageUsers";
+import WorkspaceDashboard from "@/pages/user/WorkspaceDashboard";
+import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 
 const AppRoutes = () => {
+  const {user, visibleWorkspaces} = useVisibleWorkspace()
+  // console.log("vw in ap", visibleWorkspaces)
+  // console.log("user in ap", user)
   return (
     <BrowserRouter>
       <Routes>
@@ -34,6 +39,7 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoute allowedRole="user" />}>
               <Route path="/for-you" element={<UserDashboard />} />
               <Route path="/your-workspaces" element={<AllWorkspace />} />
+              <Route path={"/your-workspaces/:workspaceId"} element={<WorkspaceDashboard/>}/>
             </Route>
           </Route>
         </Route>

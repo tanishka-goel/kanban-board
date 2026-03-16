@@ -1,12 +1,10 @@
 import React from 'react'
-import WorkspaceCard from "@/components/charts/WorkspaceCard";
+import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useVisibleWorkspace } from '@/hooks/useVisibleWorkspaces';
 
 const AllWorkspace = () => {
   
   const {visibleWorkspaces, workspaceLoading, authLoading} = useVisibleWorkspace();
-
-
   const pageLoading = workspaceLoading || authLoading;
 
   if(pageLoading) return (

@@ -1,5 +1,5 @@
 import PieDonutText from "@/components/charts/pie-donut-text";
-import WorkspaceCard from "@/components/charts/WorkspaceCard";
+import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import UserGreeting from "@/components/shared/skeletons/UserGreeting";
 import { loginThunk } from "@/features/auth/authSlice";
 import { useWorkspaces } from "@/queries/workspaces.query";

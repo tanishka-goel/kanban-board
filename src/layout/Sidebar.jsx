@@ -169,10 +169,10 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                 )}
               </NavLink>
               {pg.name === "Workspaces" && openWorkspaceDropdown && (
-                <div className="text-white p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
+                <div className="">
                   {visibleWorkspaces.map((ws) => (
-                    <NavLink to={"/profile"}>
-                      <div key={ws.id} className="ml-5">
+                   <NavLink key={ws.id} to={`/your-workspaces/${ws.id}`}>
+                      <div className="md:ml-5 text-white md:p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
                       {isCollapsed
                         ? ws?.data?.workspace_name?.slice(0, 2)
                         : ws?.data?.workspace_name}
