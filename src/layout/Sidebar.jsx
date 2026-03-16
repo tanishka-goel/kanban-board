@@ -1,11 +1,28 @@
-import { LayoutDashboard, ChevronLeft, Workflow, NotepadTextIcon, Bell, Users, ActivitySquareIcon } from 'lucide-react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import {
+  LayoutDashboard,
+  ChevronLeft,
+  Workflow,
+  NotepadTextIcon,
+  Bell,
+  Users,
+  ActivitySquareIcon,
+  ChevronDown,
+} from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
-  const { user, role } = useSelector((state) => state.auth)
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { user, role, visibleWorkspaces } = useVisibleWorkspace();
+  const [openWorkspaceDropdown, setOpenWorkspaceDropdown] = useState(false);
+
+  // console.log("user", user)
+  // console.log("VW", visibleWorkspaces)
+
+  const handleWorkspaceToggle = () => {
+    setOpenWorkspaceDropdown((prev) => !prev);
+  };
 
   const AdminPages = [
     {
@@ -13,7 +30,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <LayoutDashboard size={20} />,
       link: "/admin/dashboard",
     },
-     {
+    {
       name: "Users",
       icon: <Users size={20} />,
       link: "/admin/manage-users",
@@ -28,7 +45,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <ActivitySquareIcon size={20} />,
       link: "/activity",
     },
-  ]
+  ];
 
   const UserPages = [
     {
@@ -41,11 +58,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <Workflow size={20} />,
       link: "/your-workspaces",
     },
-     {
-      name: "Boards",
-      icon: <NotepadTextIcon size={20} />,
-      link: "/your-boards",
-    },
+    // {
+    //   name: "Boards",
+    //   icon: <NotepadTextIcon size={20} />,
+    //   link: "/your-boards",
+    // },
     {
       name: "Activity",
       icon: <ActivitySquareIcon size={20} />,
@@ -56,9 +73,9 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
     //   icon: <Bell size={20} />,
     //   link: "/notifications",
     // },
-  ]
+  ];
 
-  const pagesToDisplay = role === "admin" ? AdminPages : UserPages
+  const pagesToDisplay = role === "admin" ? AdminPages : UserPages;
 
   return (
     <div
@@ -127,11 +144,46 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                     >
                       {pg.name}
                     </span>
+
+                    {pg.name === "Workspaces" && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleWorkspaceToggle();
+                        }}
+                        className={`ml-auto transition-all duration-300 ${
+                          isCollapsed
+                            ? "opacity-0 translate-x-4 w-0 ml-0"
+                            : "opacity-100 translate-x-0 w-auto ml-3"
+                        }`}
+                      >
+                        <ChevronDown
+                          size={20}
+                          className={`transition-transform duration-300 ${
+                            openWorkspaceDropdown ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    )}
                   </div>
                 )}
               </NavLink>
+              {pg.name === "Workspaces" && openWorkspaceDropdown && (
+                <div className="text-white p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
+                  {visibleWorkspaces.map((ws) => (
+                    <NavLink to={"/profile"}>
+                      <div key={ws.id} className="ml-5">
+                      {isCollapsed
+                        ? ws?.data?.workspace_name?.slice(0, 2)
+                        : ws?.data?.workspace_name}
+                    </div>
+                    </NavLink>
+                    
+                  ))}
+                </div>
+              )}
             </li>
-          )
+          );
         })}
       </ul>
 
@@ -140,7 +192,6 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
           onClick={onToggle}
           className="w-full flex justify-center items-center bg-darkest/50 hover:bg-secondary text-accent hover:text-white p-3 rounded-xl border border-secondary/50 shadow-sm active:scale-95 transition-all duration-300"
         >
-
           <ChevronLeft
             className={`w-5 h-5 transition-transform duration-500 ease-in-out ${
               isCollapsed ? "rotate-180" : "rotate-0"
@@ -149,7 +200,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

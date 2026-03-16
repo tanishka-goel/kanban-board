@@ -5,7 +5,7 @@ import UserDashboard from "../pages/user/UserDashboard";
 import ProtectedRoute from "./ProtectedRoutes";
 import MainLayout from "../layout/MainLayout";
 import Profile from "@/pages/Profile";
-import Workspace from "@/pages/user/Workspace";
+import AllWorkspace from "@/pages/user/AllWorkspace";
 import Activity from "@/pages/Activity";
 import ManageUsers from "@/pages/admin/ManageUsers";
 
@@ -33,7 +33,7 @@ const AppRoutes = () => {
 
             <Route element={<ProtectedRoute allowedRole="user" />}>
               <Route path="/for-you" element={<UserDashboard />} />
-              <Route path="/your-workspaces" element={<Workspace />} />
+              <Route path="/your-workspaces" element={<AllWorkspace />} />
             </Route>
           </Route>
         </Route>

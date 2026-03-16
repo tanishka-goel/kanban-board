@@ -5,16 +5,9 @@ import { loginThunk } from "@/features/auth/authSlice";
 import { useWorkspaces } from "@/queries/workspaces.query";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 
 const UserDashboard = () => {
-  const dispatch = useDispatch();
-  const { user, isLoading, error } = useSelector((state) => state.auth);
-  const { data: workspace, isLoading: workspaceLoading } = useWorkspaces();
-  //console.log("Workspace data: ", data);
-  // console.log("user: ", user);
-  // console.log(user?.first_name);
-
-  // console.log("Error", error)
   const date = new Date();
   const formattedDate = date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -22,29 +15,12 @@ const UserDashboard = () => {
     day: "numeric",
   });
 
-  const currentUserID = user.id
-  //console.log("User id : ", currentUserID)
+  const { visibleWorkspaces, workspaceLoading, authLoading, user } =
+    useVisibleWorkspace();
 
- const creatorID = workspace?.data?.[0]?.data?.creatorID
-  //console.log("creator id : ", creatorID)
+  const pageLoading = workspaceLoading || authLoading;
 
-  const memberID = workspace?.data?.[0]?.data?.members
-  //console.log("memberID id : ", memberID)
-
-  function hasWorkspaceAccess (ws, userID){
-    const workspace = ws.data;
-    return (
-    workspace.creatorID === userID ||
-    workspace.members?.includes(userID)
-  );
-
-  }
-
-  const visibleWorkspace = workspace?.data?.filter((ws)=>
-  hasWorkspaceAccess(ws,currentUserID)
-  ) ||[]
-
-  if (isLoading)
+  if (pageLoading)
     return (
       <div>
         <UserGreeting />
@@ -63,16 +39,19 @@ const UserDashboard = () => {
         <div className="md:m-5 m-2 p-2 h-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 my-3 items-center">
             <h1 className="md:text-xl text-md w-fit bg-lime-200/70 p-1 md:mb-3 md:p-2 md:px-4 rounded-4xl font-semibold tracking-wide">
-            Your Workspaces
-          </h1>
-          <p>Sort By: Most Recent</p>
+              Recent Workspaces
+            </h1>
+            <p>Sort By: Most Recent</p>
           </div>
-          
+
           <div className="h-110 overflow-y-auto pr-2 custom-scrollbar">
-        {visibleWorkspace.map((ws)=>(
-          <WorkspaceCard key={ws.id} data={ws}/>
-        ))}
-    </div>
+            {visibleWorkspaces.length === 0 && (
+              <div>Create a Workspace to get started</div>
+            )}
+            {visibleWorkspaces.map((ws) => (
+              <WorkspaceCard key={ws.id} data={ws} />
+            ))}
+          </div>
         </div>
 
         <div className="w-auto h-auto m-5 p-3 rounded-2xl shadow-xl transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] hover:scale-105">
