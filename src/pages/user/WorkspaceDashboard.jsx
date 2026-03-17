@@ -15,8 +15,8 @@ const WorkspaceDashboard = () => {
 
   const taskData = taskResponse?.data;
 
-  console.log("Tasks", taskData);
-  console.log("Tasks 1 data", taskData?.[0]?.data);
+  // console.log("Tasks", taskData);
+  // console.log("Tasks 1 data", taskData?.[0]?.data);
 
   //const memberDetails = useMemberDetails()
   //   console.log("vw in wd", visibleWorkspaces);
@@ -70,7 +70,11 @@ const WorkspaceDashboard = () => {
     const draggedTask = taskData?.find(t => t.id === taskId);
     if(draggedTask?.data?.status === updatedTaskId) return;
 
-    console.log(`Time to update Task ${taskId} to status: ${updatedTaskId}`);
+    //  console.log("draggedTask full object:", draggedTask);
+    // console.log("existingData being sent:", draggedTask?.data);
+    // console.log("payload will be:", { ...draggedTask?.data, status: updatedTaskId });
+
+    //console.log(`Time to update Task ${taskId} to status: ${updatedTaskId}`);
 
     updateTaskStatusMutation({
       taskId:taskId,

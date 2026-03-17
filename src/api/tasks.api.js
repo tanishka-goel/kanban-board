@@ -8,13 +8,13 @@ export async function getTasks(){
 
 export async function updateTaskStatus({taskId,updatedTaskId, existingData}){
     const payload = {
-        data: {
+        data:{
             ...existingData,
             status: updatedTaskId
         }
     };
     const res = await BaseApi.patch(`/collections/tasks/records/${taskId}`, payload);
-    console.log("Task updated : ",res.data)
-    return res.data
+    //console.log("Task updated : ",res.data.data)
+    return res.data.data
 }
 

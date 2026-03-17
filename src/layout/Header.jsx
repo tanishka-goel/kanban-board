@@ -1,4 +1,5 @@
 import ProfileDialog from "@/components/ProfileDialog";
+import NewButton from "@/components/shared/NewButton";
 import { User } from "lucide-react";
 import { useState } from "react";
 
@@ -16,14 +17,20 @@ const Header = () => {
         TaskForge
       </h1>
 
+      <div className="grid grid-cols-2 items-center gap-3">
+        <NewButton text={"Create"} className="bg-white text-black hover:bg-gray-200"/>
+
       <div className="relative">
         <button onClick={handleProfileToggle}>
           <div className="flex items-center justify-center bg-[#001919] w-10 h-10 text-white rounded-full">
             <User size={20} />
           </div>
         </button>
+ {openProfileDialog && <ProfileDialog />}
+      </div>
 
-        {openProfileDialog && <ProfileDialog />}
+
+       
       </div>
       
     </div>

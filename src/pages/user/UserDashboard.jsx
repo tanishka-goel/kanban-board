@@ -1,11 +1,12 @@
 import PieDonutText from "@/components/charts/pie-donut-text";
-import WorkspaceCard from "@/components/shared/WorkspaceCard";
+import WorkspaceCard from "@/components/user/WorkspaceCard";
 import UserGreeting from "@/components/shared/skeletons/UserGreeting";
 import { loginThunk } from "@/features/auth/authSlice";
 import { useWorkspaces } from "@/queries/workspaces.query";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
+import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 
 const UserDashboard = () => {
   const date = new Date();
@@ -45,6 +46,8 @@ const UserDashboard = () => {
           </div>
 
           <div className="h-110 overflow-y-auto pr-2 custom-scrollbar">
+            {workspaceLoading && <WorkspaceSkeleton/> }
+            
             {visibleWorkspaces.length === 0 && (
               <div>Create a Workspace to get started</div>
             )}
