@@ -6,6 +6,19 @@ export async function getTasks(){
     return res.data
 }
 
+export async function createTask(newData){
+    const response = await BaseApi.post("/collections/tasks/records",{data:newData});
+    console.log(response.data)
+    return response.data 
+}
+
+export async function updateTask({id,newData}){
+    const response = await BaseApi.put(`/collections/tasks/records/${id}`, {data:newData});
+    console.log(response.data)
+    return response.data
+    
+}
+
 export async function updateTaskStatus({taskId,updatedTaskId, existingData}){
     const payload = {
         data:{

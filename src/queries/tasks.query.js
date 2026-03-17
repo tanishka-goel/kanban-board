@@ -1,4 +1,4 @@
-import { getTasks, updateTaskStatus } from "@/api/tasks.api";
+import { createTask, getTasks, updateTask, updateTaskStatus } from "@/api/tasks.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -11,6 +11,28 @@ export const useTasks = () =>{
         refetchOnMount: false,
 
     })
+}
+
+export const useCreateTask = () =>{
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (newdata) =>{
+            return createTask(newdata)
+        },
+        onSuccess: () =>{
+            queryClient.invalidateQueries({queryKey:["tasks"]})
+        }
+    })
+}
+
+export const useEditTask = () =>{
+     const queryClient = useQueryClient();
+     return useMutation({
+        mutationFn:updateTask,
+        onSuccess: () =>{
+            queryClient.invalidateQueries({queryKey:["tasks"]})
+        }
+     })
 }
 
 export const useDragCardMutation = () =>{
