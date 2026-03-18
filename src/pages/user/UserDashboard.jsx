@@ -21,7 +21,7 @@ const UserDashboard = () => {
 
   const pageLoading = workspaceLoading || authLoading;
 
-  if (pageLoading)
+  if (authLoading)
     return (
       <div>
         <UserGreeting />
@@ -46,7 +46,13 @@ const UserDashboard = () => {
           </div>
 
           <div className="h-110 overflow-y-auto pr-2 custom-scrollbar">
-            {workspaceLoading && <WorkspaceSkeleton/> }
+            {workspaceLoading && <div>
+               {Array.from({ length: 3 }).map((_, index) => (
+            <WorkspaceSkeleton key={index} />
+          ))}
+            </div>
+            
+           }
             
             {visibleWorkspaces.length === 0 && (
               <div>Create a Workspace to get started</div>

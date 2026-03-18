@@ -6,7 +6,7 @@ export const useTasks = () =>{
     return useQuery({
         queryKey:["tasks"],
         queryFn:getTasks,
-        //staleTime: Infinity,
+        staleTime: Infinity,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
 

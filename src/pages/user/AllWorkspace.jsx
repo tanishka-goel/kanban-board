@@ -6,7 +6,6 @@ import Header from "@/components/shared/Header";
 import NewButton from "@/components/shared/NewButton";
 import WorkspaceModal from "@/components/user/WorkspaceModal";
 import { toast } from "sonner";
-import { useDetails } from "@/hooks/useDetails";
 import {
   useCreateWorkspace,
   useEditWorkspace,
@@ -21,7 +20,6 @@ const AllWorkspace = () => {
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
 
-  //const u = useDetails()
 
   const handleAddWorkspace = () => {
     setOpenWorkspaceModal(true);
@@ -90,7 +88,7 @@ const AllWorkspace = () => {
         )}
       </div>
 
-      <div className="p-4">
+      <div className="p-4 md:mx-5">
         <div className="h-screen overflow-y-auto pr-2 custom-scrollbar">
           {visibleWorkspaces.length === 0 && (
             <div>Create a Workspace to get started</div>

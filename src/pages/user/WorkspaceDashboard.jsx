@@ -1,19 +1,29 @@
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useMemberDetails } from "@/hooks/useMemberDetails";
-import Taskcard from "@/components/board/Taskcard";
 import { useDragCardMutation, useTasks } from "@/queries/tasks.query";
+import { useUsers } from "@/queries/users.query";
 import { DndContext } from "@dnd-kit/core";
-import BoardColumns from "@/components/board/BoardColumns";
+import BoardColumns from "@/components/user/board/BoardColumns";
+import Header from "@/components/shared/Header";
 
 const WorkspaceDashboard = () => {
   const { workspaceId } = useParams();
   const { user, visibleWorkspaces } = useVisibleWorkspace();
   const { data: taskResponse } = useTasks();
+  const { data: usersResponse } = useUsers();
   const {mutate:updateTaskStatusMutation} = useDragCardMutation();
 
   const taskData = taskResponse?.data;
+  const users = usersResponse ?? [];
+  const assigneeById = new Map(
+    users.map((userRecord) => {
+      const firstName = userRecord?.data?.first_name ?? "";
+      const lastName = userRecord?.data?.last_name ?? "";
+      const fullName = `${firstName} ${lastName}`.trim();
+      return [userRecord.id, fullName];
+    }),
+  );
 
   // console.log("Tasks", taskData);
   // console.log("Tasks 1 data", taskData?.[0]?.data);
@@ -85,11 +95,11 @@ const WorkspaceDashboard = () => {
 
   return (
     <div className="p-2">
-      <h1>Workspace Details</h1>
-      <div>
-        <h1>Name : {currentWorkspace?.data?.workspace_name}</h1>
-        <h2>Created by : {currentWorkspace?.data?.creatorName} </h2>
-        {/* <h2>Members : </h2> */}
+      <Header header={"Workspace details and kanban"}/>
+      <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-fit">
+        <h1 className="text-lg font-semibold">Name : {currentWorkspace?.data?.workspace_name}</h1>
+        <h2 className="text-md text-gray-500  font-semibold">Created by : {currentWorkspace?.data?.creatorName} </h2>
+        <h2 className="text-md  text-gray-500 font-semibold">Members : </h2>
       </div>
 
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">
@@ -105,6 +115,7 @@ const WorkspaceDashboard = () => {
               <BoardColumns 
               header={header} 
               columnTasks={columnTasks}
+              assigneeById={assigneeById}
               key={header.id}
               />
             );
