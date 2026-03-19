@@ -5,10 +5,14 @@ export const useVisibleWorkspace = () =>{
   const { user, role,isLoading:authLoading , error } = useSelector((state) => state.auth);
   const { data: workspace, isLoading: workspaceLoading } = useWorkspaces();
 
-  const currentUserID = user.id;
+  //console.log("visible ws",workspace)
 
-  const visibleWorkspaces = workspace?.data?.filter((ws)=>{
-    const w = ws.data;
+  const currentUserID = user.id;
+  //console.log("cu", currentUserID)
+
+  const visibleWorkspaces = workspace?.filter((ws)=>{
+    const w = ws;
+    //console.log("workspace data",w)
       return (
         w.creatorID === currentUserID ||
         w.members?.includes(currentUserID)

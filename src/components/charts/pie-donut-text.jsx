@@ -10,20 +10,25 @@ const chartData = [
   { status: "Pending", tasks: 5 },
   { status: "Completed", tasks: 8 },
   { status: "In-Progress", tasks: 3 },
+  { status: "In-Review", tasks: 3 },
 ];
 
 const chartConfig = {
   Pending: {
     label: "Pending",
-    color: "#ef4444", // red-500
+    color: "#EF4444", // red-500
   },
   Completed: {
     label: "Completed",
-    color: "#10b981", // primary/green
+    color: "#10B981", // primary/green
   },
   "In-Progress": {
     label: "In Progress",
     color: "#f59e0b", // yellow-500
+  },
+  "In-Review": {
+    label: "In Review",
+    color: "#3B82F6",
   },
 };
 
@@ -95,17 +100,22 @@ export function PieDonutText() {
         </ChartContainer>
       </div>
 
-      <div className="grid grid-cols-1 items-center justify-center md:grid-cols-3">
+      <div className="flex flex-wrap items-center justify-center gap-6">
         <div className="flex items-center gap-2">
-          <div className="bg-red-500 w-3 h-3 rounded-full"></div> <p>Pending</p>
+          <div className="bg-red-500 w-3 h-3 rounded-full shrink-0" />
+          <p className="text-sm font-medium">Pending</p>
         </div>
-
-         <div className="flex items-center gap-2">
-          <div className="bg-primary w-3 h-3 rounded-full"></div> <p>Completed</p>
+        <div className="flex items-center gap-2">
+          <div className="bg-primary w-3 h-3 rounded-full shrink-0" />
+          <p className="text-sm font-medium">Completed</p>
         </div>
-
-         <div className="flex items-center gap-2">
-          <div className="bg-yellow-500 w-3 h-3 rounded-full"></div> <p>In Progress</p>
+        <div className="flex items-center gap-2">
+          <div className="bg-yellow-500 w-3 h-3 rounded-full shrink-0" />
+          <p className="text-sm font-medium">In Progress</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-500 w-3 h-3 rounded-full shrink-0" />
+          <p className="text-sm font-medium">In Review</p>
         </div>
       </div>
     </div>

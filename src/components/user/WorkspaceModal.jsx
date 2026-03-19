@@ -14,7 +14,7 @@ const WorkspaceModal = ({
   const { user: currentUser } = useSelector((state) => state.auth);
   const [errors, setErrors] = useState({});
   const { data: users } = useUsers();
-  //console.log("users in Wm", users?.data?.first_name);
+  //console.log("users in Wm", users);
   const [formdata, setFormdata] = useState({
     workspace_name: "",
     description: "",
@@ -28,6 +28,7 @@ const WorkspaceModal = ({
   useEffect(() => {
     if (selectedWorkspace) {
       const workspaceData = selectedWorkspace.data ?? selectedWorkspace;
+      //console.log("WS data", workspaceData)
       setFormdata({
         workspace_name: workspaceData.workspace_name || "",
         description: workspaceData.description || "",
@@ -154,7 +155,7 @@ const WorkspaceModal = ({
               <option value="">Select member</option>
               {users?.map((user) => (
                 <option key={user.id} value={user.id}>
-                  {user?.data?.first_name} {user?.data?.last_name}
+                  {user?.first_name} {user?.last_name}
                 </option>
               ))}
             </select>
@@ -162,12 +163,13 @@ const WorkspaceModal = ({
             <div className="flex flex-wrap gap-2 mt-2">
               {formdata.members.map((memberId) => {
                 const user = users?.find((u) => u.id === memberId);
+                //console.log("memberId", memberId, "matched user", user);
                 return (
                   <div
                     key={memberId}
                     className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full flex items-center gap-2"
                   >
-                    <span className=" text-md">{user?.data?.first_name} {user?.data?.last_name}</span>
+                    <span className=" text-md">{user?.first_name} {user?.last_name}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveMember(memberId)}

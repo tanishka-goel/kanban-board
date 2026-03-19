@@ -1,8 +1,15 @@
 import { Edit, LucideArrowRight } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { format } from 'date-fns';
 
 const WorkspaceCard = ({ data, onClick }) => {
+
+  const datee = data.updated_at;
+  //console.log("date", datee)
+  const formattedDate = format(datee, 'MMMM do, yyyy h:mma');
+  //console.log("date", formattedDate)
+
   return (
     <div
       className="shadow-lg transition-transform duration-500 transform-gpu
@@ -13,11 +20,11 @@ const WorkspaceCard = ({ data, onClick }) => {
      <div className="flex items-start justify-between gap-2">
   <div className="flex flex-wrap items-center gap-2">
     <h1 className="text-base sm:text-lg md:text-xl py-1 tracking-wider leading-snug font-bold text-gray-800 wrap-break-word">
-      {data?.data?.workspace_name}
+      {data?.workspace_name}
     </h1>
 
     <p className="mt-1 w-fit px-3 py-0.5 text-[10px] sm:text-xs rounded-full font-medium bg-blue-100 text-blue-700">
-      {data?.id.slice(0, 6)}
+      {data?.id.slice(0,8)}
     </p>
   </div>
 
@@ -25,16 +32,16 @@ const WorkspaceCard = ({ data, onClick }) => {
     <Edit size={18} className="text-green-600" />
   </button>
 </div>
-        <p className="my-2 text-md font-medium text-gray-500">{data?.data?.description}</p>
+        <p className="my-2 text-md font-medium text-gray-500">{data?.description}</p>
       <h1 className="text-xs sm:text-sm my-1 tracking-wide font-bold text-gray-800">
         CREATED BY : <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold">
-            {data?.data?.creatorName}
+            {data?.creatorName}
           </span>
       </h1>
 
       <div className="flex items-center justify-between mt-1">
         <h1 className="text-[11px] sm:text-xs md:text-sm tracking-wide font-bold text-gray-500">
-          Updated On : {data?.updated_at.slice(0, 10)}
+          Updated On : {format(data?.updated_at,'MMMM do, yyyy h:mma')}
         </h1>
 
         <Link

@@ -14,12 +14,12 @@ const WorkspaceDashboard = () => {
   const { data: usersResponse } = useUsers();
   const {mutate:updateTaskStatusMutation} = useDragCardMutation();
 
-  const taskData = taskResponse?.data;
+  const taskData = taskResponse;
   const users = usersResponse ?? [];
   const assigneeById = new Map(
     users.map((userRecord) => {
-      const firstName = userRecord?.data?.first_name ?? "";
-      const lastName = userRecord?.data?.last_name ?? "";
+      const firstName = userRecord?.first_name ?? "";
+      const lastName = userRecord?.last_name ?? "";
       const fullName = `${firstName} ${lastName}`.trim();
       return [userRecord.id, fullName];
     }),
@@ -95,10 +95,10 @@ const WorkspaceDashboard = () => {
 
   return (
     <div className="p-2">
-      <Header header={"Workspace details and kanban"}/>
+      <Header header={"Workspace details"}/>
       <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-fit">
-        <h1 className="text-lg font-semibold">Name : {currentWorkspace?.data?.workspace_name}</h1>
-        <h2 className="text-md text-gray-500  font-semibold">Created by : {currentWorkspace?.data?.creatorName} </h2>
+        <h1 className="text-lg font-semibold">Name : {currentWorkspace?.workspace_name}</h1>
+        <h2 className="text-md text-gray-500  font-semibold">Created by : {currentWorkspace?.creatorName} </h2>
         <h2 className="text-md  text-gray-500 font-semibold">Members : </h2>
       </div>
 
@@ -108,7 +108,7 @@ const WorkspaceDashboard = () => {
 <div className="grid md:grid-cols-4 gap-4">
           {Headers.map((header) => {
             const columnTasks = taskData?.filter(
-              (task) => task.data.status === header.id,
+              (task) => task.status === header.id,
             );
 
             return (

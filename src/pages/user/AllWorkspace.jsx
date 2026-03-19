@@ -17,6 +17,7 @@ const AllWorkspace = () => {
   const pageLoading = workspaceLoading || authLoading;
   const { mutate: createWorkspace } = useCreateWorkspace();
   const { mutate: editWorkspace } = useEditWorkspace();
+  //console.log("edit ws", editWorkspace)
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
 

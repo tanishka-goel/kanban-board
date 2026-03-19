@@ -4,13 +4,18 @@ import { SHA256 } from "crypto-js";
 
 export async function loginUser({ username, password }) {
   try {
-    const res = await BaseApi.get("/collections/profiles/records");
+    const cleanUsername = username.trim().toLowerCase();
+    const res = await BaseApi.get(
+      `/rest/v1/profiles?username=eq.${cleanUsername}&select=*`
+    );
+    // console.log("Response:", res.data);
+    // console.log("looking for this username:", username);
     //console.log("Raw data", res)
-    const allUsers = res.data.data;
-    //console.log(" data", allUsers)
-    const user = allUsers.find(u => u.data?.username === username);
-    //console.log("looking for this username:", username);
-    //console.log("db pass", password);
+    // const allUsers = res;
+    // console.log(" data", allUsers)
+    const user = res.data[0];
+    console.log("User :", user)
+    // console.log("db pass", password);
     
 
     if (!user) {
@@ -23,7 +28,7 @@ export async function loginUser({ username, password }) {
     // console.log("db pass", password);
     //  console.log("hashed pass", hashedpass);
 
-    if (hashedpass !== user.data.password) {
+    if (hashedpass !== user.password) {
       toast.error("Incorrect password");
       throw new Error("Incorrect password");
     }
@@ -33,11 +38,11 @@ export async function loginUser({ username, password }) {
     return {
       user: {
         id: user.id,
-        username: user.data.username,
-        role: user.data.role,
-        first_name: user.data.first_name,
-        last_name: user.data.last_name,
-        email: user.data.email,
+        username: user.username,
+        role: user.role,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
       },
       token: token,
     };

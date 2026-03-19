@@ -2,7 +2,7 @@ import React from "react";
 import Taskcard from "./Taskcard";
 import { useDroppable } from "@dnd-kit/core";
 
-const BoardColumns = ({ header, columnTasks, assigneeById }) => {
+const BoardColumns = ({ header, columnTasks, assigneeById, taskDueDate }) => {
 
     const {setNodeRef, isOver} = useDroppable({
         id: header.id
@@ -21,11 +21,13 @@ const BoardColumns = ({ header, columnTasks, assigneeById }) => {
       </h1>
 
       {columnTasks?.map((task) => {
-        const assigneeName = assigneeById?.get(task.data?.assigned_user_id);
+        const assigneeName = assigneeById?.get(task.assigned_user_id);
+        const dueDate = taskDueDate?.get(task.due_date)
+        console.log("AN", dueDate)
         return (
           <Taskcard
             key={task.id}
-            data={{ ...task.data, assignee_name: assigneeName }}
+            data={{ ...task, assignee_name: assigneeName, due_date:dueDate }}
             taskId={task.id}
           />
         );

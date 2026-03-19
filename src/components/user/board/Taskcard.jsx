@@ -3,6 +3,9 @@ import React from "react";
 import { CSS } from "@dnd-kit/utilities";
 
 const Taskcard = ({ data, taskId }) => {
+
+  const datee = data.due_date
+  console.log("datee", datee)
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: taskId,
   });
@@ -50,7 +53,7 @@ const Taskcard = ({ data, taskId }) => {
         className={`${colors.divBar} mb-3 w-full h-1.5 rounded-full opacity-80`}
       />
 
-      <h1 className="font-semibold text-[15px] text-gray-900 tracking-tight leading-snug line-clamp-2">
+      <h1 className="font-medium text-[15px] text-gray-900 -tracking-normal line-clamp-2">
         {data?.title}
       </h1>
 
@@ -69,7 +72,7 @@ const Taskcard = ({ data, taskId }) => {
         </span>
 
         <span className="text-xs text-gray-400">
-          Due : {data.due_date?.slice(0, 10) || "No Due Date"}
+          Due : {data.due_date || "No Due Date"}
         </span>
       </div>
     </div>

@@ -2,22 +2,22 @@ import axios from "axios";
 import { toast } from "sonner";
 
 export const BaseApi = axios.create({
-    baseURL:import.meta.env.VITE_API_URL,
+    baseURL:import.meta.env.VITE_SUPABASE_URL,
     timeout:5000,
     headers: {
   'Content-Type': 'application/json',
-  'x-api-key': import.meta.env.VITE_REQRES_ADMIN_KEY,
-  'X-Reqres-Env': 'dev' 
+  apiKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+//   'X-Reqres-Env': 'dev' 
 }
 })
 
 BaseApi.interceptors.request.use(
      (config)=>{
-        const token = localStorage.getItem("token")
+        // const token = localStorage.getItem("token")
 
-        if(token){
-            config.headers.Authorization = `Bearer ${token}`
-        }
+        // if(token){
+        //     config.headers.Authorization = `Bearer ${token}`
+        // }
         console.log("Request sent : ",config.url )
         return config;
     },

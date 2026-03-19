@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, replace, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { loginThunk } from "../../features/auth/authSlice";
+import { SHA256} from "crypto-js";
 
 const Login = () => {
   const usernameRef = useRef(null);
@@ -13,6 +14,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false)
   const navigate = useNavigate()
+
+  //console.log("password",SHA256("user3j").toString());
 
   const toggleVisibility = () =>{
     setIsVisible(!isVisible)

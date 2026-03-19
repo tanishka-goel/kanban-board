@@ -51,7 +51,9 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
     creator_name: taskData.creator_name|| "",
     creator_id: taskData.creator_id|| "",
     status: taskData.status||"todo",
-    due_date:taskData.due_date|| "",
+   due_date: taskData.due_date
+        ? new Date(taskData.due_date).toISOString().slice(0, 16)
+        : "",
     priority:taskData.priority||"medium",
     workspace_id:taskData.workspace_id|| "",
     assigned_user_id:taskData.assigned_user_id|| "",
@@ -82,7 +84,7 @@ console.log("FORM SUBMITTED");
     ...formdata,
     due_date: formdata.due_date
       ? new Date(formdata.due_date).toISOString()
-      : "",
+      : null,
   };
 
   const res = taskSchema.safeParse(formattedData);
@@ -120,7 +122,7 @@ console.log("FORM SUBMITTED");
             required
             onChange={handleChange}
             inputValue={formdata.title}
-            // error={errors.title}
+            error={errors.title}
           />
 
           <FormInput
@@ -131,7 +133,7 @@ console.log("FORM SUBMITTED");
             textarea
             onChange={handleChange}
             inputValue={formdata.description}
-            // error={errors.description}
+            error={errors.description}
           />
 
           <div className="grid grid-cols-2 gap-3">
@@ -143,7 +145,7 @@ console.log("FORM SUBMITTED");
               readOnly
               onChange={handleChange}
               inputValue={formdata.creator_name}
-              // error={errors.creator_name}
+              error={errors.creator_name}
             />
 
             <FormInput
@@ -154,7 +156,7 @@ console.log("FORM SUBMITTED");
               readOnly
               onChange={handleChange}
               inputValue={formdata.creator_id}
-              // error={errors.creator_id}
+              error={errors.creator_id}
             />
           </div>
 
@@ -239,9 +241,9 @@ console.log("FORM SUBMITTED");
               </SelectTrigger>
 
               <SelectContent>
-                {workspaces?.data?.map((ws) => (
+                {workspaces?.map((ws) => (
                   <SelectItem key={ws.id} value={ws.id}>
-                    {ws.data?.workspace_name}
+                    {ws?.workspace_name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -270,7 +272,7 @@ console.log("FORM SUBMITTED");
     <SelectContent position="popper">
       {allUsers?.map((user) => (
         <SelectItem key={user.id} value={user.id}>
-          {user.data?.first_name} {user.data?.last_name}
+          {user?.first_name} {user?.last_name}
         </SelectItem>
       ))}
     </SelectContent>
