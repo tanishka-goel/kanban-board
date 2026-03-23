@@ -5,13 +5,9 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useDisplayTasks } from "@/hooks/useDisplayTasks";
 
-const chartData = [
-  { status: "Pending", tasks: 5 },
-  { status: "Completed", tasks: 8 },
-  { status: "In-Progress", tasks: 3 },
-  { status: "In-Review", tasks: 3 },
-];
+
 
 const chartConfig = {
   Pending: {
@@ -33,9 +29,12 @@ const chartConfig = {
 };
 
 export function PieDonutText() {
+
+  const {chartData, tasksToUse, countCompleted, countInProgress, countInReview, countTodo} = useDisplayTasks()
+
   const totalTasks = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.tasks, 0);
-  }, []);
+  }, [chartData]);
 
   return (
     <div className="w-full h-full flex flex-col p-4">

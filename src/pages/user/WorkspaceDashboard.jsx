@@ -9,12 +9,16 @@ import Header from "@/components/shared/Header";
 
 const WorkspaceDashboard = () => {
   const { workspaceId } = useParams();
-  const { user, visibleWorkspaces } = useVisibleWorkspace();
+  const { user, visibleWorkspaces, showMembers } = useVisibleWorkspace();
   const { data: taskResponse } = useTasks();
   const { data: usersResponse } = useUsers();
-  const {mutate:updateTaskStatusMutation} = useDragCardMutation();
+  const { mutate: updateTaskStatusMutation } = useDragCardMutation();
 
-  const taskData = taskResponse;
+  const taskData = taskResponse?.filter(
+    (task) => task.workspace_id === workspaceId,
+  );
+  //console.log("Task response : ", taskResponse)
+
   const users = usersResponse ?? [];
   const assigneeById = new Map(
     users.map((userRecord) => {
@@ -36,11 +40,12 @@ const WorkspaceDashboard = () => {
   const currentWorkspace = visibleWorkspaces?.find(
     (cw) => cw.id === workspaceId,
   );
-  //console.log("Current Workspace found:", currentWorkspace);
 
   if (!currentWorkspace) {
     return <div>Loading workspace...</div>;
   }
+
+  //console.log("Current Workspace ID found: ", currentWorkspace.id);
 
   const Headers = [
     {
@@ -69,16 +74,16 @@ const WorkspaceDashboard = () => {
     },
   ];
 
-  const handleDrag = (e) =>{
-    const {active, over} = e;
+  const handleDrag = (e) => {
+    const { active, over } = e;
 
-    if(!over) return;
+    if (!over) return;
 
     const taskId = active.id;
     const updatedTaskId = over.id;
 
-    const draggedTask = taskData?.find(t => t.id === taskId);
-    if(draggedTask?.data?.status === updatedTaskId) return;
+    const draggedTask = taskData?.find((t) => t.id === taskId);
+    if (draggedTask?.data?.status === updatedTaskId) return;
 
     //  console.log("draggedTask full object:", draggedTask);
     // console.log("existingData being sent:", draggedTask?.data);
@@ -87,42 +92,45 @@ const WorkspaceDashboard = () => {
     //console.log(`Time to update Task ${taskId} to status: ${updatedTaskId}`);
 
     updateTaskStatusMutation({
-      taskId:taskId,
-      updatedTaskId:updatedTaskId,
-      existingData:draggedTask?.data
-    })
-  }
+      taskId: taskId,
+      updatedTaskId: updatedTaskId,
+      existingData: draggedTask?.data,
+    });
+  };
 
   return (
     <div className="p-2">
-      <Header header={"Workspace details"}/>
+      <Header header={"Workspace details"} />
       <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-fit">
-        <h1 className="text-lg font-semibold">Name : {currentWorkspace?.workspace_name}</h1>
-        <h2 className="text-md text-gray-500  font-semibold">Created by : {currentWorkspace?.creatorName} </h2>
+        <h1 className="text-lg font-semibold">
+          Name : {currentWorkspace?.workspace_name}
+        </h1>
+        <h2 className="text-md text-gray-500  font-semibold">
+          Created by : {currentWorkspace?.creatorName}{" "}
+        </h2>
         <h2 className="text-md  text-gray-500 font-semibold">Members : </h2>
       </div>
 
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">
-        
         <DndContext onDragEnd={handleDrag}>
-<div className="grid md:grid-cols-4 gap-4">
-          {Headers.map((header) => {
-            const columnTasks = taskData?.filter(
-              (task) => task.status === header.id,
-            );
+          <div className="grid md:grid-cols-4 gap-4">
+            {Headers.map((header) => {
+              const columnTasks = taskData?.filter(
+                (task) => task.status === header.id,
+              );
 
-            return (
-              <BoardColumns 
-              header={header} 
-              columnTasks={columnTasks}
-              assigneeById={assigneeById}
-              key={header.id}
-              />
-            );
-          })}
-        </div>
+              return (
+                <BoardColumns
+                  header={header}
+                  columnTasks={columnTasks}
+                  assigneeById={assigneeById}
+                  workspaceName={currentWorkspace.workspace_name}
+                  key={header.id}
+                />
+              );
+            })}
+          </div>
         </DndContext>
-        
       </div>
     </div>
   );

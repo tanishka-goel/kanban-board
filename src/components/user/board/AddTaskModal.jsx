@@ -16,15 +16,16 @@ import { useSelector } from "react-redux";
 import { useUsers } from "@/queries/users.query";
 import { taskSchema } from "@/validation/schemas/taskSchema";
 import { toast } from "sonner";
+import { createPortal } from "react-dom"
 
 const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
   // const { data:allTasks } = useTasks()
   const { data: workspaces } = useWorkspaces();
   const { user: currentUser } = useSelector((state) => state.auth);
   const { data: allUsers } = useUsers();
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
- // console.log("WS", allUsers)
+  // console.log("WS", allUsers)
 
   const [formdata, setFormdata] = useState({
     title: "",
@@ -42,34 +43,34 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
 
   const isEditMode = !!selectedTask;
 
-  useEffect(()=>{
-    if(selectedTask){
-      const taskData = selectedTask.data ?? selectedTask
+  useEffect(() => {
+    if (selectedTask) {
+      const taskData = selectedTask.data ?? selectedTask;
       setFormdata({
-        title: taskData.title|| "",
-    description: taskData.description|| "",
-    creator_name: taskData.creator_name|| "",
-    creator_id: taskData.creator_id|| "",
-    status: taskData.status||"todo",
-   due_date: taskData.due_date
-        ? new Date(taskData.due_date).toISOString().slice(0, 16)
-        : "",
-    priority:taskData.priority||"medium",
-    workspace_id:taskData.workspace_id|| "",
-    assigned_user_id:taskData.assigned_user_id|| "",
-      })
+        title: taskData.title || "",
+        description: taskData.description || "",
+        creator_name: taskData.creator_name || "",
+        creator_id: taskData.creator_id || "",
+        status: taskData.status || "todo",
+        due_date: taskData.due_date
+          ? new Date(taskData.due_date).toISOString().slice(0, 16)
+          : "",
+        priority: taskData.priority || "medium",
+        workspace_id: taskData.workspace_id || "",
+        assigned_user_id: taskData.assigned_user_id || "",
+      });
     }
-  },[])
+  }, []);
 
-    useEffect(() => {
-      if (currentUser && !isEditMode) {
-        setFormdata((prev) => ({
-          ...prev,
-          creator_name: `${currentUser.first_name} ${currentUser.last_name}`,
-          creator_id: currentUser.id,
-        }));
-      }
-    }, [currentUser, isEditMode]);
+  useEffect(() => {
+    if (currentUser && !isEditMode) {
+      setFormdata((prev) => ({
+        ...prev,
+        creator_name: `${currentUser.first_name} ${currentUser.last_name}`,
+        creator_id: currentUser.id,
+      }));
+    }
+  }, [currentUser, isEditMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,34 +78,36 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-console.log("FORM SUBMITTED");
-  const formattedData = {
-    ...formdata,
-    due_date: formdata.due_date
-      ? new Date(formdata.due_date).toISOString()
-      : null,
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //console.log("FORM SUBMITTED");
+    const formattedData = {
+      ...formdata,
+      due_date: formdata.due_date
+        ? new Date(formdata.due_date).toISOString()
+        : null,
+      assigned_user_id:formdata.assigned_user_id || null
+    };
 
-  const res = taskSchema.safeParse(formattedData);
+    const res = taskSchema.safeParse(formattedData);
 
-  if (!res.success) {
-    const fieldErrors = {};
-    res.error.errors.forEach((err) => {
+    if (!res.success) {
+      const fieldErrors = {};
+      
+      res.error?.errors?.forEach((err) => {   
       fieldErrors[err.path[0]] = err.message;
     });
-    setErrors(fieldErrors);
-    toast.error("Please fill the fields correctly");
-    return;
-  }
+      setErrors(fieldErrors);
+      toast.error("Please fill the fields correctly");
+      return;
+    }
 
-  onTaskAddition?.(formattedData);
-};
+    onTaskAddition?.(res.data);
+  };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white w-full max-w-xl rounded-2xl shadow-xl p-8 relative">
+      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-8 relative">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-semibold text-gray-800">Add Task</h1>
           <NewButton
@@ -114,7 +117,11 @@ console.log("FORM SUBMITTED");
           />
         </div>
 
-        <form noValidate onSubmit={handleSubmit} className="space-y-6 max-w-5xl">
+        <form
+          noValidate
+          onSubmit={handleSubmit}
+          className="space-y-6 max-w-5xl"
+        >
           <FormInput
             labelTitle={"Task Name"}
             placeholder={"Enter task name"}
@@ -143,6 +150,7 @@ console.log("FORM SUBMITTED");
               name="creator_name"
               required
               readOnly
+              className={"text-gray-400 bg-gray-100 cursor-not-allowed"}
               onChange={handleChange}
               inputValue={formdata.creator_name}
               error={errors.creator_name}
@@ -153,6 +161,7 @@ console.log("FORM SUBMITTED");
               placeholder={"Enter your ID"}
               name="creator_id"
               required
+              className={"text-gray-400 bg-gray-100 cursor-not-allowed"}
               readOnly
               onChange={handleChange}
               inputValue={formdata.creator_id}
@@ -166,14 +175,16 @@ console.log("FORM SUBMITTED");
                 Task Status
               </label>
               <Select
-  value={formdata.status}
-  onValueChange={(value) => setFormdata((prev) => ({ ...prev, status: value }))}
->
-                <SelectTrigger className="w-full max-w-48">
+                value={formdata.status}
+                onValueChange={(value) =>
+                  setFormdata((prev) => ({ ...prev, status: value }))
+                }
+              >
+                <SelectTrigger className="w-full bg-white max-w-48">
                   <SelectValue placeholder="Select Task status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
+                  <SelectGroup className={"bg-white"}>
                     <SelectLabel>Status</SelectLabel>
                     <SelectItem value="todo">To Do</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
@@ -189,14 +200,16 @@ console.log("FORM SUBMITTED");
                 Priority
               </label>
               <Select
-  value={formdata.priority}
-  onValueChange={(value) => setFormdata((prev) => ({ ...prev, priority: value }))}
->
+                value={formdata.priority}
+                onValueChange={(value) =>
+                  setFormdata((prev) => ({ ...prev, priority: value }))
+                }
+              >
                 <SelectTrigger className="w-full max-w-48">
                   <SelectValue placeholder="Select Task status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
+                  <SelectGroup className={"bg-white"}>
                     <SelectLabel>Priority</SelectLabel>
                     <SelectItem value="urgent">Urgent</SelectItem>
                     <SelectItem value="high">High</SelectItem>
@@ -222,63 +235,60 @@ console.log("FORM SUBMITTED");
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Select Workspace
               </label>
               <Select
-              value={formdata.workspace_id}
-              onValueChange={(value) =>
-                setFormdata((prev) => ({
-                  ...prev,
-                  workspace_id: value,
-                }))
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Workspace" />
-              </SelectTrigger>
+                value={formdata.workspace_id}
+                onValueChange={(value) =>
+                  setFormdata((prev) => ({
+                    ...prev,
+                    workspace_id: value,
+                  }))
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Workspace" />
+                </SelectTrigger>
 
-              <SelectContent>
-                {workspaces?.map((ws) => (
-                  <SelectItem key={ws.id} value={ws.id}>
-                    {ws?.workspace_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
+                <SelectContent className={"bg-white"}>
+                  {workspaces?.map((ws) => (
+                    <SelectItem key={ws.id} value={ws.id}>
+                      {ws?.workspace_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-             <div>
-  <label className="text-sm font-medium text-gray-700">
-    Assign To
-  </label>
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Assign To
+              </label>
 
-  <Select
-    value={formdata.assigned_user_id}
-    onValueChange={(value) =>
-      setFormdata((prev) => ({
-        ...prev,
-        assigned_user_id: value,
-      }))
-    }
-  >
-    <SelectTrigger className="w-full">
-      <SelectValue placeholder="Select Assignee" />
-    </SelectTrigger>
+              <Select
+                value={formdata.assigned_user_id}
+                onValueChange={(value) =>
+                  setFormdata((prev) => ({
+                    ...prev,
+                    assigned_user_id: value,
+                  }))
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Assignee" />
+                </SelectTrigger>
 
-    <SelectContent position="popper">
-      {allUsers?.map((user) => (
-        <SelectItem key={user.id} value={user.id}>
-          {user?.first_name} {user?.last_name}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-</div>
-            
+                <SelectContent position="popper" className={"bg-white"}>
+                  {allUsers?.map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user?.first_name} {user?.last_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div>
@@ -305,7 +315,8 @@ console.log("FORM SUBMITTED");
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

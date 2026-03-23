@@ -5,6 +5,8 @@ import NewButton from "@/components/shared/NewButton";
 import { useState } from "react";
 import AddUserFormModal from "@/components/AddUserFormModal";
 import { toast } from "sonner";
+import Header from "@/components/shared/Header";
+
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
@@ -16,9 +18,8 @@ const ManageUsers = () => {
   if (isLoading) return <p>Loading users...</p>;
   if (error) return <p>Error fetching users</p>;
 
-  const users = data?.filter((user) => user.data.role === "user");
+  const users = data?.filter((user) => user.role === "user");
 
-  
 
   const handleAddClick = () => {
     setSelectedUser(null);
@@ -31,11 +32,9 @@ const ManageUsers = () => {
   };
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <h1 className="text-lg md:text-xl font-bold tracking-wide">
-          MANAGE ALL USERS
-        </h1>
+        <Header header={"MANAGE ALL USERS"}/>
 
         <div className="flex justify-around items-center gap-4">
           <Search />
@@ -49,7 +48,10 @@ const ManageUsers = () => {
           onUserAddition={(formData) => {
             if (selectedUser) {
               editUser(
-                { id: selectedUser.id, newData: formData },
+                { id: selectedUser.id, 
+                  newData: {...formData,
+                    id:selectedUser.id
+                  } },
                 {
                   onSuccess: () => {
                     toast.success("User updated successfully");
@@ -99,16 +101,16 @@ const ManageUsers = () => {
             <div className="flex items-center gap-3">
               <div className="bg-black w-10 h-10 flex items-center justify-center rounded-full">
                 <p className="text-white font-semibold text-sm">
-                  {user.data.first_name[0]}
-                  {user.data.last_name[0]}
+                  {user.first_name[0]}
+                  {user.last_name[0]}
                 </p>
               </div>
 
               <div>
                 <p className="font-semibold">
-                  {user.data.first_name} {user.data.last_name}
+                  {user.first_name} {user.last_name}
                 </p>
-                <p className="text-xs text-gray-500">@{user.data.username}</p>
+                <p className="text-xs text-gray-500">@{user.username}</p>
               </div>
             </div>
 
@@ -119,7 +121,7 @@ const ManageUsers = () => {
             </p>
 
             <p className="uppercase md:ml-2 font-semibold border border-purple-700 text-purple-500 text-xs bg-purple-300/20 px-3 py-1 rounded-2xl w-fit">
-              {user.data.role}
+              {user.role}
             </p>
 
             <div className="flex md:ml-10 items-center gap-2 md:justify-center">

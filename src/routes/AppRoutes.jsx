@@ -10,6 +10,7 @@ import Activity from "@/pages/Activity";
 import ManageUsers from "@/pages/admin/ManageUsers";
 import WorkspaceDashboard from "@/pages/user/WorkspaceDashboard";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
+import AdminAllWorkspaces from "@/pages/admin/AdminAllWorkspaces";
 
 const AppRoutes = () => {
   const {user, visibleWorkspaces} = useVisibleWorkspace()
@@ -34,6 +35,8 @@ const AppRoutes = () => {
             <Route element={<ProtectedRoute allowedRole="admin" />}>
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/manage-users" element={<ManageUsers />} />
+              <Route path="/admin/all-workspaces" element={<AdminAllWorkspaces />} />
+               <Route path="/admin/all-workspaces/:workspaceId" element={<WorkspaceDashboard />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRole="user" />}>

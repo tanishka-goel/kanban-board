@@ -2,8 +2,14 @@ import { Edit, LucideArrowRight } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
+import { useSelector } from "react-redux";
 
 const WorkspaceCard = ({ data, onClick }) => {
+
+  const {user} = useSelector((state)=>state.auth)
+  //console.log("user in wscard :", user.role)
+
+  const basePath = user.role==="admin"? `admin/all-workspaces`:`your-workspaces`
 
   const datee = data.updated_at;
   //console.log("date", datee)
@@ -45,7 +51,7 @@ const WorkspaceCard = ({ data, onClick }) => {
         </h1>
 
         <Link
-          to={`/your-workspaces/${data.id}`}
+          to={`/${basePath}/${data.id}`}
           className="hover:bg-gray-200 bg-gray-100 rounded-full p-1.5 sm:p-2 transition"
         >
           <LucideArrowRight size={18} />

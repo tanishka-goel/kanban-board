@@ -15,7 +15,7 @@ export const loginThunk = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const res = await loginUser(credentials);
-      console.log("Response from loginthunk : ", res);
+      //console.log("Response from loginthunk : ", res);
       return res;
     } catch (error) {
       return rejectWithValue(error.message);

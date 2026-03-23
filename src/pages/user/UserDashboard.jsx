@@ -1,13 +1,12 @@
 import PieDonutText from "@/components/charts/pie-donut-text";
 import WorkspaceCard from "@/components/user/WorkspaceCard";
 import UserGreeting from "@/components/shared/skeletons/UserGreeting";
-import { loginThunk } from "@/features/auth/authSlice";
-import { useWorkspaces } from "@/queries/workspaces.query";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import { StarfieldBackground } from "@/components/ui/starfield";
+import { useDisplayTasks } from "@/hooks/useDisplayTasks";
+
 
 const UserDashboard = () => {
   const date = new Date();
@@ -20,6 +19,8 @@ const UserDashboard = () => {
   const { visibleWorkspaces, workspaceLoading, authLoading, user } =
     useVisibleWorkspace();
 
+  const ct = useDisplayTasks()
+
   const pageLoading = workspaceLoading || authLoading;
 
   if (authLoading)
@@ -31,19 +32,18 @@ const UserDashboard = () => {
   return (
     <div className="p-2">
       <div className="relative w-full rounded-2xl h-30 overflow-hidden shadow-lg shadow-gray-400 border-8 border-blue-200">
-  <StarfieldBackground contained />
-  <div className="relative z-10 p-5">
-    <p className="text-white text-sm">{formattedDate}</p>
-    <h1 className="text-2xl text-white font-semibold">
-      Hello, {user?.first_name} {user?.last_name}
-    </h1>
-  </div>
-</div>
+        <StarfieldBackground contained />
+        <div className="relative z-10 p-5">
+          <p className="text-white text-sm">{formattedDate}</p>
+          <h1 className="text-2xl text-white font-semibold">
+            Hello, {user?.first_name} {user?.last_name}
+          </h1>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="md:m-5 m-2 p-2 h-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 my-3 items-center">
-
             <h1 className="md:text-lg text-white text-md w-fit bg-linear-to-r from-indigo-950 via-secondary to-indigo-950 p-1 md:mb-3 md:p-2 md:px-4 rounded-4xl font-semibold shadow-xl shadow-gray-400 tracking-wide">
               Recent Workspaces
             </h1>
@@ -51,14 +51,14 @@ const UserDashboard = () => {
           </div>
 
           <div className="h-110 overflow-y-auto pr-2 custom-scrollbar">
-            {workspaceLoading && <div>
-               {Array.from({ length: 3 }).map((_, index) => (
-            <WorkspaceSkeleton key={index} />
-          ))}
-            </div>
-            
-           }
-            
+            {workspaceLoading && (
+              <div>
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <WorkspaceSkeleton key={index} />
+                ))}
+              </div>
+            )}
+
             {visibleWorkspaces.length === 0 && (
               <div>Create a Workspace to get started</div>
             )}

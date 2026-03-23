@@ -1,11 +1,21 @@
 import { useDraggable } from "@dnd-kit/core";
-import React from "react";
+import React, { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
+import { Edit, EllipsisVertical, Trash2 } from "lucide-react";
+import {
+  DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import AddTaskModal from "./AddTaskModal";
+import { useEditTask } from "@/queries/tasks.query";
+import { toast } from "sonner";
 
 const Taskcard = ({ data, taskId }) => {
-
-  const datee = data.due_date
-  console.log("datee", datee)
+  const [editTaskModal, setEditTaskModal] = useState(false)
+  const {mutate:editTask} = useEditTask()
+  const [deleteTaskModal, setDeleteTaskModal] = useState(false)
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: taskId,
   });
@@ -33,15 +43,15 @@ const Taskcard = ({ data, taskId }) => {
     },
   };
 
+
   const priority = data.priority || "low";
   const colors = headerColor[priority];
 
   return (
+    <>
     <div
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
       className="group cursor-grab active:cursor-grabbing 
       p-4 mb-3 rounded-2xl bg-white 
       border border-gray-200/70
@@ -53,9 +63,29 @@ const Taskcard = ({ data, taskId }) => {
         className={`${colors.divBar} mb-3 w-full h-1.5 rounded-full opacity-80`}
       />
 
-      <h1 className="font-medium text-[15px] text-gray-900 -tracking-normal line-clamp-2">
-        {data?.title}
-      </h1>
+      <div className="flex justify-between">
+        <div {...listeners} {...attributes} className="cursor-grab flex-1">
+          <h1 className="font-medium text-[15px] text-gray-900 -tracking-normal line-clamp-2">
+            {data?.title}
+          </h1>
+        </div>
+
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="hover:bg-gray-200 p-1.5 rounded-full">
+                <EllipsisVertical size={15} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40 bg-white" align="start">
+            <DropdownMenuItem onClick={()=>setEditTaskModal(true)} ><Edit className="mr-2 h-4 w-4 text-green-500" />Edit</DropdownMenuItem>
+             <DropdownMenuItem><Trash2 className="mr-2 h-4 w-4 text-red-500" />Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          
+        </div>
+      </div>
 
       <p className="mt-2 text-sm text-gray-500">
         Assignee:{" "}
@@ -76,6 +106,14 @@ const Taskcard = ({ data, taskId }) => {
         </span>
       </div>
     </div>
+    {editTaskModal && (
+  <AddTaskModal
+    closeModal={() => setEditTaskModal(false)}
+    selectedTask={data} 
+    onTaskAddition={(newData) => editTask({ id: data.id, newData })}
+  />
+)}
+    </>
   );
 };
 
