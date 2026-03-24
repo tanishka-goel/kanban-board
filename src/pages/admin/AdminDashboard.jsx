@@ -7,6 +7,11 @@ import { CheckCheck, Clock3, ListCheck, ListTodo } from "lucide-react";
 import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useDisplayTasks } from "@/hooks/useDisplayTasks";
 import PieDonutText from "@/components/charts/pie-donut-text";
+import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
+import UserGreeting from "@/components/shared/skeletons/UserGreeting";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import StatusSkeleton from "@/components/shared/skeletons/StatusSkeleton";
+import TaskStatisticsSkeleton from "@/components/shared/skeletons/TaskStatisticsSkeleton";
 
 const taskStatus = [
   {
@@ -62,6 +67,30 @@ const AdminDashboard = () => {
 
   //console.log("Workspace: ", workspace);
 
+  if (workspaceLoading)
+    return (
+      <div className="p-4">
+        <UserGreeting /> <br />
+          <HeaderSkeleton/> <br />
+         <div className="grid grid-cols-4 gap-3">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <StatusSkeleton key={index} />
+          ))}
+        </div> <br />
+        <div className="grid gap-2 grid-cols-2">
+          <div>
+            <HeaderSkeleton /> <br />
+            {Array.from({ length: 3 }).map((_, index) => (
+              <WorkspaceSkeleton key={index} />
+            ))}
+          </div>
+          <div>
+            <TaskStatisticsSkeleton/>
+          </div>
+        </div>
+      </div>
+    );
+
   return (
     <div className="p-2">
       <div className="relative w-full rounded-2xl h-30 overflow-hidden shadow-lg shadow-gray-400 border-8 border-blue-200">
@@ -76,6 +105,8 @@ const AdminDashboard = () => {
 
       <div className="py-5">
         <Header header={"Task Status"} />
+
+       
 
         <div className="grid grid-cols-2 mt-5 md:grid-cols-4 gap-5">
           {taskStatus?.map((item, index) => {
@@ -98,7 +129,7 @@ const AdminDashboard = () => {
         <div className="py-5">
           <Header header={"All workspaces"} />
 
-          <div className="h-135 mt-5 overflow-auto w-150">
+          <div className="h-135 mt-5 overflow-auto w-auto">
             {workspace?.map((ws) => {
               return (
                 <div key={ws.id}>
@@ -111,6 +142,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="w-auto h-auto m-5 p-3 rounded-2xl shadow-xl transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] hover:scale-105">
+         
           <PieDonutText />
         </div>
       </div>

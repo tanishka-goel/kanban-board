@@ -11,6 +11,9 @@ import { useState } from "react";
 import AddUserFormModal from "@/components/shared/modals/AddUserFormModal";
 import { toast } from "sonner";
 import Header from "@/components/shared/Header";
+import DeleteModal from "@/components/shared/modals/DeleteModal";
+import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
@@ -19,8 +22,14 @@ const ManageUsers = () => {
   const { mutate: deleteUser } = useDeleteUser();
   const [openUserModal, setOpenUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(null);
 
-  if (isLoading) return <p>Loading users...</p>;
+  if (isLoading) return (
+    <div className="p-4">
+      <HeaderSkeleton rightpart/><br />
+      <TableSkeleton />
+    </div>
+  );
   if (error) return <p>Error fetching users</p>;
 
   const users = data?.filter((user) => user.role === "user");
@@ -34,7 +43,6 @@ const ManageUsers = () => {
     setSelectedUser(user);
     setOpenUserModal(true);
   };
-
   return (
     <div className="p-4 md:p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -86,7 +94,9 @@ const ManageUsers = () => {
           }}
         />
       )}
+      
 
+{/* <TableSkeleton/> */}
       <div className="hidden md:grid grid-cols-5 px-6 ml-13 py-3 text-sm font-semibold text-gray-500">
         <p>Name</p>
         <p>Active Workspaces</p>
@@ -136,16 +146,30 @@ const ManageUsers = () => {
                 <Edit size={18} />
               </button>
               <button
-                onClick={() => deleteUser(user.id)}
+                onClick={() => setOpenDeleteModal(user.id)}
                 className="text-red-600 bg-red-100 hover:bg-red-200 p-1.5 rounded-lg"
               >
                 <Trash2 size={18} />
               </button>
             </div>
+            
           </div>
         ))}
       </div>
+      {openDeleteModal && (
+              <DeleteModal
+                title={users?.find(u => u.id === openDeleteModal)?.first_name}
+                deleteEntity={()=>{
+                  deleteUser(openDeleteModal,{
+                    onSuccess:() =>{setOpenDeleteModal(null)
+                    }
+                  })
+                }}
+                closeModal={() => setOpenDeleteModal(null)}
+              />
+            )}
     </div>
+    
   );
 };
 

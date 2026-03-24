@@ -45,6 +45,9 @@ export const useDeleteUser = () =>{
     onSuccess:()=>{
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("User Deleted successfully")
+    },
+    onError:(error) =>{
+      toast.error(error?.response?.data?.error || "Failed to delete user");
     }
   })
 }

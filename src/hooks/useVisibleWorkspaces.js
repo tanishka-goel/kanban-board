@@ -7,24 +7,7 @@ export const useVisibleWorkspace = () =>{
   const { data: workspace, isLoading: workspaceLoading } = useWorkspaces();
   const { data:allUsers} = useUsers()
 
-  // console.log("All user Deatils", allUsers)
-  // console.log("All workspaces details : ", workspace)
-
-  const getwsname = workspace?.map((ws)=> ws.workspace_name)
-  //console.log("WS names : ", getwsname)
-
   const getMemberIds = workspace?.map((ws)=>{return ws.members})
-  //console.log("member ids",getMemberIds)
-
-//   const getWorkspaceMembers = (workspace, allUsers) => {
-//   return allUsers
-//     ?.filter((user) => workspace.members?.includes(user.id))
-//     ?.map((user) => `${user.first_name} ${user.last_name}`);
-// };
-
-// const names = getWorkspaceMembers(workspace,allUsers)
-// console.log("namess", names)
-
   const currentUserID = user.id;
   //console.log("cu", currentUserID)
 

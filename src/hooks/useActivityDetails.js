@@ -4,12 +4,20 @@ import { useWorkspaces } from "@/queries/workspaces.query";
 import { useTasks } from "@/queries/tasks.query";
 
 export const useActivityDetails = () => {
-  const { data: activityLogs } = useActivityLogs();
-  const { data: allUsers } = useUsers();
-  const { data: allWorkspaces } = useWorkspaces();
-  const { data: allTasks } = useTasks();
+  const { data: activityLogs, isLoading: isActivityLogsLoading } = useActivityLogs();
+  const { data: allUsers, isLoading: isUsersLoading } = useUsers();
+  const { data: allWorkspaces, isLoading: isWorkspacesLoading } = useWorkspaces();
+  const { data: allTasks, isLoading: isTasksLoading } = useTasks();
 
-  const formattedActivities = activityLogs?.data?.map((activity) => {
+  const loading =
+    isActivityLogsLoading ||
+    isUsersLoading ||
+    isWorkspacesLoading ||
+    isTasksLoading;
+
+  const formattedActivities = activityLogs?.data
+  .sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
+  ?.map((activity) => {
     const user = allUsers?.find(
       (u) => u.id === activity.user_id
     );
@@ -18,7 +26,7 @@ export const useActivityDetails = () => {
       ? `${user.first_name} ${user.last_name}`
       : "Unknown User";
 
-    let itemName = "Unknown";
+    let itemName = "Task";
 
     if (activity.entity_type === "Workspace") {
       const ws = allWorkspaces?.find(
@@ -49,6 +57,7 @@ export const useActivityDetails = () => {
     }
 
     const date = new Date(activity.created_at).toLocaleString();
+    
 
     return {
       id: activity.id,
@@ -62,6 +71,7 @@ export const useActivityDetails = () => {
 
   return {
     activities: formattedActivities,
+    loading,
     raw: { activityLogs, allUsers, allTasks, allWorkspaces },
   };
 };

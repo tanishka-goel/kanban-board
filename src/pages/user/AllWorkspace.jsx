@@ -8,8 +8,11 @@ import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
 import { toast } from "sonner";
 import {
   useCreateWorkspace,
+  useDeleteWorkspace,
   useEditWorkspace,
 } from "@/queries/workspaces.query";
+import DeleteModal from "@/components/shared/modals/DeleteModal";
+import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 
 const AllWorkspace = () => {
   const { visibleWorkspaces, workspaceLoading, authLoading } =
@@ -17,9 +20,11 @@ const AllWorkspace = () => {
   const pageLoading = workspaceLoading || authLoading;
   const { mutate: createWorkspace } = useCreateWorkspace();
   const { mutate: editWorkspace } = useEditWorkspace();
+  const {mutate:deleteWorkspace} = useDeleteWorkspace()
   //console.log("edit ws", editWorkspace)
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(null)
 
 
   const handleAddWorkspace = () => {
@@ -32,11 +37,16 @@ const AllWorkspace = () => {
     setSelectedWorkspace(ws);
   };
 
-  if (pageLoading) return <div>Loading...</div>;
+  if (pageLoading) return (
+  <div className="p-4">
+    {Array.from({ length: 5 }).map((_, index) => (
+            <WorkspaceSkeleton key={index} />
+          ))}
+  </div>);
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex p-2 px-4 items-center justify-between">
         <Header header={"Your Workspaces"} />
         <div className="flex items-center justify-around gap-4">
           <p>Search</p>
@@ -96,13 +106,28 @@ const AllWorkspace = () => {
           )}
           {visibleWorkspaces.map((ws) => (
             <WorkspaceCard
+            onDelete={()=>{setOpenDeleteModal(ws.id)}}
               onClick={() => handleEditWorkspace(ws)}
               key={ws.id}
               data={ws}
             />
           ))}
         </div>
+        
       </div>
+      {openDeleteModal && 
+        (<DeleteModal
+        title={visibleWorkspaces?.find(w => w.id === openDeleteModal)?.workspace_name}
+        deleteEntity={()=>{
+          deleteWorkspace(openDeleteModal,{
+            onSuccess:()=>{
+              setOpenDeleteModal(null)
+            }
+          })
+        }}
+        closeModal={()=>setOpenDeleteModal(null)}
+        />)
+        }
     </div>
   );
 };

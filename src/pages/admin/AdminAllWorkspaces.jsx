@@ -11,6 +11,8 @@ import {
 import NewButton from "@/components/shared/NewButton";
 import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
 import { toast } from "sonner";
+import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 
 const AdminAllWorkspaces = () => {
   const { mutate: createWorkspace } = useCreateWorkspace();
@@ -21,7 +23,7 @@ const AdminAllWorkspaces = () => {
   const { user } = useSelector((state) => state.auth);
   //console.log("get curr user", user)
 
-  const { data: allWorkspaces } = useWorkspaces();
+  const { data: allWorkspaces, isLoading:workspaceLoading } = useWorkspaces();
 
   const handleAddWorkspace = () => {
     setOpenWorkspaceModal(true);
@@ -33,8 +35,21 @@ const AdminAllWorkspaces = () => {
     setSelectedWorkspace(ws);
   };
   //console.log("all ws", allWorkspaces)
+
+  if(workspaceLoading) return(
+    <div className="p-4">
+      <HeaderSkeleton rightpart/>
+      <div className="grid mt-10 grid-cols-3 gap-4">
+      {Array.from({ length: 9 }).map((_, index) => (
+            <WorkspaceSkeleton key={index} />
+          ))}
+      </div>
+
+    </div>
+  )
   return (
     <div className="p-5">
+      
       <div className="flex items-center justify-between">
         <Header header={"All Workspaces"} />
         <div className="flex items-center justify-around gap-4">
@@ -87,8 +102,10 @@ const AdminAllWorkspaces = () => {
           />
         )}
       </div>
+      
 
- <div className="grid gap-4 grid-cols-3">
+ <div className="grid gap-4 mt-10 grid-cols-3">
+  {/* <WorkspaceSkeleton/> */}
       {allWorkspaces?.map((aws) => {
         return (
          

@@ -39,3 +39,21 @@ export async function updateWorkspace({id,newData}){
     console.log(response.data)
     return response.data
 }
+
+export async function deleteWorkspace(id){
+    const response = await BaseApi.delete(`/rest/v1/workspaces?id=eq.${id}`);
+
+    const deletedWorkspace = response?.data?.[0];
+    if (deletedWorkspace?.creatorID) {
+      await createActivityLog({
+        user_id: deletedWorkspace.creatorID,
+        workspace_id: id,
+        action: "deleted",
+        entity_type: "Workspace",
+        entity_id: id,
+      });
+    }
+      
+    console.log(response.data)
+    return response.data
+}

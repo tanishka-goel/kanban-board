@@ -1,4 +1,4 @@
-import { createTask, getTasks, updateTask, updateTaskStatus } from "@/api/tasks.api";
+import { createTask, deleteTask, getTasks, updateTask, updateTaskStatus } from "@/api/tasks.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -46,6 +46,21 @@ export const useDragCardMutation = () =>{
         onError: (error) =>{
             toast.error("Failed to update task status")
             console.error("Error updating task status:", error);
+        }
+    })
+}
+
+export const useDeleteTask = () =>{
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn:deleteTask,
+        onSuccess:()=>{
+            queryClient.invalidateQueries({queryKey:["tasks"]})
+            toast.success("Task deleted successfully")
+        },
+        onError: (error) =>{
+            toast.error("Failed to delete task")
+            console.error("Error deleting task :", error);
         }
     })
 }

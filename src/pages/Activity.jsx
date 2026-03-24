@@ -1,4 +1,6 @@
 import Header from "@/components/shared/Header";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import { useActivityDetails } from "@/hooks/useActivityDetails";
 import { useActivityLogs } from "@/queries/activity.query";
 import React from "react";
@@ -35,7 +37,12 @@ const Activity = () => {
     };
   });
 
-  if (activityLoading) return <h1>Loading...</h1>;
+  if (activityLoading) return (
+   <div className="p-4">
+    <HeaderSkeleton/><br />
+     <TableSkeleton/>
+   </div>
+  );
   return (
     <div className="p-5">
       <Header header={"Activity Logs"} />

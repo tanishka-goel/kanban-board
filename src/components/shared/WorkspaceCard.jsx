@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 
-const WorkspaceCard = ({ data, onClick }) => {
+const WorkspaceCard = ({ data, onClick, onDelete }) => {
   const { user } = useSelector((state) => state.auth);
   const basePath =
     user.role === "admin" ? `admin/all-workspaces` : `your-workspaces`;
@@ -50,7 +50,10 @@ const WorkspaceCard = ({ data, onClick }) => {
         </button>
 
         <button
-          onClick={onClick}
+          onClick={(e) => {
+    e.stopPropagation();
+    onDelete();
+  }}
           className="
             shrink-0 p-2 rounded-xl
             bg-red-50 text-red-600
@@ -78,7 +81,7 @@ const WorkspaceCard = ({ data, onClick }) => {
             <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">
               Created by :
             </span>
-            <span className="text-xs font-semibold text-violet-700 bg-violet-50 border border-violet-100 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+            <span className="text-xs font-semibold text-violet-700 bg-violet-50 border border-violet-100 px-2 py-0.5 rounded-full truncate max-w-30">
               {data?.creatorName}
             </span>
           </div>

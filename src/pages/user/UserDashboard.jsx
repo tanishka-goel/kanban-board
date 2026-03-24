@@ -6,6 +6,8 @@ import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import { StarfieldBackground } from "@/components/ui/starfield";
 import { useDisplayTasks } from "@/hooks/useDisplayTasks";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import TaskStatisticsSkeleton from "@/components/shared/skeletons/TaskStatisticsSkeleton";
 
 
 const UserDashboard = () => {
@@ -19,14 +21,27 @@ const UserDashboard = () => {
   const { visibleWorkspaces, workspaceLoading, authLoading, user } =
     useVisibleWorkspace();
 
-  const ct = useDisplayTasks()
-
   const pageLoading = workspaceLoading || authLoading;
 
-  if (authLoading)
+  
+
+  if (pageLoading)
     return (
-      <div>
-        <UserGreeting />
+       <div className="p-4">
+        <UserGreeting /> <br />
+          <HeaderSkeleton/> <br />
+         <br />
+        <div className="grid gap-2 grid-cols-2">
+          <div>
+            <HeaderSkeleton /> <br />
+            {Array.from({ length: 3 }).map((_, index) => (
+              <WorkspaceSkeleton key={index} />
+            ))}
+          </div>
+          <div>
+            <TaskStatisticsSkeleton/>
+          </div>
+        </div>
       </div>
     );
   return (
