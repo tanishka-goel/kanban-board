@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import WorkspaceCard from "@/components/user/WorkspaceCard";
+import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import { WorkflowIcon } from "lucide-react";
 import Header from "@/components/shared/Header";
 import NewButton from "@/components/shared/NewButton";
-import WorkspaceModal from "@/components/user/WorkspaceModal";
+import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
 import { toast } from "sonner";
 import {
   useCreateWorkspace,

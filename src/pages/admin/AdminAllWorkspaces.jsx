@@ -1,5 +1,5 @@
 import Header from "@/components/shared/Header";
-import WorkspaceCard from "@/components/user/WorkspaceCard";
+import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useUsers } from "@/queries/users.query";
 import { useWorkspaces } from "@/queries/workspaces.query";
 import React, { useState } from "react";
@@ -9,7 +9,7 @@ import {
   useEditWorkspace,
 } from "@/queries/workspaces.query";
 import NewButton from "@/components/shared/NewButton";
-import WorkspaceModal from "@/components/user/WorkspaceModal";
+import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
 import { toast } from "sonner";
 
 const AdminAllWorkspaces = () => {

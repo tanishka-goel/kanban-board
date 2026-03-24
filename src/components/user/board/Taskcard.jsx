@@ -8,9 +8,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import AddTaskModal from "./AddTaskModal";
+import AddTaskModal from "../../shared/modals/AddTaskModal";
 import { useEditTask } from "@/queries/tasks.query";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 const Taskcard = ({ data, taskId }) => {
   const [editTaskModal, setEditTaskModal] = useState(false)
@@ -102,7 +103,7 @@ const Taskcard = ({ data, taskId }) => {
         </span>
 
         <span className="text-xs text-gray-400">
-          Due : {data.due_date || "No Due Date"}
+          Due :  {format(data.due_date || "Unassigned","MMM do, yyyy ")}
         </span>
       </div>
     </div>

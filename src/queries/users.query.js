@@ -1,7 +1,8 @@
 
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUsers, getUsers, updateUsers } from "@/api/users.api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createUsers, deleteUsers, getUsers, updateUsers } from "@/api/users.api";
 import { SHA256 } from "crypto-js";
+import { toast } from "sonner";
 
 export const useUsers = () => {
   return useQuery({
@@ -36,3 +37,14 @@ export const useEditUser = () => {
     },
   });
 };
+
+export const useDeleteUser = () =>{
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn:deleteUsers,
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("User Deleted successfully")
+    }
+  })
+}

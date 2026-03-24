@@ -9,7 +9,8 @@ import Header from "@/components/shared/Header";
 
 const WorkspaceDashboard = () => {
   const { workspaceId } = useParams();
-  const { user, visibleWorkspaces, showMembers } = useVisibleWorkspace();
+  const { user, role, visibleWorkspaces, workspace, workspaceLoading } =
+    useVisibleWorkspace();
   const { data: taskResponse } = useTasks();
   const { data: usersResponse } = useUsers();
   const { mutate: updateTaskStatusMutation } = useDragCardMutation();
@@ -37,12 +38,18 @@ const WorkspaceDashboard = () => {
   //   console.log("user in wd", user);
   //   console.log("ID from URL:", workspaceId);
 
-  const currentWorkspace = visibleWorkspaces?.find(
+  const workspaceList = role === "admin" ? workspace : visibleWorkspaces;
+
+  const currentWorkspace = workspaceList?.find(
     (cw) => cw.id === workspaceId,
   );
 
-  if (!currentWorkspace) {
+  if (workspaceLoading) {
     return <div>Loading workspace...</div>;
+  }
+
+  if (!currentWorkspace) {
+    return <div>Workspace not found.</div>;
   }
 
   //console.log("Current Workspace ID found: ", currentWorkspace.id);
@@ -101,14 +108,14 @@ const WorkspaceDashboard = () => {
   return (
     <div className="p-2">
       <Header header={"Workspace details"} />
-      <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-fit">
+      <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-full">
         <h1 className="text-lg font-semibold">
-          Name : {currentWorkspace?.workspace_name}
+         Workspace Name : {currentWorkspace?.workspace_name}
         </h1>
         <h2 className="text-md text-gray-500  font-semibold">
           Created by : {currentWorkspace?.creatorName}{" "}
         </h2>
-        <h2 className="text-md  text-gray-500 font-semibold">Members : </h2>
+        {/* <h2 className="text-md  text-gray-500 font-semibold">Members : </h2> */}
       </div>
 
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">

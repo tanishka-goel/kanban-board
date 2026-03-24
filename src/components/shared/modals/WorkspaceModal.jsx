@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import FormInput from "../shared/FormInput";
-import NewButton from "../shared/NewButton";
+import FormInput from "../FormInput";
+import NewButton from "../NewButton";
 import { useSelector } from "react-redux";
 import { useUsers } from "@/queries/users.query";
 import { workspaceSchema } from "@/validation/schemas/workspaceSchema";

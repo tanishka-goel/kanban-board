@@ -19,3 +19,9 @@ export async function updateUsers({id,newData}){
     return response.data
     
 }
+
+export async function deleteUsers(id){
+    const response = await BaseApi.delete(`/rest/v1/profiles?id=eq.${id}`);
+    console.log("Delete User response",response.data)
+    return response.data
+}

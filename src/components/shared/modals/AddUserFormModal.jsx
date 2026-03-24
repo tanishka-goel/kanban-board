@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FormInput from "@/components/shared/FormInput";
-import NewButton from "./shared/NewButton";
+import NewButton from "../NewButton";
 import { toast } from "sonner";
 import { userSchema } from "@/validation/schemas/userSchema";
 

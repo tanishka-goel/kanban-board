@@ -1,17 +1,22 @@
 import Search from "@/components/shared/Search";
-import { useAddUser, useUsers, useEditUser } from "@/queries/users.query";
+import {
+  useAddUser,
+  useUsers,
+  useEditUser,
+  useDeleteUser,
+} from "@/queries/users.query";
 import { Edit, Trash2 } from "lucide-react";
 import NewButton from "@/components/shared/NewButton";
 import { useState } from "react";
-import AddUserFormModal from "@/components/AddUserFormModal";
+import AddUserFormModal from "@/components/shared/modals/AddUserFormModal";
 import { toast } from "sonner";
 import Header from "@/components/shared/Header";
-
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
   const { mutate: addUser } = useAddUser();
   const { mutate: editUser } = useEditUser();
+  const { mutate: deleteUser } = useDeleteUser();
   const [openUserModal, setOpenUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -19,7 +24,6 @@ const ManageUsers = () => {
   if (error) return <p>Error fetching users</p>;
 
   const users = data?.filter((user) => user.role === "user");
-
 
   const handleAddClick = () => {
     setSelectedUser(null);
@@ -34,7 +38,7 @@ const ManageUsers = () => {
   return (
     <div className="p-4 md:p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <Header header={"MANAGE ALL USERS"}/>
+        <Header header={"MANAGE ALL USERS"} />
 
         <div className="flex justify-around items-center gap-4">
           <Search />
@@ -48,10 +52,10 @@ const ManageUsers = () => {
           onUserAddition={(formData) => {
             if (selectedUser) {
               editUser(
-                { id: selectedUser.id, 
-                  newData: {...formData,
-                    id:selectedUser.id
-                  } },
+                {
+                  id: selectedUser.id,
+                  newData: { ...formData, id: selectedUser.id },
+                },
                 {
                   onSuccess: () => {
                     toast.success("User updated successfully");
@@ -117,7 +121,7 @@ const ManageUsers = () => {
             <p className="text-sm md:ml-20 text-gray-600">0</p>
 
             <p className="text-sm md:ml-5 font-medium  text-gray-600">
-              {user.created_at.slice(0,10) ?? "—"}
+              {user.created_at.slice(0, 10) ?? "—"}
             </p>
 
             <p className="uppercase md:ml-2 font-semibold border border-purple-700 text-purple-500 text-xs bg-purple-300/20 px-3 py-1 rounded-2xl w-fit">
@@ -131,7 +135,10 @@ const ManageUsers = () => {
               >
                 <Edit size={18} />
               </button>
-              <button className="text-red-600 bg-red-100 hover:bg-red-200 p-1.5 rounded-lg">
+              <button
+                onClick={() => deleteUser(user.id)}
+                className="text-red-600 bg-red-100 hover:bg-red-200 p-1.5 rounded-lg"
+              >
                 <Trash2 size={18} />
               </button>
             </div>

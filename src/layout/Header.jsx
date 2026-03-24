@@ -1,6 +1,6 @@
 import ProfileDialog from "@/components/ProfileDialog";
 import NewButton from "@/components/shared/NewButton";
-import AddTaskModal from "@/components/user/board/AddTaskModal";
+import AddTaskModal from "@/components/shared/modals/AddTaskModal";
 import { useCreateTask } from "@/queries/tasks.query";
 import { User } from "lucide-react";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import PieDonutText from "@/components/charts/pie-donut-text";
-import WorkspaceCard from "@/components/user/WorkspaceCard";
+import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import UserGreeting from "@/components/shared/skeletons/UserGreeting";
 import React from "react";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
