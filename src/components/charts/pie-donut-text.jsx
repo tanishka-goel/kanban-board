@@ -6,6 +6,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useDisplayTasks } from "@/hooks/useDisplayTasks";
+import { Frown, Smile } from "lucide-react";
 
 
 
@@ -36,13 +37,27 @@ export function PieDonutText() {
     return chartData.reduce((acc, curr) => acc + curr.tasks, 0);
   }, [chartData]);
 
+
   return (
     <div className="w-full h-full flex flex-col p-4">
       <div className="text-center mb-2">
         <h3 className="text-lg font-semibold">Task Statistics</h3>
       </div>
       <div className="flex-1 flex items-center justify-center min-h-0">
-        <ChartContainer
+        {!chartData || totalTasks===0 ? (
+
+         <div className="flex flex-col items-center justify-center gap-3 py-8">
+  <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center">
+    <Frown size={28} className="text-gray-400" />
+  </div>
+  <div className="text-center">
+    <p className="text-sm font-medium text-gray-800">No tasks yet</p>
+    <p className="text-xs text-gray-400 mt-1">Get assigned a task to view statistics.</p>
+  </div>
+</div>
+          
+        ): (
+           <ChartContainer
           className="aspect-square w-80 h-80"
           config={chartConfig}
         >
@@ -97,6 +112,8 @@ export function PieDonutText() {
             </Pie>
           </PieChart>
         </ChartContainer>
+        )}
+       
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-6">

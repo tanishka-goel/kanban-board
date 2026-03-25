@@ -13,19 +13,23 @@ import {
 } from "@/queries/workspaces.query";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
+import { useSelector } from "react-redux";
 
 const AllWorkspace = () => {
+  const { user } = useSelector((state) => state.auth);
   const { visibleWorkspaces, workspaceLoading, authLoading } =
     useVisibleWorkspace();
   const pageLoading = workspaceLoading || authLoading;
   const { mutate: createWorkspace } = useCreateWorkspace();
   const { mutate: editWorkspace } = useEditWorkspace();
-  const {mutate:deleteWorkspace} = useDeleteWorkspace()
+  const { mutate: deleteWorkspace } = useDeleteWorkspace();
   //console.log("edit ws", editWorkspace)
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
-  const [openDeleteModal, setOpenDeleteModal] = useState(null)
+  const [openDeleteModal, setOpenDeleteModal] = useState(null);
 
+  // console.log("Current user ID : ", user.id);
+  // console.log("Current user role : ", user.role);
 
   const handleAddWorkspace = () => {
     setOpenWorkspaceModal(true);
@@ -37,12 +41,14 @@ const AllWorkspace = () => {
     setSelectedWorkspace(ws);
   };
 
-  if (pageLoading) return (
-  <div className="p-4">
-    {Array.from({ length: 5 }).map((_, index) => (
-            <WorkspaceSkeleton key={index} />
-          ))}
-  </div>);
+  if (pageLoading)
+    return (
+      <div className="p-4">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <WorkspaceSkeleton key={index} />
+        ))}
+      </div>
+    );
 
   return (
     <div>
@@ -104,30 +110,40 @@ const AllWorkspace = () => {
           {visibleWorkspaces.length === 0 && (
             <div>Create a Workspace to get started</div>
           )}
-          {visibleWorkspaces.map((ws) => (
-            <WorkspaceCard
-            onDelete={()=>{setOpenDeleteModal(ws.id)}}
-              onClick={() => handleEditWorkspace(ws)}
-              key={ws.id}
-              data={ws}
-            />
-          ))}
+          {visibleWorkspaces.map((ws) =>{
+            const hasAccess = user.role === "admin" || ws.creatorID === user.id;
+
+            return (
+              <WorkspaceCard
+                hasAccess = {hasAccess}
+                onDelete={() => {
+                  setOpenDeleteModal(ws.id);
+                }}
+                onClick={() => handleEditWorkspace(ws)}
+                key={ws.id}
+                data={ws}
+              />
+            )
+          }
+          )}
         </div>
-        
       </div>
-      {openDeleteModal && 
-        (<DeleteModal
-        title={visibleWorkspaces?.find(w => w.id === openDeleteModal)?.workspace_name}
-        deleteEntity={()=>{
-          deleteWorkspace(openDeleteModal,{
-            onSuccess:()=>{
-              setOpenDeleteModal(null)
-            }
-          })
-        }}
-        closeModal={()=>setOpenDeleteModal(null)}
-        />)
-        }
+      {openDeleteModal && (
+        <DeleteModal
+          title={
+            visibleWorkspaces?.find((w) => w.id === openDeleteModal)
+              ?.workspace_name
+          }
+          deleteEntity={() => {
+            deleteWorkspace(openDeleteModal, {
+              onSuccess: () => {
+                setOpenDeleteModal(null);
+              },
+            });
+          }}
+          closeModal={() => setOpenDeleteModal(null)}
+        />
+      )}
     </div>
   );
 };

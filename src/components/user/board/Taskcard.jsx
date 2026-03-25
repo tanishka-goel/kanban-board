@@ -11,7 +11,7 @@ import {
 import AddTaskModal from "../../shared/modals/AddTaskModal";
 import { useDeleteTask, useEditTask } from "@/queries/tasks.query";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 
 const Taskcard = ({ data, taskId }) => {
@@ -48,6 +48,10 @@ const Taskcard = ({ data, taskId }) => {
 
   const priority = data.priority || "low";
   const colors = headerColor[priority];
+  const dueDate = data?.due_date ? new Date(data.due_date) : null;
+  const dueDateLabel = dueDate && isValid(dueDate)
+    ? format(dueDate, "MMM do, yyyy")
+    : "Unassigned";
 
   return (
     <>
@@ -108,7 +112,7 @@ const Taskcard = ({ data, taskId }) => {
           </span>
 
           <span className="text-xs text-gray-400">
-            Due : {format(data.due_date || "Unassigned", "MMM do, yyyy ")}
+            Due : {dueDateLabel}
           </span>
         </div>
       </div>

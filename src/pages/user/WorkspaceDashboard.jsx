@@ -6,6 +6,8 @@ import { useUsers } from "@/queries/users.query";
 import { DndContext } from "@dnd-kit/core";
 import BoardColumns from "@/components/user/board/BoardColumns";
 import Header from "@/components/shared/Header";
+import BoardSkeleton from "@/components/shared/skeletons/BoardSkeleton";
+import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 
 const WorkspaceDashboard = () => {
   const { workspaceId } = useParams();
@@ -45,7 +47,11 @@ const WorkspaceDashboard = () => {
   );
 
   if (workspaceLoading) {
-    return <div>Loading workspace...</div>;
+    return (
+    <div className="p-4">
+      <HeaderSkeleton/> <br />
+      <BoardSkeleton/>
+    </div>);
   }
 
   if (!currentWorkspace) {
@@ -118,6 +124,7 @@ const WorkspaceDashboard = () => {
         {/* <h2 className="text-md  text-gray-500 font-semibold">Members : </h2> */}
       </div>
 
+{/* <BoardSkeleton/> */}
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">
         <DndContext onDragEnd={handleDrag}>
           <div className="grid md:grid-cols-4 gap-4">

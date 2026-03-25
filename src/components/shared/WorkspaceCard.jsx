@@ -4,12 +4,10 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 
-const WorkspaceCard = ({ data, onClick, onDelete }) => {
+const WorkspaceCard = ({ data, onClick, onDelete, hasAccess }) => {
   const { user } = useSelector((state) => state.auth);
   const basePath =
     user.role === "admin" ? `admin/all-workspaces` : `your-workspaces`;
-  const datee = data.updated_at;
-  //const formattedDate = format(datee, "MMMM do, yyyy h:mma");
 
   return (
     <div
@@ -34,38 +32,36 @@ const WorkspaceCard = ({ data, onClick, onDelete }) => {
           </span>
         </div>
 
-        <div>
-
-<button
-          onClick={onClick}
-          className="
+{hasAccess && <div>
+          <button
+            onClick={onClick}
+            className="
             shrink-0 p-2 rounded-xl
             bg-emerald-50 text-emerald-600
             hover:bg-emerald-100 hover:scale-105
             active:scale-95
             transition-all duration-200
           "
-        >
-          <Edit size={16} />
-        </button>
+          >
+            <Edit size={16} />
+          </button>
 
-        <button
-          onClick={(e) => {
-    e.stopPropagation();
-    onDelete();
-  }}
-          className="
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="
             shrink-0 p-2 rounded-xl
             bg-red-50 text-red-600
             hover:bg-red-100 hover:scale-105
             active:scale-95
             transition-all duration-200
           "
-        >
-          <Trash2 size={16} />
-        </button>
-        </div>
-
+          >
+            <Trash2 size={16} />
+          </button>
+        </div> }
         
       </div>
 
