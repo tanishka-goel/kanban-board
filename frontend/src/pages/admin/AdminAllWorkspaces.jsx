@@ -13,6 +13,7 @@ import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
 import { toast } from "sonner";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import Search from "@/components/shared/Search";
 
 const AdminAllWorkspaces = () => {
   const { mutate: createWorkspace } = useCreateWorkspace();
@@ -22,7 +23,7 @@ const AdminAllWorkspaces = () => {
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const { user } = useSelector((state) => state.auth);
   //console.log("get curr user", user)
-
+  const [searchTerm, setSearchTerm] = useState("");
   const { data: allWorkspaces, isLoading: workspaceLoading } = useWorkspaces();
 
 
@@ -36,6 +37,10 @@ const AdminAllWorkspaces = () => {
     setSelectedWorkspace(ws);
   };
   //console.log("all ws", allWorkspaces)
+
+  const filteredWorkspaces = allWorkspaces?.filter((fWs)=>
+   (fWs.workspace_name).toLowerCase().includes(searchTerm.toLowerCase())
+)
 
   if (workspaceLoading)
     return (
@@ -53,8 +58,8 @@ const AdminAllWorkspaces = () => {
       <div className="flex items-center justify-between">
         <Header header={"All Workspaces"} />
         <div className="flex items-center justify-around gap-4">
-          <p>Search</p>
-          <p>Sort</p>
+          <Search onSearchChange={setSearchTerm}/>
+          {/* <p>Sort</p> */}
           <NewButton
             onClick={handleAddWorkspace}
             text={"Create New Workspace"}
@@ -105,7 +110,7 @@ const AdminAllWorkspaces = () => {
 
       <div className="grid gap-4 mt-10 grid-cols-3">
         {/* <WorkspaceSkeleton/> */}
-        {allWorkspaces?.map((aws) => {
+        {filteredWorkspaces?.map((aws) => {
            const hasAccess = user.role === "admin"
           return (
             <WorkspaceCard

@@ -8,7 +8,7 @@ export const useVisibleWorkspace = () =>{
   const { data:allUsers} = useUsers()
 
   const getMemberIds = workspace?.map((ws)=>{return ws.members})
-  const currentUserID = user.id;
+  const currentUserID = user?.id;
   //console.log("cu", currentUserID)
 
 const showMembers = allUsers
@@ -19,7 +19,6 @@ const showMembers = allUsers
 
   const visibleWorkspaces = workspace?.filter((ws)=>{
     const w = ws;
-    //console.log("workspace data",w)
       return (
         w.creatorID === currentUserID ||
         w.members?.includes(currentUserID)

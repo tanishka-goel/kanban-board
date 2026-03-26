@@ -4,6 +4,7 @@ import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import { useActivityDetails } from "@/hooks/useActivityDetails";
 import { useActivityLogs } from "@/queries/activity.query";
 import React from "react";
+import { format } from "date-fns";
 
 const Activity = () => {
   const { activities, loading: activityLoading } = useActivityDetails();

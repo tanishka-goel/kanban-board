@@ -1,20 +1,30 @@
+import { logout } from "@/features/auth/authSlice";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
-const ProfileDialog = () => {
+const ProfileDialog = ({user}) => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = () =>{
+    dispatch(logout());
+    navigate("/")
+  }
+
   return (
     <div className="absolute z-40 right-0 top-full mt-2 bg-white p-2 rounded-3xl w-72 shadow-2xl shadow-gray-500 border border-gray-500 backdrop-blur-sm animate-in fade-in slide-in-from-top-1 duration-300 ease-out origin-top-right">
       <div>
         <div className="flex items-center gap-4 p-4 pb-3">
           <div className="shrink-0 bg-purple-700 rounded-full w-16 h-16 flex items-center justify-center">
             <span className="text-xl font-bold text-white ">
-              AB
+              {user?.first_name.slice(0,1)}{user?.last_name.slice(0,1)}
             </span>
           </div>
 
           <div className="overflow-hidden">
-            <h1 className="text-lg font-bold text-gray-950 truncate">Name</h1>
-            <h2 className="text-sm text-gray-500 truncate">Email</h2>
+            <h1 className="text-lg font-bold text-gray-950 truncate">{user?.first_name} {user?.last_name}</h1>
+            <h2 className="text-sm text-gray-500 truncate">{user.email}</h2>
           </div>
         </div>
 
@@ -28,12 +38,12 @@ const ProfileDialog = () => {
             Profile
           </Link>
 
-          <Link
-            to="/login"
+          <button
+            onClick={handleLogout}
             className="flex items-center gap-3.5 p-3 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors duration-200"
           >
             Log out
-          </Link>
+          </button>
         </div>
       </div>
     </div>

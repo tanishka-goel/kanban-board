@@ -2,14 +2,13 @@ import {
   LayoutDashboard,
   ChevronLeft,
   Workflow,
-  NotepadTextIcon,
-  Bell,
   Users,
   ActivitySquareIcon,
   ChevronDown,
+  SquareCenterlineDashedVerticalIcon,
+  MessageCircle,
 } from "lucide-react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 
@@ -45,6 +44,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <ActivitySquareIcon size={20} />,
       link: "/activity",
     },
+    {
+      name: "Chat",
+      icon: <MessageCircle size={20} />,
+      link: "/chats",
+    },
   ];
 
   const UserPages = [
@@ -58,21 +62,16 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <Workflow size={20} />,
       link: "/your-workspaces",
     },
-    // {
-    //   name: "Boards",
-    //   icon: <NotepadTextIcon size={20} />,
-    //   link: "/your-boards",
-    // },
     {
       name: "Activity",
       icon: <ActivitySquareIcon size={20} />,
       link: "/activity",
     },
-    // {
-    //   name: "Notifications",
-    //   icon: <Bell size={20} />,
-    //   link: "/notifications",
-    // },
+    {
+      name: "Chat",
+      icon: <MessageCircle size={20} />,
+      link: "/chats",
+    },
   ];
 
   const pagesToDisplay = role === "admin" ? AdminPages : UserPages;
@@ -83,7 +82,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
-      {/* Logo Area */}
+
       <div className="flex items-center mt-6 mb-6 px-4 overflow-hidden">
         <Link
           to={role === "admin" ? "/admin/dashboard" : "/for-you"}
@@ -174,8 +173,8 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                    <NavLink key={ws.id} to={`/your-workspaces/${ws.id}`}>
                       <div className="md:ml-5 text-white md:p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
                       {isCollapsed
-                        ? ws?.data?.workspace_name?.slice(0, 2)
-                        : ws?.data?.workspace_name}
+                        ? <SquareCenterlineDashedVerticalIcon/>
+                        : ws?.workspace_name}
                     </div>
                     </NavLink>
                     

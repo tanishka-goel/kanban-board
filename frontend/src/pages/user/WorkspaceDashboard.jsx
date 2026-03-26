@@ -20,7 +20,6 @@ const WorkspaceDashboard = () => {
   const taskData = taskResponse?.filter(
     (task) => task.workspace_id === workspaceId,
   );
-  //console.log("Task response : ", taskResponse)
 
   const users = usersResponse ?? [];
   const assigneeById = new Map(
@@ -57,8 +56,6 @@ const WorkspaceDashboard = () => {
   if (!currentWorkspace) {
     return <div>Workspace not found.</div>;
   }
-
-  //console.log("Current Workspace ID found: ", currentWorkspace.id);
 
   const Headers = [
     {
@@ -98,12 +95,6 @@ const WorkspaceDashboard = () => {
     const draggedTask = taskData?.find((t) => t.id === taskId);
     if (draggedTask?.data?.status === updatedTaskId) return;
 
-    //  console.log("draggedTask full object:", draggedTask);
-    // console.log("existingData being sent:", draggedTask?.data);
-    // console.log("payload will be:", { ...draggedTask?.data, status: updatedTaskId });
-
-    //console.log(`Time to update Task ${taskId} to status: ${updatedTaskId}`);
-
     updateTaskStatusMutation({
       taskId: taskId,
       updatedTaskId: updatedTaskId,
@@ -121,7 +112,6 @@ const WorkspaceDashboard = () => {
         <h2 className="text-md text-gray-500  font-semibold">
           Created by : {currentWorkspace?.creatorName}{" "}
         </h2>
-        {/* <h2 className="text-md  text-gray-500 font-semibold">Members : </h2> */}
       </div>
 
 {/* <BoardSkeleton/> */}

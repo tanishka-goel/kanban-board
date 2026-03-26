@@ -2,14 +2,15 @@ import ProfileDialog from "@/components/ProfileDialog";
 import NewButton from "@/components/shared/NewButton";
 import AddTaskModal from "@/components/shared/modals/AddTaskModal";
 import { useCreateTask } from "@/queries/tasks.query";
-import { User } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
 const Header = () => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
   const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const { mutateAsync: createTask } = useCreateTask();
+  const {user} = useSelector((state)=>state.auth)
 
   const handleTaskToggle = () => {
     setOpenTaskDialog((prev) => !prev);
@@ -51,11 +52,14 @@ const Header = () => {
 
         <div className="relative">
           <button onClick={handleProfileToggle}>
-            <div className="flex items-center justify-center bg-[#001919] w-10 h-10 text-white rounded-full">
-              <User size={20} />
+            <div className="flex items-center justify-center bg-secondary w-10 h-10 text-white rounded-full">
+              {user?.first_name.slice(0,1)}{user?.last_name.slice(0,1)}
             </div>
           </button>
-          {openProfileDialog && <ProfileDialog />}
+          {openProfileDialog && 
+          <ProfileDialog
+          user={user}
+           />}
         </div>
       </div>
     </div>

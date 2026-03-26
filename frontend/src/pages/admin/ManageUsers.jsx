@@ -7,7 +7,7 @@ import {
 } from "@/queries/users.query";
 import { Edit, Trash2 } from "lucide-react";
 import NewButton from "@/components/shared/NewButton";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AddUserFormModal from "@/components/shared/modals/AddUserFormModal";
 import { toast } from "sonner";
 import Header from "@/components/shared/Header";
@@ -23,14 +23,9 @@ const ManageUsers = () => {
   const [openUserModal, setOpenUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  if (isLoading) return (
-    <div className="p-4">
-      <HeaderSkeleton rightpart/><br />
-      <TableSkeleton />
-    </div>
-  );
-  if (error) return <p>Error fetching users</p>;
+ 
 
   const users = data?.filter((user) => user.role === "user");
 
@@ -43,13 +38,29 @@ const ManageUsers = () => {
     setSelectedUser(user);
     setOpenUserModal(true);
   };
+
+
+const filteredUsers = useMemo(() => {
+  return users?.filter((user) =>
+    user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||  user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) 
+  )
+}, [searchTerm, users])
+
+ if (isLoading) return (
+    <div className="p-4">
+      <HeaderSkeleton rightpart/><br />
+      <TableSkeleton />
+    </div>
+  );
+  if (error) return <p>Error fetching users</p>;
+
   return (
     <div className="p-4 md:p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <Header header={"MANAGE ALL USERS"} />
 
         <div className="flex justify-around items-center gap-4">
-          <Search />
+          <Search onSearchChange={setSearchTerm}/>
           <NewButton onClick={handleAddClick} text={"Add Users"} />
         </div>
       </div>
@@ -107,7 +118,7 @@ const ManageUsers = () => {
       <hr />
 
       <div>
-        {users?.map((user) => (
+        {filteredUsers?.map((user) => (
           <div
             key={user.id}
             className="grid md:grid-cols-5 gap-4 items-center px-4 md:px-12 py-4 border-b"

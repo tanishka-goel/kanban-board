@@ -9,7 +9,6 @@ export const useTasks = () =>{
         staleTime: Infinity,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-
     })
 }
 

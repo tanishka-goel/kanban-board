@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export const BaseApi = axios.create({
     baseURL:import.meta.env.VITE_SUPABASE_URL,
-    timeout:5000,
+    timeout:10000,
     headers: {
   'Content-Type': 'application/json',
   apiKey: import.meta.env.VITE_SUPABASE_ANON_KEY,

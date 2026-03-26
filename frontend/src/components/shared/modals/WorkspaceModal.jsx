@@ -110,7 +110,7 @@ const WorkspaceModal = ({
             required
             onChange={handleChange}
             inputValue={formdata.workspace_name}
-            // error={errors.workspace_name}
+            error={errors.workspace_name}
           />
 
           <FormInput
@@ -121,7 +121,7 @@ const WorkspaceModal = ({
             textarea
             onChange={handleChange}
             inputValue={formdata.description}
-            // error={errors.workspace_name}
+            error={errors.description}
           />
 
           <FormInput
@@ -132,7 +132,7 @@ const WorkspaceModal = ({
             readOnly
             onChange={handleChange}
             inputValue={formdata.creatorName}
-            // error={errors.workspace_name}
+            error={errors.creatorName}
           />
 
           <FormInput
@@ -143,7 +143,7 @@ const WorkspaceModal = ({
             readOnly
             onChange={handleChange}
             inputValue={formdata.creatorID}
-            // error={errors.workspace_name}
+            error={errors.creatorID}
           />
 
           <div>
@@ -163,7 +163,6 @@ const WorkspaceModal = ({
             <div className="flex flex-wrap gap-2 mt-2">
               {formdata.members.map((memberId) => {
                 const user = users?.find((u) => u.id === memberId);
-                //console.log("memberId", memberId, "matched user", user);
                 return (
                   <div
                     key={memberId}
