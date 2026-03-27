@@ -1,29 +1,87 @@
 import express from 'express';
-import {Server} from "socket.io"
+import { Server } from "socket.io";
 import { createServer } from 'node:http';
+import { createClient } from "@supabase/supabase-js";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
+app.use(express.json());
+
 const server = createServer(app);
 
-const io = new Server(server,{
-    cors:{
-        origin:"http://localhost:5173",
-        methods:["GET","POST"]
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+});
+
+const onlineUsers = new Map();
+
+io.on('connection', (socket) => {
+  console.log("User Connected with ID : ", socket.id);
+
+  socket.on("connect", () => {
+  console.log("✅ Socket connected:", socket.id); // should print in browser console
+});
+
+  socket.on('registerUser', (userId) => {
+    onlineUsers.set(userId, socket.id);
+  });
+
+  socket.on('sendMessage', async (message) => {
+    const { data, error } = await supabase
+      .from('messages')
+      .insert({
+        sender_id: message.sender_id,
+        receiver_id: message.receiver_id,
+        message: message.text,
+        seen: false
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error saving message:", error);
+      return;
     }
-})
 
-io.on('connection',(socket)=>{
-    console.log("User Connected with ID : ", socket.id);
+    const receiverSocketId = onlineUsers.get(message.receiver_id);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('receiveMessage', data);
+    }
+    socket.emit('receiveMessage', data);
+  });
 
-    socket.on('sendMessage',(message)=>{
-        io.emit('receiveMessage',message)
-    })
+  socket.on('disconnect', () => {
+    onlineUsers.forEach((socketId, userId) => {
+      if (socketId === socket.id) onlineUsers.delete(userId);
+    });
+  });
+});
 
-    socket.on('disconnect',()=>{
-        io.emit("User disconnected", socket.id)
-    })
-})
+
+app.get('/api/messages', async (req, res) => {
+  const { sender_id, receiver_id } = req.query;
+
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .or(
+      `and(sender_id.eq.${sender_id},receiver_id.eq.${receiver_id}),and(sender_id.eq.${receiver_id},receiver_id.eq.${sender_id})`
+    )
+    .order('created_at', { ascending: true });
+
+  if (error) return res.status(500).json({ error });
+  res.json(data);
+});
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');

@@ -12,6 +12,7 @@ const FormInput = ({
   onChange,
   name,
   textarea,
+  error,
   readOnly = false,
   
 }) => {
@@ -29,7 +30,9 @@ const FormInput = ({
         placeholder={placeholder}
         required={required}
         onChange={onChange}
-        className={` ${className} p-2 border-2 placeholder:text-sm rounded-lg border-gray-300`}
+       className={`${className} p-2 border-2 placeholder:text-sm rounded-lg ${
+            error ? "border-red-500" : "border-gray-300" 
+          }`}
         readOnly = {readOnly}
       />):(
 <Input
@@ -40,11 +43,13 @@ const FormInput = ({
         required={required}
         onChange={onChange}
         readOnly = {readOnly}
-         className={` ${className} h-10`}
+        className={`${className} h-10 ${
+            error ? "border-red-500" : "" 
+          }`}
       />
       )}
 
-      
+      {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
 };

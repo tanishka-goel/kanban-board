@@ -78,7 +78,7 @@ const WorkspaceModal = ({
 
     if(!res.success){
       const fieldErrors = {}
-      res.error.errors.forEach((err)=>
+      res.error.issues.forEach((err)=>
       {
         fieldErrors[err.path[0]] = err.message;
       })

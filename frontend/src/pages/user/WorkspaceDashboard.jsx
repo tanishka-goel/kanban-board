@@ -1,6 +1,6 @@
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDragCardMutation, useTasks } from "@/queries/tasks.query";
 import { useUsers } from "@/queries/users.query";
 import { DndContext } from "@dnd-kit/core";
@@ -8,6 +8,7 @@ import BoardColumns from "@/components/user/board/BoardColumns";
 import Header from "@/components/shared/Header";
 import BoardSkeleton from "@/components/shared/skeletons/BoardSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import { ChevronRight } from "lucide-react";
 
 const WorkspaceDashboard = () => {
   const { workspaceId } = useParams();
@@ -102,17 +103,26 @@ const WorkspaceDashboard = () => {
     });
   };
 
+  const basePath = role ==="admin"? "/admin/all-workspaces":"/your-workspaces"
+
   return (
     <div className="p-2">
-      <Header header={"Workspace details"} />
-      <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-full">
+
+      <div className="flex items-center gap-3">
+    
+       <h1 className="text-gray-500 font-medium hover:text-gray-600"><Link to={`${basePath}`}>Workspace</Link></h1>
+       <h1><ChevronRight size={17} className="text-gray-500"/></h1>
+        <h1 className="text-gray-600 font-medium"> {currentWorkspace?.workspace_name}</h1>
+      </div>
+     
+      {/* <div className="mt-5 bg-white rounded-2xl shadow-2xl p-2 w-full">
         <h1 className="text-lg font-semibold">
          Workspace Name : {currentWorkspace?.workspace_name}
         </h1>
         <h2 className="text-md text-gray-500  font-semibold">
           Created by : {currentWorkspace?.creatorName}{" "}
         </h2>
-      </div>
+      </div> */}
 
 {/* <BoardSkeleton/> */}
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">

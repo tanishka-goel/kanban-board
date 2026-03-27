@@ -14,9 +14,12 @@ import Header from "@/components/shared/Header";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
+import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
+import { useWorkspaces } from "@/queries/workspaces.query";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
+  const {data:workspaces} = useWorkspaces()
   const { mutate: addUser } = useAddUser();
   const { mutate: editUser } = useEditUser();
   const { mutate: deleteUser } = useDeleteUser();
@@ -26,8 +29,19 @@ const ManageUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
  
+  console.log("all ws", workspaces)
 
   const users = data?.filter((user) => user.role === "user");
+
+  // console.log("users in mu", users)
+
+  // const getuserid = users?.map((us) => us.id)
+  //  console.log("users in mu", getuserid)
+
+ const getActiveWorkspaces = (userId) => {
+  return workspaces?.filter((ws) => ws.creatorID === userId || ws.members?.includes(userId));
+};
+  console.log("gaws", getActiveWorkspaces)
 
   const handleAddClick = () => {
     setSelectedUser(null);
@@ -139,7 +153,7 @@ const filteredUsers = useMemo(() => {
               </div>
             </div>
 
-            <p className="text-sm md:ml-20 text-gray-600">0</p>
+            <p className="text-sm md:ml-20 text-gray-600">{getActiveWorkspaces(user.id)?.length || 0}</p>
 
             <p className="text-sm md:ml-5 font-medium  text-gray-600">
               {user.created_at.slice(0, 10) ?? "—"}
