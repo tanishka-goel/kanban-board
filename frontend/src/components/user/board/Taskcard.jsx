@@ -37,12 +37,12 @@ const Taskcard = ({ data, taskId }) => {
       badge: "bg-orange-50 text-orange-500",
     },
     low: {
-      divBar: "bg-blue-500",
-      badge: "bg-blue-50 text-blue-500",
+      divBar: "bg-emerald-500",
+      badge: "bg-emerald-50 text-emerald-500",
     },
     medium: {
-      divBar: "bg-yellow-500",
-      badge: "bg-yellow-50 text-yellow-600",
+      divBar: "bg-blue-500",
+      badge: "bg-blue-50 text-blue-600",
     },
   };
 

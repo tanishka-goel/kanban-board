@@ -139,6 +139,8 @@ const WorkspaceDashboard = () => {
                   columnTasks={columnTasks}
                   assigneeById={assigneeById}
                   workspaceName={currentWorkspace.workspace_name}
+                  workspaceId={currentWorkspace.id}          
+                  workspaceMembers={currentWorkspace.members}
                   key={header.id}
                 />
               );

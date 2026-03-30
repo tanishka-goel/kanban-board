@@ -1,22 +1,34 @@
 import Search from "@/components/shared/Search";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useUsers } from "@/queries/users.query";
 import { useSelector } from "react-redux";
+import { ChevronRight } from "lucide-react";
 
-const UserChats = () => {
+const UserChats = ({onToggle, isCollapsed}) => {
   const { data: allUsers } = useUsers();
   const { user: currUser } = useSelector((state) => state.auth);
   // console.log("users for chat", allUsers)
 
   const userChats = allUsers?.filter((uc) => uc.id !== currUser.id);
-  console.log("UC", userChats);
+  //console.log("UC", userChats);
 
   return (
-    <div className="p-3 border-r-2 h-screen">
-      <Search />
+    <div className="border-r-2 h-full min-h-0 relative flex flex-col">
+      {!isCollapsed && <Search />}
 
-      <div className="p-4 mt-5">
+      <button
+  onClick={onToggle}
+  className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 
+             bg-secondary text-white border rounded-full p-1 shadow-md hover:bg-darkest"
+>
+  <ChevronRight
+    className={`w-5 h-5 transition-transform duration-500 ${
+      isCollapsed ? "rotate-180" : "rotate-0"
+    }`}
+  />
+</button>
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 mt-5">
         {userChats?.map((ucs) => (
           <Link key={ucs.id} to={`/chats/${ucs.id}`}>
             <div>
@@ -27,9 +39,12 @@ const UserChats = () => {
                     {ucs?.last_name.slice(0, 1)}
                   </span>
                 </div>
-                <div>
+
+                {isCollapsed ? <div></div> :
+                 <div>
                   {ucs?.first_name} {ucs?.last_name}
-                </div>
+                </div> }
+               
               </div>
               <hr className=" border-t-2 border-gray-300" />
             </div>

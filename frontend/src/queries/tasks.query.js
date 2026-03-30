@@ -38,6 +38,20 @@ export const useDragCardMutation = () =>{
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: updateTaskStatus,
+        onMutate: async({taskId, updatedTaskId}) =>{
+            await queryClient.cancelQueries({ queryKey: ["tasks"] });
+            const previousTasks = queryClient.getQueryData(["tasks"]);
+
+            queryClient.setQueryData(["tasks"], (oldTasks) =>
+        oldTasks?.map((task) =>
+          task.id === taskId
+            ? { ...task, status: updatedTaskId }
+            : task
+        )
+      );
+
+      return {previousTasks};
+        },
         onSuccess: () =>{
             queryClient.invalidateQueries({queryKey:["tasks"]})
             toast.success("Task status updated successfully")
@@ -45,6 +59,10 @@ export const useDragCardMutation = () =>{
         onError: (error) =>{
             toast.error("Failed to update task status")
             console.error("Error updating task status:", error);
+        },
+
+        onSettled:()=>{
+            queryClient.invalidateQueries({ queryKey: ["tasks"] });
         }
     })
 }

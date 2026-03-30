@@ -18,12 +18,16 @@ import { taskSchema } from "@/validation/schemas/taskSchema";
 import { toast } from "sonner";
 import { createPortal } from "react-dom"
 
-const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
+const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembers, workspaceId }) => {
   // const { data:allTasks } = useTasks()
   const { data: workspaces } = useWorkspaces();
   const { user: currentUser } = useSelector((state) => state.auth);
   const { data: allUsers } = useUsers();
   const [errors, setErrors] = useState({});
+
+  const assignableUsers = workspaceMembers
+    ? allUsers?.filter(user => workspaceMembers.includes(user.id))
+    : allUsers; 
 
   // console.log("WS", allUsers)
 
@@ -35,7 +39,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
     status: "todo",
     due_date: "",
     priority: "medium",
-    workspace_id: "",
+    workspace_id: workspaceId|| "",
     assigned_user_id: "",
   });
 
@@ -211,10 +215,10 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
                 <SelectContent>
                   <SelectGroup className={"bg-white"}>
                     <SelectLabel>Priority</SelectLabel>
-                    <SelectItem value="urgent">Urgent</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="urgent"><span className="rounded-full bg-red-500 w-2.5 h-2.5"></span>Urgent</SelectItem>
+                    <SelectItem value="high"><span className="rounded-full bg-orange-500 w-2.5 h-2.5"></span>High</SelectItem>
+                    <SelectItem value="medium"><span className="rounded-full bg-blue-500 w-2.5 h-2.5"></span>Medium</SelectItem>
+                    <SelectItem value="low"><span className="rounded-full bg-emerald-500 w-2.5 h-2.5"></span>Low</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -281,7 +285,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask }) => {
                 </SelectTrigger>
 
                 <SelectContent position="popper" className={"bg-white"}>
-                  {allUsers?.map((user) => (
+                  {assignableUsers?.map((user) => (
                     <SelectItem key={user.id} value={user.id}>
                       {user?.first_name} {user?.last_name}
                     </SelectItem>
