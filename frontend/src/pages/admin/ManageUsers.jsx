@@ -5,7 +5,7 @@ import {
   useEditUser,
   useDeleteUser,
 } from "@/queries/users.query";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2,ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import NewButton from "@/components/shared/NewButton";
 import { useMemo, useState } from "react";
 import AddUserFormModal from "@/components/shared/modals/AddUserFormModal";
@@ -16,6 +16,7 @@ import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import { useWorkspaces } from "@/queries/workspaces.query";
+import { usePagination } from "@/hooks/usePagination";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
@@ -59,6 +60,10 @@ const filteredUsers = useMemo(() => {
     user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||  user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) 
   )
 }, [searchTerm, users])
+
+
+ const { currentData, currentPage, totalPages, nextPage, prevPage } =
+    usePagination(filteredUsers, 10);
 
  if (isLoading) return (
     <div className="p-4">
@@ -132,10 +137,10 @@ const filteredUsers = useMemo(() => {
       <hr />
 
       <div>
-        {filteredUsers?.map((user) => (
+        {currentData?.map((user) => (
           <div
             key={user.id}
-            className="grid md:grid-cols-5 gap-4 items-center px-4 md:px-12 py-4 border-b"
+            className="grid md:grid-cols-5 gap-4 items-center hover:scale-102 transition-transform duration-300 ease-out px-4 md:px-12 py-4 border-b"
           >
             <div className="flex items-center gap-3">
               <div className="bg-black w-10 h-10 flex items-center justify-center rounded-full">
@@ -193,6 +198,37 @@ const filteredUsers = useMemo(() => {
                 closeModal={() => setOpenDeleteModal(null)}
               />
             )}
+
+
+             <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
+        <button
+          disabled={currentPage === 1}
+          className={`px-3 py-3 rounded-full 
+            ${
+              currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-linear-to-r from-primary  to-darkest text-white"
+            }`}
+          onClick={prevPage}
+        >
+          <ChevronLeftIcon />
+        </button>
+        <p className="text-custom-wine font-medium text-md text-center">
+          {currentPage} / {totalPages}
+        </p>
+        <button
+          disabled={currentPage === totalPages}
+          className={`px-3 py-3 rounded-full 
+            ${
+              currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-linear-to-r from-primary  to-darkest  text-white"
+            }`}
+          onClick={nextPage}
+        >
+          <ChevronRightIcon />
+        </button>
+      </div>
     </div>
     
   );

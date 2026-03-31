@@ -32,7 +32,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex bg-linear-to-r from-indigo-950 via-secondary to-indigo-950 h-15 p-3 md:pr-5 mb-3 w-full items-center justify-between border-secondary border">
+    <div className="flex bg-linear-to-r from-slate-950 via-secondary to-slate-950 h-15 p-3 md:pr-5 mb-3 w-full items-center justify-between border-secondary border">
       <h1 className="text-white flex gap-2 font-bold text-xl p-2 tracking-widest animate-in fade-in duration-300">
         TaskForge
       </h1>

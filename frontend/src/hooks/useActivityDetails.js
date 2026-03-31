@@ -52,6 +52,10 @@ export const useActivityDetails = () => {
       description = `updated ${activity.entity_type}`;
     }
 
+    if (activity.action === "deleted") {              
+        description = `Deleted ${activity.entity_type} "${itemName}"`;
+      }
+
     if (activity.details?.workspace_name) {
       description += ` "${activity.details.workspace_name}"`;
     }

@@ -3,7 +3,10 @@ import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import { useActivityDetails } from "@/hooks/useActivityDetails";
 import { useActivityLogs } from "@/queries/activity.query";
-import React from "react";
+import React, { useMemo } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
 
 
 const Activity = () => {
@@ -25,18 +28,32 @@ const Activity = () => {
     },
   };
 
-  const activityActions = activities?.map((act) => {
+  
+const activityActions = useMemo(() =>
+  activities?.map((act) => {
     const style = activityActionsColors[act.action] || {
       text: "text-gray-600",
       bg: "bg-gray-100",
     };
+    return { ...act, textColor: style.text, bgColor: style.bg };
+  })||[],
+[activities]);
 
-    return {
-      ...act,
-      textColor: style.text,
-      bgColor: style.bg,
-    };
-  });
+  // const activityActions = activities?.map((act) => {
+  //   const style = activityActionsColors[act.action] || {
+  //     text: "text-gray-600",
+  //     bg: "bg-gray-100",
+  //   };
+
+  //   return {
+  //     ...act,
+  //     textColor: style.text,
+  //     bgColor: style.bg,
+  //   };
+  // });
+
+   const { currentData, currentPage, totalPages, nextPage, prevPage } =
+      usePagination(activityActions, 9);
 
   if (activityLoading) return (
    <div className="p-4">
@@ -57,7 +74,8 @@ const Activity = () => {
       </div>
 
       <div className="p-4">
-        {activityActions?.map((act) => (
+        {currentData?.map((act) => (
+          
           <div
   key={act.id}
   className="grid grid-cols-5 py-4 border-b transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-md hover:bg-gray-100">
@@ -83,6 +101,36 @@ const Activity = () => {
             <div className="font-semibold text-sm">{act.date}</div>
           </div>
         ))}
+      </div>
+
+       <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
+        <button
+          disabled={currentPage === 1}
+          className={`px-3 py-3 rounded-full 
+            ${
+              currentPage === 1
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-linear-to-r from-primary  to-darkest text-white"
+            }`}
+          onClick={prevPage}
+        >
+          <ChevronLeftIcon />
+        </button>
+        <p className="text-custom-wine font-medium text-md text-center">
+          {currentPage} / {totalPages}
+        </p>
+        <button
+          disabled={currentPage === totalPages}
+          className={`px-3 py-3 rounded-full 
+            ${
+              currentPage === totalPages
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-linear-to-r from-primary  to-darkest  text-white"
+            }`}
+          onClick={nextPage}
+        >
+          <ChevronRightIcon />
+        </button>
       </div>
     </div>
   );

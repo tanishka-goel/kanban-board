@@ -9,13 +9,14 @@ export async function getTasks() {
 
 export async function createTask(newData) {
   const response = await BaseApi.post(`/rest/v1/tasks`, newData);
+  const created = response.data?.[0] ?? response.data;
 
   await createActivityLog({
     user_id: newData.creator_id,
     workspace_id: newData.workspace_id,
     action: "created",
-    entity_type: "task",
-    entity_id: newData.id,
+    entity_type: "Task",
+    entity_id: created?.id ?? newData.id,
     details: {
       title: newData.title,
     },
@@ -28,13 +29,20 @@ export async function createTask(newData) {
 export async function updateTask({ id, newData }) {
   const response = await BaseApi.patch(`/rest/v1/tasks?id=eq.${id}`, newData);
 
+  const changesField = Object.keys(newData).reduce((acc,key)=>{
+    if(previoudData[key] !==newData[key]){
+      acc[key] = {from: previoudData[key], to: newData[ley]}
+    }
+    return acc
+  })
+
   await createActivityLog({
     user_id: newData.creator_id,
     workspace_id: newData.workspace_id,
     action: "updated",
-    entity_type: "task",
+    entity_type: "Task",
     entity_id: id,
-    details: newData
+    details: changesField
   });
 
   console.log(response.data);
@@ -43,6 +51,17 @@ export async function updateTask({ id, newData }) {
 
 export async function deleteTask(id) {
   const response = await BaseApi.delete(`/rest/v1/tasks?id=eq.${id}`);
+
+  await createActivityLog({
+    user_id,
+    workspace_id,
+    action: "deleted",
+    entity_type: "Task",
+    entity_id: id,
+    details: {title}
+  });
+
+
   return response.data;
 }
 
