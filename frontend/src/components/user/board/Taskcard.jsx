@@ -1,7 +1,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import React, { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
-import { Edit, EllipsisVertical, Trash2 } from "lucide-react";
+import { Edit, EllipsisVertical, Info, Trash2 } from "lucide-react";
 import {
   DropdownMenuTrigger,
   DropdownMenu,
@@ -13,12 +13,14 @@ import { useDeleteTask, useEditTask } from "@/queries/tasks.query";
 import { toast } from "sonner";
 import { format, isValid } from "date-fns";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
+import TaskDetailsModal from "@/components/shared/modals/TaskDetailsModal";
 
 const Taskcard = ({ data, taskId }) => {
   const [editTaskModal, setEditTaskModal] = useState(false);
   const { mutate: editTask } = useEditTask();
   const { mutate: deleteTask } = useDeleteTask();
   const [deleteTaskModal, setDeleteTaskModal] = useState(false);
+  const [openTaskDetailsModal, setOpenTaskDetailsModal] = useState(false)
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: taskId,
   });
@@ -92,6 +94,11 @@ const Taskcard = ({ data, taskId }) => {
                   <Trash2 className="mr-2 h-4 w-4 text-red-500" />
                   Delete
                 </DropdownMenuItem>
+
+                 <DropdownMenuItem onClick={() => setOpenTaskDetailsModal(data.id)}>
+                  <Info className="mr-2 h-4 w-4 text-blue-500" />
+                  View Details
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -137,7 +144,13 @@ const Taskcard = ({ data, taskId }) => {
           }}
           closeModal={() => setDeleteTaskModal(false)}
         />
-      )}
+      )} 
+
+      {openTaskDetailsModal && 
+      <TaskDetailsModal
+      closeModal={()=>setOpenTaskDetailsModal(false)}
+      data={data}
+      />}
     </>
   );
 };

@@ -49,7 +49,7 @@ const AdminAllWorkspaces = () => {
   }, [allWorkspaces, searchTerm]);
 
   const { currentData, currentPage, totalPages, nextPage, prevPage } =
-    usePagination(filteredWorkspaces, 6);
+    usePagination(filteredWorkspaces, 9);
 
   const getWorkspaceName = allWorkspaces?.find((wsn) => wsn.id === openDeleteModal)?.workspace_name
 

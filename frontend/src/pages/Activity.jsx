@@ -6,6 +6,7 @@ import { useActivityLogs } from "@/queries/activity.query";
 import React, { useMemo } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { format } from "date-fns";
 
 
 
@@ -53,7 +54,7 @@ const activityActions = useMemo(() =>
   // });
 
    const { currentData, currentPage, totalPages, nextPage, prevPage } =
-      usePagination(activityActions, 9);
+      usePagination(activityActions, 10);
 
   if (activityLoading) return (
    <div className="p-4">
@@ -98,7 +99,7 @@ const activityActions = useMemo(() =>
             </div>
             <div className="font-semibold text-sm">{act.item}</div>
             <div className="font-semibold text-sm">{act.description}</div>
-            <div className="font-semibold text-sm">{act.date}</div>
+            <div className="font-semibold text-sm">{format(new Date(act.date), "do MMM,yyyy · h:mma")}</div>
           </div>
         ))}
       </div>

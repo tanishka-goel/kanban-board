@@ -27,8 +27,15 @@ export const usePagination = (data=[], itemsPerPage=5) => {
   };
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [data]);
+    if (totalPages === 0) {
+      if (currentPage !== 1) setCurrentPage(1);
+      return;
+    }
+
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return {
     currentData,

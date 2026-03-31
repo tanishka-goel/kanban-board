@@ -60,7 +60,7 @@ export const useActivityDetails = () => {
       description += ` "${activity.details.workspace_name}"`;
     }
 
-    const date = new Date(activity.created_at).toLocaleString();
+    const date = activity.created_at;
     
 
     return {
