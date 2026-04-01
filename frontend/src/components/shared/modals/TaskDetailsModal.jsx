@@ -36,7 +36,7 @@ const TaskDetailsModal = ({ closeModal, data }) => {
           <p className="text-sm text-gray-500 mt-1">
             {data?.description || "No description provided"}
           </p>
-          <h2 className="text-sm font-medium mt-2 text-gray-500 mt-1">{data?.workspace_name ?? "Unknown"}</h2>
+          <h2 className="text-sm font-medium mt-2 text-gray-500 ">{data?.workspace_name ?? "Unknown"}</h2>
         </div>
 
         <div className="grid grid-cols-2 gap-6 text-sm">

@@ -17,6 +17,7 @@ import { useUsers } from "@/queries/users.query";
 import { taskSchema } from "@/validation/schemas/taskSchema";
 import { toast } from "sonner";
 import { createPortal } from "react-dom"
+import WarningModal from "./WarningModal";
 
 const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembers, workspaceId }) => {
   // const { data:allTasks } = useTasks()
@@ -24,6 +25,8 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
   const { user: currentUser } = useSelector((state) => state.auth);
   const { data: allUsers } = useUsers();
   const [errors, setErrors] = useState({});
+    const [showWarning, setShowWarning] = useState(false)
+    const [isChanged, setIsChanged]=useState(false)
 
   const assignableUsers = workspaceMembers
     ? allUsers?.filter(user => workspaceMembers.includes(user.id))
@@ -79,6 +82,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
+    setIsChanged(true)
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -109,6 +113,14 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
     onTaskAddition?.(res.data);
   };
 
+   const handleClose = () =>{
+    if(isChanged){
+      setShowWarning(true)
+    } else{
+      closeModal()
+    }
+  }
+
   return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-8 relative">
@@ -117,9 +129,16 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
           <NewButton
             className="bg-red-600 hover:bg-red-700 text-white h-8 w-8 flex items-center justify-center rounded-md"
             text={"X"}
-            onClick={closeModal}
+            onClick={handleClose}
           />
         </div>
+
+        {showWarning && (
+          <WarningModal
+          onConfirm={()=>{setShowWarning(false), closeModal()}}
+          onCancel={()=>{setShowWarning(false)}}
+          />
+        )}
 
         <form
           noValidate

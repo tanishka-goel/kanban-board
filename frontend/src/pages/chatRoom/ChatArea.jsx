@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useMessages } from "@/queries/messages.query";
 import { format } from "date-fns";
 import { Check, CheckCheck, MessagesSquareIcon, Send } from "lucide-react";
+import ChatAreaSkeleton from "@/components/shared/skeletons/chatSkeletons/ChatAreaSkeleton";
 
 const CHAT_SERVER_URL =
   import.meta.env.VITE_CHAT_SERVER_URL || "http://localhost:3000";
@@ -16,10 +17,10 @@ const socket = io(CHAT_SERVER_URL);
 const ChatArea = () => {
   const [realtimeMessages, setRealtimeMessages] = useState([]);
   const [input, setInput] = useState("");
-  const { data: allusers } = useUsers();
+  const { data: allusers, isLoading:usersLoading } = useUsers();
   const { user: currUser } = useSelector((state) => state.auth);
   const { userId } = useParams();
-  const { data: chatHistory = [] } = useMessages(currUser?.id, userId);
+  const { data: chatHistory = [], isLoading:messageLoading } = useMessages(currUser?.id, userId);
 
   const getChatUser = allusers?.find((u) => u.id === userId);
 
@@ -102,6 +103,11 @@ const ChatArea = () => {
     if (date.toDateString() === today.toDateString()) return "Today";
     if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
     return format(date, "MMMM d, yyyy");
+  }
+
+  const pageLoading = usersLoading || (!!userId && messageLoading);
+  if (pageLoading) {
+    return <ChatAreaSkeleton />;
   }
 
   return (

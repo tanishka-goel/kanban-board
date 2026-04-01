@@ -3,6 +3,7 @@ import FormInput from "@/components/shared/FormInput";
 import NewButton from "../NewButton";
 import { toast } from "sonner";
 import { userSchema } from "@/validation/schemas/userSchema";
+import WarningModal from "./WarningModal";
 
 const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
   const [formdata, setFormdata] = useState({
@@ -14,6 +15,8 @@ const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
     last_name: "",
   });
 const [errors, setErrors] = useState({});
+ const [showWarning, setShowWarning] = useState(false)
+const [isChanged, setIsChanged]=useState(false)
   const isEditMode = !!selectedUser;
 
   useEffect(() => {
@@ -33,6 +36,7 @@ const [errors, setErrors] = useState({});
    const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
+    setIsChanged(true)
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -67,6 +71,14 @@ const [errors, setErrors] = useState({});
     });
   };
 
+   const handleClose = () =>{
+    if(isChanged){
+      setShowWarning(true)
+    } else{
+      closeModal()
+    }
+  }
+
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -78,9 +90,16 @@ const [errors, setErrors] = useState({});
           <NewButton
             className="bg-red-600 hover:bg-red-700 text-white h-8 w-8 flex items-center justify-center rounded-md"
             text={"X"}
-            onClick={closeModal}
+            onClick={handleClose}
           />
         </div>
+
+        {showWarning && (
+                  <WarningModal
+                  onConfirm={()=>{setShowWarning(false), closeModal()}}
+                  onCancel={()=>{setShowWarning(false)}}
+                  />
+                )}
 
         <form noValidate onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

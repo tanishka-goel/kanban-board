@@ -49,7 +49,7 @@ const AdminAllWorkspaces = () => {
   }, [allWorkspaces, searchTerm]);
 
   const { currentData, currentPage, totalPages, nextPage, prevPage } =
-    usePagination(filteredWorkspaces, 9);
+    usePagination(filteredWorkspaces, 6);
 
   const getWorkspaceName = allWorkspaces?.find((wsn) => wsn.id === openDeleteModal)?.workspace_name
 
@@ -59,8 +59,8 @@ const AdminAllWorkspaces = () => {
     return (
       <div className="p-4">
         <HeaderSkeleton rightpart />
-        <div className="grid mt-10 grid-cols-3 gap-4">
-          {Array.from({ length: 9 }).map((_, index) => (
+        <div className="grid mt-10 grid-cols-2 gap-4">
+          {Array.from({ length: 8 }).map((_, index) => (
             <WorkspaceSkeleton key={index} />
           ))}
         </div>
@@ -121,7 +121,7 @@ const AdminAllWorkspaces = () => {
         />
       )}
 
-      <div className="grid gap-4 mt-10 grid-cols-3">
+      <div className="grid gap-4 mt-10 grid-cols-2">
         {/* <WorkspaceSkeleton/> */}
         {currentData?.map((aws) => {
           const hasAccess = user.role === "admin";

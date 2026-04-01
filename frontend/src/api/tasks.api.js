@@ -27,23 +27,35 @@ export async function createTask(newData) {
 }
 
 export async function updateTask({ id, newData }) {
+  const previousTaskRes = await BaseApi.get(
+    `/rest/v1/tasks?id=eq.${id}&select=*&limit=1`
+  );
+  const previousData = previousTaskRes.data?.[0] ?? {};
+
   const response = await BaseApi.patch(`/rest/v1/tasks?id=eq.${id}`, newData);
 
-  const changesField = Object.keys(newData).reduce((acc,key)=>{
-    if(previoudData[key] !==newData[key]){
-      acc[key] = {from: previoudData[key], to: newData[ley]}
+  const changesField = Object.keys(newData).reduce((acc, key) => {
+    if (previousData[key] !== newData[key]) {
+      acc[key] = {
+        from: previousData[key] ?? null,
+        to: newData[key] ?? null,
+      };
     }
-    return acc
-  })
+    return acc;
+  }, {});
 
-  await createActivityLog({
-    user_id: newData.creator_id,
-    workspace_id: newData.workspace_id,
-    action: "updated",
-    entity_type: "Task",
-    entity_id: id,
-    details: changesField
-  });
+  try {
+    await createActivityLog({
+      user_id: newData.creator_id ?? previousData.creator_id,
+      workspace_id: newData.workspace_id ?? previousData.workspace_id,
+      action: "updated",
+      entity_type: "Task",
+      entity_id: id,
+      details: changesField,
+    });
+  } catch (error) {
+    console.error("Failed to log task update activity:", error);
+  }
 
   console.log(response.data);
   return response.data;

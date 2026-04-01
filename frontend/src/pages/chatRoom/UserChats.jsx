@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 import { useUsers } from "@/queries/users.query";
 import { useSelector } from "react-redux";
 import { ChevronRight } from "lucide-react";
+import SidebarSkeleton from "@/components/shared/skeletons/chatSkeletons/SidebarSkeleton";
 
 const UserChats = ({ onToggle, isCollapsed }) => {
-  const { data: allUsers } = useUsers();
+  const { data: allUsers, isLoading } = useUsers();
   const { user: currUser } = useSelector((state) => state.auth);
+
+  if (isLoading) {
+    return <SidebarSkeleton />;
+  }
 
   const userChats = allUsers?.filter((uc) => uc.id !== currUser.id);
 

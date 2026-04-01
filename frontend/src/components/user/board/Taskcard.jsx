@@ -127,7 +127,12 @@ const Taskcard = ({ data, taskId }) => {
         <AddTaskModal
           closeModal={() => setEditTaskModal(false)}
           selectedTask={data}
-          onTaskAddition={(newData) => editTask({ id: data.id, newData })}
+          onTaskAddition={(newData) =>
+            editTask(
+              { id: data.id, newData },
+              { onSuccess: () => setEditTaskModal(false) }
+            )
+          }
         />
       )}
 

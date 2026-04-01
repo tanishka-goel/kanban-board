@@ -20,6 +20,7 @@ export const useCreateTask = () =>{
         },
         onSuccess: () =>{
             queryClient.invalidateQueries({queryKey:["tasks"]})
+            queryClient.invalidateQueries({queryKey:["activity"]})
         }
     })
 }
@@ -30,7 +31,13 @@ export const useEditTask = () =>{
         mutationFn:updateTask,
         onSuccess: () =>{
             queryClient.invalidateQueries({queryKey:["tasks"]})
-        }
+            queryClient.invalidateQueries({queryKey:["activity"]})
+            toast.success("Task updated successfully")
+        },
+        onError: (error) => {
+            toast.error("Failed to update task")
+            console.error("Error updating task:", error);
+        },
      })
 }
 
@@ -54,6 +61,7 @@ export const useDragCardMutation = () =>{
         },
         onSuccess: () =>{
             queryClient.invalidateQueries({queryKey:["tasks"]})
+            queryClient.invalidateQueries({queryKey:["activity"]})
             toast.success("Task status updated successfully")
         },
         onError: (error) =>{
@@ -63,6 +71,7 @@ export const useDragCardMutation = () =>{
 
         onSettled:()=>{
             queryClient.invalidateQueries({ queryKey: ["tasks"] });
+            queryClient.invalidateQueries({ queryKey: ["activity"] });
         }
     })
 }
@@ -73,6 +82,7 @@ export const useDeleteTask = () =>{
         mutationFn:deleteTask,
         onSuccess:()=>{
             queryClient.invalidateQueries({queryKey:["tasks"]})
+            queryClient.invalidateQueries({queryKey:["activity"]})
             toast.success("Task deleted successfully")
         },
         onError: (error) =>{

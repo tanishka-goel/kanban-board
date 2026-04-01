@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useUsers } from "@/queries/users.query";
 import { workspaceSchema } from "@/validation/schemas/workspaceSchema";
 import { toast } from "sonner";
+import WarningModal from "./WarningModal";
 
 const WorkspaceModal = ({
   onWorkspaceAddition,
@@ -14,6 +15,8 @@ const WorkspaceModal = ({
   const { user: currentUser } = useSelector((state) => state.auth);
   const [errors, setErrors] = useState({});
   const { data: users } = useUsers();
+  const [showWarning, setShowWarning] = useState(false)
+  const [isChanged, setIsChanged]=useState(false)
   //console.log("users in Wm", users);
   const [formdata, setFormdata] = useState({
     workspace_name: "",
@@ -52,6 +55,7 @@ const WorkspaceModal = ({
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
+    setIsChanged(true)
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -90,6 +94,14 @@ const WorkspaceModal = ({
       
   };
 
+  const handleClose = () =>{
+    if(isChanged){
+      setShowWarning(true)
+    } else{
+      closeModal()
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-xl rounded-2xl shadow-xl p-8 relative">
@@ -98,9 +110,16 @@ const WorkspaceModal = ({
           <NewButton
             className="bg-red-600 hover:bg-red-700 text-white h-8 w-8 flex items-center justify-center rounded-md"
             text={"X"}
-            onClick={closeModal}
+            onClick={handleClose}
           />
         </div>
+
+        {showWarning && (
+          <WarningModal
+          onConfirm={()=>{setShowWarning(false), closeModal()}}
+          onCancel={()=>{setShowWarning(false)}}
+          />
+        )}
 
         <form noValidate onSubmit={handleSubmit} className="space-y-4">
           <FormInput

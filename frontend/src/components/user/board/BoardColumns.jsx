@@ -3,22 +3,25 @@ import Taskcard from "./Taskcard";
 import { useDroppable } from "@dnd-kit/core";
 import { Cross, Plus } from "lucide-react";
 import AddTaskModal from "@/components/shared/modals/AddTaskModal";
-import { createTask } from "@/api/tasks.api";
+import { useCreateTask } from "@/queries/tasks.query";
 import { toast } from "sonner";
 
 const BoardColumns = ({ header, columnTasks, assigneeById, workspaceName, workspaceId,workspaceMembers }) => {
 
   const [openTaskModal, setOpenTaskModal] = useState(false)
+  const { mutate: createTask } = useCreateTask();
 
-  const handleTaskAddition = async (taskData) => {
-    try {
-      await createTask(taskData);
-      toast.success("Task created successfully");
-      setOpenTaskModal(false);
-    } catch (error) {
-      console.error("Failed to create task", error);
-      toast.error("Failed to create task");
-    }
+  const handleTaskAddition = (taskData) => {
+    createTask(taskData, {
+      onSuccess: () => {
+        toast.success("Task created successfully");
+        setOpenTaskModal(false);
+      },
+      onError: (error) => {
+        console.error("Failed to create task", error);
+        toast.error("Failed to create task");
+      },
+    });
   };
 
     const {setNodeRef, isOver} = useDroppable({

@@ -98,8 +98,8 @@ const activityActions = useMemo(() =>
               </span>
             </div>
             <div className="font-semibold text-sm">{act.item}</div>
-            <div className="font-semibold text-sm">{act.description}</div>
-            <div className="font-semibold text-sm">{format(new Date(act.date), "do MMM,yyyy · h:mma")}</div>
+            <div className="font-semibold mr-3 text-sm">{act.description}</div>
+            <div className="font-semibold  text-gray-400 text-sm">{format(new Date(act.date), "do MMM,yyyy · h:mma")}</div>
           </div>
         ))}
       </div>
