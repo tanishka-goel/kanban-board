@@ -7,5 +7,6 @@ export const useMessages = (sender_id, receiver_id) => {
     queryKey: ["messages", sender_id, receiver_id],
     queryFn: () => getMessages(sender_id, receiver_id),
     enabled: !!sender_id && !!receiver_id,
+    refetchOnWindowFocus: false,
   });
 };

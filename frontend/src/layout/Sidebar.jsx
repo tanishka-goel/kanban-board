@@ -7,6 +7,7 @@ import {
   ChevronDown,
   SquareCenterlineDashedVerticalIcon,
   MessageCircle,
+  BellRing,
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
@@ -71,6 +72,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       name: "Chat",
       icon: <MessageCircle size={20} />,
       link: "/chats",
+    },
+    {
+      name: "Notifications",
+      icon: <BellRing size={20} />,
+      link: "/notifications",
     },
   ];
 

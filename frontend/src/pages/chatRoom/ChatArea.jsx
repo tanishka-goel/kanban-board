@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useUsers } from "@/queries/users.query";
 import { useParams } from "react-router-dom";
@@ -12,23 +12,36 @@ import ChatAreaSkeleton from "@/components/shared/skeletons/chatSkeletons/ChatAr
 const CHAT_SERVER_URL =
   import.meta.env.VITE_CHAT_SERVER_URL || "http://localhost:3000";
 
-const socket = io(CHAT_SERVER_URL);
+let socket = null;
+
+const getSocket = () => {
+  if (!socket) {
+    socket = io(CHAT_SERVER_URL);
+  }
+  return socket;
+};
 
 const ChatArea = () => {
   const [realtimeMessages, setRealtimeMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [readBy, setReadBy] = useState({});
   const { data: allusers, isLoading:usersLoading } = useUsers();
   const { user: currUser } = useSelector((state) => state.auth);
   const { userId } = useParams();
   const { data: chatHistory = [], isLoading:messageLoading } = useMessages(currUser?.id, userId);
-
+  const socketRef = useRef(getSocket())
+  const bottomRef = useRef(null)
+  const inputRef = useRef(null)
   const getChatUser = allusers?.find((u) => u.id === userId);
 
   useEffect(() => {
+
+    // socketRef.current = io(CHAT_SERVER_URL)
+    const socket = socketRef.current;
+
     const onReceiveMessage = (message) => {
       setRealtimeMessages((prev) => {
         if (message.id && prev.some((m) => m.id === message.id)) return prev;
-
         return [...prev, message];
       });
     };
@@ -47,6 +60,7 @@ const ChatArea = () => {
     return () => {
       socket.off("receiveMessage", onReceiveMessage);
       socket.off("seen", onSeen);
+     // socket.disconnect();
     };
   }, [currUser?.id]);
 
@@ -69,7 +83,7 @@ const ChatArea = () => {
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    socket.emit("sendMessage", {
+    socketRef.current.emit("sendMessage", {
       sender_id: currUser.id,
       receiver_id: userId,
       text: input,
@@ -81,18 +95,11 @@ const ChatArea = () => {
   useEffect(() => {
     if (!messages.length) return;
 
-    socket.emit("seen", {
+    socketRef.current.emit("seen", {
       sender_id: userId,
       receiver_id: currUser?.id,
     });
   }, [messages]);
-
-  const msgDate = messages?.map((md) => md.created_at.replace(" ", "T"));
-  //  const newDate = new Date(messages.created_at.replace(" ", "T"))
-  console.log("msg date", msgDate);
-  //console.log("msg date", newDate)
-
-  const [readBy, setReadBy] = useState({});
 
   function getDateLabel(dateStr) {
     const date = new Date(dateStr.replace(" ", "T"));
@@ -105,10 +112,23 @@ const ChatArea = () => {
     return format(date, "MMMM d, yyyy");
   }
 
+
+  useEffect(()=>{
+    bottomRef?.current?.scrollIntoView({ 
+      behavior: chatHistory.length ? "smooth" : "instant"
+    });
+  },[messages])
+
+  useEffect(()=>{
+    inputRef?.current?.focus()
+  },[])
+
   const pageLoading = usersLoading || (!!userId && messageLoading);
   if (pageLoading) {
     return <ChatAreaSkeleton />;
   }
+
+
 
   return (
     <>
@@ -224,10 +244,14 @@ const ChatArea = () => {
                 </div>
               );
             })}
+            <div ref={bottomRef} />
           </div>
+
+           
 
           <div className="flex p-2 gap-2">
             <Input
+            ref ={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
