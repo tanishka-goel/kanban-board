@@ -73,11 +73,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <MessageCircle size={20} />,
       link: "/chats",
     },
-    {
-      name: "Notifications",
-      icon: <BellRing size={20} />,
-      link: "/notifications",
-    },
+    // {
+    //   name: "Notifications",
+    //   icon: <BellRing size={20} />,
+    //   link: "/notifications",
+    // },
   ];
 
   const pagesToDisplay = role === "admin" ? AdminPages : UserPages;
