@@ -1,5 +1,6 @@
 import { BaseApi } from "./instance/api";
 import { createActivityLog } from "./activity.api";
+import { createNotifications } from "./notifications.api";
 
 export async function getTasks() {
   const res = await BaseApi.get("/rest/v1/tasks?select=*");
@@ -10,6 +11,20 @@ export async function getTasks() {
 export async function createTask(newData) {
   const response = await BaseApi.post(`/rest/v1/tasks`, newData);
   const created = response.data?.[0] ?? response.data;
+
+
+  // if(newData.assigned_to && newData.assigned_to !== newData.creator_id){
+  //   await createNotifications({
+  //     user_id: newData.assigned_to, // assignee
+  //     actor_id: newData.creator_id, // assignor
+  //     type: "task_assigned",
+  //     entity_type: "task",
+  //     entity_id: created?.id,
+  //     workspace_id: newData.workspace_id,
+  //     title: "Task assigned",
+  //     description: `assigned you to "${newData.title}"`,
+  //   })
+  // }
 
   await createActivityLog({
     user_id: newData.creator_id,

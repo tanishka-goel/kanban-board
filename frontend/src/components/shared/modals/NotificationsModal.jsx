@@ -1,10 +1,12 @@
+import { useGetNotifications } from "@/queries/notifications.query";
 import { ClipboardCheck, Meh, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
+
 const NotificationsModal = () => {
-  const [notifications, setNotifications] = useState(true);
   const { user: currUser } = useSelector((state) => state.auth);
+  const { data:allNotifications =[], isLoading:notificationLoading } = useGetNotifications(currUser?.id)
 
   //console.log("curr user", currUser)
 
@@ -13,7 +15,7 @@ const NotificationsModal = () => {
       <div className="p-4 font-semibold border-b">Notifications</div>
 
       <div className="max-h-180 h-auto overflow-y-auto">
-        {!notifications ? (
+        {allNotifications.length===0 ? (
           <div className="p-4  text-sm text-center text-gray-600">
             <div className="bg-gray-200 flex items-center flex-col p-2 rounded-lg">
               <br />
@@ -25,7 +27,8 @@ const NotificationsModal = () => {
           </div>
         ) : (
           <div className="p-2">
-            <div>
+            {allNotifications.map((notif)=>(
+              <div>
               <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5">
                 <ClipboardCheck size={11} className="text-gray-500" />
                 <span className="text-[10.5px] font-semibold uppercase tracking-wider text-gray-400">
@@ -37,20 +40,19 @@ const NotificationsModal = () => {
                 <div className="">
                   <div className="my-3 flex items-center gap-2">
                     <div className="bg-purple-100 rounded-xl w-14 h-14 flex items-center justify-center">
-                      <p className="font-bold text-purple-600 text-lg">A</p>
+                      <p className="font-bold text-purple-600 text-lg">  {notif.actor?.first_name?.[0]?.toUpperCase() || "?"}</p>
                     </div>
                     <div className="">
                       <p className="text-md mb-0.5">
                         {" "}
-                        <b>Arjun</b> assigned you to{" "}
-                        <b>Design system audit</b>{" "}
+                        <b>{notif.actor?.first_name} {notif.title}</b> {notif.description}
                       </p>
                       <div className="flex items-center gap-2">
                         <p className="text-gray-400 text-sm">2m ago</p>
                         <div className="bg-blue-100 p-1 px-3 rounded-2xl">
                           {" "}
                           <p className="text-xs font-medium text-gray-800">
-                            Task
+                             {notif.entity_type}
                           </p>
                         </div>
                       </div>
@@ -63,13 +65,14 @@ const NotificationsModal = () => {
 
               
             </div>
+            ))}
 
-            <div className="flex items-center gap-1.5 px-4 pt-2 pb-1.5">
+            {/* <div className="flex items-center gap-1.5 px-4 pt-2 pb-1.5">
               <MessageCircle size={11} className="text-gray-500" />
               <span className="text-[10.5px] font-semibold uppercase tracking-wider text-gray-400">
                 Messages
               </span>
-            </div>
+            </div> */}
 
            
           </div>
