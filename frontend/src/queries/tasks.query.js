@@ -1,3 +1,4 @@
+import { createNotifications } from "@/api/notifications.api";
 import {
   createTask,
   deleteTask,
@@ -25,25 +26,32 @@ export const useCreateTask = () => {
     onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["activity"] });
+      toast.success("Task created Successfully")
+      //console.log("notif data", data)
 
      try{
-         if (variables.assigned_to && variables.assigned_to !== variables.creator_id) {
+         if (variables.assigned_user_id && variables.assigned_user_id !== variables.creator_id) {
         await createNotifications({
-          user_id: variables.assigned_to, // assignee
+          user_id: variables.assigned_user_id, // assignee
           actor_id: variables.creator_id, // assignor
           type: "task_assigned",
           entity_type: "task",
           entity_id: data?.id || data?.[0]?.id,
           workspace_id: variables.workspace_id,
           title: "Task assigned",
-          description: `assigned you to "${variables.title}"`,
+          description: `assigned you to ${variables.title}`,
         });
         queryClient.invalidateQueries({queryKey:["notifications"]})
       }
      } catch (err){
         console.log("Error in notif creation from create task query fn", err)
      }
-
+// console.log("notif data", data)
+// console.log("creating notif with:", {
+//   user_id: variables.assigned_user_id,
+//   actor_id: variables.creator_id,
+//   entity_id: data?.[0]?.id
+// })
     },
   });
 };
