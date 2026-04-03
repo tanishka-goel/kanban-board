@@ -2,7 +2,6 @@ import Header from "@/components/shared/Header";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import TableSkeleton from "@/components/shared/skeletons/TableSkeleton";
 import { useActivityDetails } from "@/hooks/useActivityDetails";
-import { useActivityLogs } from "@/queries/activity.query";
 import React, { useMemo } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -40,21 +39,10 @@ const activityActions = useMemo(() =>
   })||[],
 [activities]);
 
-  // const activityActions = activities?.map((act) => {
-  //   const style = activityActionsColors[act.action] || {
-  //     text: "text-gray-600",
-  //     bg: "bg-gray-100",
-  //   };
 
-  //   return {
-  //     ...act,
-  //     textColor: style.text,
-  //     bgColor: style.bg,
-  //   };
-  // });
 
    const { currentData, currentPage, totalPages, nextPage, prevPage } =
-      usePagination(activityActions, 10);
+      usePagination(activityActions, 20);
 
   if (activityLoading) return (
    <div className="p-4">

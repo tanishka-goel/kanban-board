@@ -1,6 +1,4 @@
-import { toast } from "sonner";
 import { BaseApi } from "./instance/api";
-import { use } from "react";
 
 export async function getActivityLogs() {
   const res = await BaseApi.get("/rest/v1/activity?select=*");

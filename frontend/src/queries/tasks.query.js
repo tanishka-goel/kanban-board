@@ -39,7 +39,7 @@ export const useCreateTask = () => {
           entity_id: data?.id || data?.[0]?.id,
           workspace_id: variables.workspace_id,
           title: "Task assigned",
-          description: `assigned you to ${variables.title}`,
+          description: `assigned you "${variables.title}"`,
         });
         queryClient.invalidateQueries({queryKey:["notifications"]})
       }
@@ -47,11 +47,7 @@ export const useCreateTask = () => {
         console.log("Error in notif creation from create task query fn", err)
      }
 // console.log("notif data", data)
-// console.log("creating notif with:", {
-//   user_id: variables.assigned_user_id,
-//   actor_id: variables.creator_id,
-//   entity_id: data?.[0]?.id
-// })
+
     },
   });
 };
@@ -60,10 +56,28 @@ export const useEditTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateTask,
-    onSuccess: () => {
+    onSuccess: async (data,variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["activity"] });
       toast.success("Task updated successfully");
+
+      try{
+         if (variables.assigned_user_id && variables.assigned_user_id !== variables.creator_id) {
+        await createNotifications({
+          user_id: variables.assigned_user_id, // assignee
+          actor_id: variables.creator_id, // assignor
+          type: "task_updated",
+          entity_type: "task",
+          entity_id: data?.id || data?.[0]?.id,
+          workspace_id: variables.workspace_id,
+          title: "Task updated",
+          description: `assigned you "${variables.title}"`,
+        });
+        queryClient.invalidateQueries({queryKey:["notifications"]})
+      }
+     } catch (err){
+        console.log("Error in notif creation from create task query fn", err)
+     }
     },
     onError: (error) => {
       toast.error("Failed to update task");

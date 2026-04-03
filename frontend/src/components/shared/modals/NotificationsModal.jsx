@@ -1,5 +1,5 @@
 import { useGetNotifications } from "@/queries/notifications.query";
-import { ClipboardCheck, Meh, MessageCircle } from "lucide-react";
+import { ClipboardCheck, Loader2Icon, Meh, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -9,6 +9,20 @@ const NotificationsModal = () => {
     useGetNotifications(currUser?.id);
 
   //console.log("curr user", currUser)
+
+  if(notificationLoading) return (
+    <div className="absolute p-2 right-0 mt-3 w-120 max-w-4xl bg-white rounded-xl shadow-xl z-50 border border-gray-200 overflow-hidden">
+       <div className="p-4  text-sm text-center text-gray-600">
+            <div className="bg-gray-200 animate-shimmer flex items-center flex-col p-2 rounded-lg">
+              <br />
+              <div>
+                <Loader2Icon className="animate-spin" size={40} />
+              </div>
+              <h1 className="p-3"> Loading notifications</h1>
+            </div>
+          </div>
+    </div>
+  )
 
   return (
     <div className="absolute p-2 right-0 mt-3 w-120 max-w-4xl bg-white rounded-xl shadow-xl z-50 border border-gray-200 overflow-hidden">

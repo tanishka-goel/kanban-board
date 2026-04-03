@@ -16,7 +16,7 @@ const Header = () => {
   const { mutateAsync: createTask } = useCreateTask();
   const { user } = useSelector((state) => state.auth);
   const notifRef = useRef(null);
-  const profileRef = useRef(null)
+  const profileRef = useRef(null);
 
   const handleTaskToggle = () => {
     setOpenTaskDialog((prev) => !prev);
@@ -37,59 +37,61 @@ const Header = () => {
     }
   };
 
-  useClickOutside(notifRef, ()=>setOpenNotifications(false), openNotifications)
-  useClickOutside(profileRef, ()=>setOpenProfileDialog(false), openProfileDialog)
+  useClickOutside(
+    notifRef,
+    () => setOpenNotifications(false),
+    openNotifications,
+  );
+  useClickOutside(
+    profileRef,
+    () => setOpenProfileDialog(false),
+    openProfileDialog,
+  );
 
   return (
-  <div className="flex bg-linear-to-r from-slate-950 via-secondary to-slate-950  h-16 px-4 md:px-6 mb-3 w-full items-center justify-between border border-secondary">
+    <div className="flex bg-linear-to-r from-slate-950 via-secondary to-slate-950  h-16 px-4 md:px-6 mb-3 w-full items-center justify-between border border-secondary">
+      <h1 className="text-white font-bold text-xl tracking-widest flex items-center gap-2">
+        TaskForge
+      </h1>
 
-    <h1 className="text-white font-bold text-xl tracking-widest flex items-center gap-2">
-      TaskForge
-    </h1>
-
-    <div className="flex items-center mr-4 gap-4">
-
-      <NewButton
-        onClick={handleTaskToggle}
-        text={"Create Task"}
-        className="bg-white text-black hover:bg-gray-200 transition-all"
-      />
-
-      {openTaskDialog && (
-        <AddTaskModal
-          closeModal={() => setOpenTaskDialog(false)}
-          onTaskAddition={handleTaskAddition}
+      <div className="flex items-center mr-4 gap-4">
+        {/* <NewButton
+          onClick={handleTaskToggle}
+          text={"Create Task"}
+          className="bg-white text-black hover:bg-gray-200 transition-all"
         />
-      )}
 
-      <div ref={notifRef} className="relative">
-        <button
-          onClick={() => setOpenNotifications((prev) => !prev)}
-          className="group"
-        >
-          <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center transition-all group-hover:bg-secondary/80">
-            <Bell size={20} className="text-white" />
-          </div>
-        </button>
+        {openTaskDialog && (
+          <AddTaskModal
+            closeModal={() => setOpenTaskDialog(false)}
+            onTaskAddition={handleTaskAddition}
+          />
+        )} */}
 
-        {openNotifications && <NotificationsModal />}
-      </div>
+        <div ref={notifRef} className="relative group w-fit">
+          <button onClick={() => setOpenNotifications((prev) => !prev)}>
+            <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-secondary/80">
+              <Bell size={20} className="text-white" />
+            </div>
+          </button>
+          {openNotifications && <NotificationsModal />}
+        </div>
 
-      <div ref={profileRef} className="relative">
-        <button onClick={handleProfileToggle}>
-          <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold tracking-wide transition-all hover:bg-secondary/80">
-            <span className="leading-none">
-              {user?.first_name?.[0]}
-              {user?.last_name?.[0]}
-            </span>
-          </div>
-        </button>
+        <div ref={profileRef} className="relative">
+          <button onClick={handleProfileToggle}>
+            <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold tracking-wide transition-all hover:bg-secondary/80">
+              <span className="leading-none">
+                {user?.first_name?.[0]}
+                {user?.last_name?.[0]}
+              </span>
+            </div>
+          </button>
 
-        {openProfileDialog && <ProfileDialog user={user} />}
+          {openProfileDialog && <ProfileDialog user={user} />}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default Header;

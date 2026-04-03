@@ -110,9 +110,9 @@ app.get("/api/messages", async (req, res) => {
   res.json(data);
 });
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
-});
+// app.get('/', (req, res) => {
+//   res.send('<h1>Hello world</h1>');
+// });
 
 server.listen(3000, () => {
   console.log("server running at http://localhost:3000");

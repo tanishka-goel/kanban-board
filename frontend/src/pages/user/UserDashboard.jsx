@@ -62,7 +62,7 @@ const UserDashboard = () => {
             <h1 className="md:text-lg text-white text-md w-fit bg-linear-to-r from-indigo-950 via-secondary to-indigo-950 p-1 md:mb-3 md:p-2 md:px-4 rounded-4xl font-semibold shadow-xl shadow-gray-400 tracking-wide">
               Recent Workspaces
             </h1>
-            <p>Sort By: Most Recent</p>
+            {/* <p>Sort By: Most Recent</p> */}
           </div>
 
           <div className="h-110 overflow-y-auto pr-2 custom-scrollbar">

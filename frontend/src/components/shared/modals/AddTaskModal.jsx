@@ -102,9 +102,10 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
     if (!res.success) {
       const fieldErrors = {};
       
-      res.error?.errors?.forEach((err) => {   
-      fieldErrors[err.path[0]] = err.message;
-    });
+     res.error?.issues?.forEach((err) => {
+  const field = err.path[0];
+  if (field) fieldErrors[field] = err.message;
+});
       setErrors(fieldErrors);
       toast.error("Please fill the fields correctly");
       return;
@@ -292,12 +293,11 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
 
               <Select
                 value={formdata.assigned_user_id}
-                onValueChange={(value) =>
-                  setFormdata((prev) => ({
-                    ...prev,
-                    assigned_user_id: value,
-                  }))
-                }
+               onValueChange={(value) => {
+  setFormdata((prev) => ({ ...prev, status: value }));
+  setIsChanged(true);
+  if (errors.status) setErrors((prev) => ({ ...prev, status: "" }));
+}}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Assignee" />
@@ -311,6 +311,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
                   ))}
                 </SelectContent>
               </Select>
+              {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
             </div>
           </div>
 

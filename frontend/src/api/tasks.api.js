@@ -63,15 +63,19 @@ export async function updateTask({ id, newData }) {
 }
 
 export async function deleteTask(id) {
+
+  const taskRes = await BaseApi.get(`/rest/v1/tasks?id=eq.${id}&select=*&limit=1`);
+  const task = taskRes.data?.[0] ?? {};
+
   const response = await BaseApi.delete(`/rest/v1/tasks?id=eq.${id}`);
 
   await createActivityLog({
-    user_id,
-    workspace_id,
+     user_id: task.creator_id,
+    workspace_id: task.workspace_id,
     action: "deleted",
     entity_type: "Task",
     entity_id: id,
-    details: {title}
+    details: { title: task.title },
   });
 
 

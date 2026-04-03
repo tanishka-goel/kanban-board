@@ -31,7 +31,7 @@ const UserChats = ({ onToggle, isCollapsed }) => {
       >
         <ChevronRight
           className={`w-4 h-4 transition-transform duration-500 ${
-            isCollapsed ? "rotate-180" : "rotate-0"
+            isCollapsed ? "rotate-0" : "rotate-180"
           }`}
         />
       </button>
@@ -53,7 +53,6 @@ const UserChats = ({ onToggle, isCollapsed }) => {
                     {ucs?.last_name.slice(0, 1)}
                   </span>
                 </div>
-                {/* Online dot */}
                 <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 
                                  border-2 border-white rounded-full" />
               </div>

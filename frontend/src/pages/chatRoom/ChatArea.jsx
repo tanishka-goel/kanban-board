@@ -36,7 +36,6 @@ const ChatArea = () => {
 
   useEffect(() => {
 
-    // socketRef.current = io(CHAT_SERVER_URL)
     const socket = socketRef.current;
 
     const onReceiveMessage = (message) => {
@@ -125,7 +124,11 @@ const ChatArea = () => {
 
   const pageLoading = usersLoading || (!!userId && messageLoading);
   if (pageLoading) {
-    return <ChatAreaSkeleton />;
+    return (
+    <div className="p-3">
+       <ChatAreaSkeleton />
+    </div>
+   );
   }
 
 

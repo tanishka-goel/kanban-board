@@ -1,4 +1,5 @@
 
+import { TooltipProvider } from "./components/ui/tooltip"
 import AppRoutes from "./routes/AppRoutes"
 import { Toaster } from "sonner"
 
@@ -8,8 +9,11 @@ function App() {
   return (
     <>
    
-      <Toaster position="bottom-right" richColors />
+   <TooltipProvider>
+    <Toaster position="bottom-right" richColors />
       <AppRoutes/>
+   </TooltipProvider>
+      
     
     
     </>

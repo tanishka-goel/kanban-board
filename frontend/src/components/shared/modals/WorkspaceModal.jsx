@@ -60,11 +60,15 @@ const WorkspaceModal = ({
   };
 
   const handleAddMember = (userId) => {
+    if (!userId) return;
     if (!formdata.members.includes(userId)) {
       setFormdata((prev) => ({
         ...prev,
         members: [...prev.members, userId],
       }));
+    }
+    if (errors.members) {
+      setErrors((prev) => ({ ...prev, members: "" }));
     }
   };
 
@@ -144,6 +148,7 @@ const WorkspaceModal = ({
           />
 
           <FormInput
+          className={"text-gray-400"}
             labelTitle={"Created By"}
             placeholder={"Enter your name"}
             name="creatorName"
@@ -155,6 +160,7 @@ const WorkspaceModal = ({
           />
 
           <FormInput
+            className={"text-gray-400"}
             labelTitle={"Creator ID"}
             placeholder={"Enter your ID"}
             name="creatorID"
@@ -168,6 +174,7 @@ const WorkspaceModal = ({
           <div>
             <label className="text-sm font-medium">Members</label>
             <select
+            value=""
               onChange={(e) => handleAddMember(e.target.value)}
               className="w-full border rounded-md p-2 mt-1"
             >
