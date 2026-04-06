@@ -1,5 +1,5 @@
 import Search from "@/components/shared/Search";
-import React from "react"; // Removed unused useState
+import React, { useMemo, useState } from "react"; // Removed unused useState
 import { Link } from "react-router-dom";
 import { useUsers } from "@/queries/users.query";
 import { useSelector } from "react-redux";
@@ -9,18 +9,26 @@ import SidebarSkeleton from "@/components/shared/skeletons/chatSkeletons/Sidebar
 const UserChats = ({ onToggle, isCollapsed }) => {
   const { data: allUsers, isLoading } = useUsers();
   const { user: currUser } = useSelector((state) => state.auth);
+  const [searchTerm, setSearchTerm] = useState("")
 
-  if (isLoading) {
-    return <SidebarSkeleton />;
-  }
+
 
   const userChats = allUsers?.filter((uc) => uc.id !== currUser.id);
+
+  const filteredUsers = useMemo(()=>{
+     if (!searchTerm) return userChats;
+    return userChats?.filter((uc)=> uc?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()))
+  },[userChats, searchTerm])
+
+    if (isLoading) {
+    return <SidebarSkeleton />;
+  }
 
   return (
     <div className="border-r border-gray-200 h-full min-h-0 relative flex flex-col bg-white">
       {!isCollapsed && (
         <div className="p-4 border-b border-gray-100">
-          <Search />
+          <Search onSearchChange={setSearchTerm} />
         </div>
       )}
 
@@ -37,7 +45,7 @@ const UserChats = ({ onToggle, isCollapsed }) => {
       </button>
 
       <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1">
-        {userChats?.map((ucs) => (
+        {filteredUsers?.map((ucs) => (
           <Link key={ucs.id} to={`/chats/${ucs.id}`} className="block">
             <div
               className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-gray-100 cursor-pointer ${

@@ -32,17 +32,18 @@ export const useCreateWorkspace = () => {
         const members = variables.members || [];
 
         const notifPromise = members
-          ?.filter((memId) => memId !== variables.creator_id)
+          ?.filter((memId) => memId !== variables.creatorID)
           ?.map((memId) =>
             createNotifications({
               user_id: memId,
-              actor_id: variables.creator_id, // assignor
+              actor_id: variables.creatorID, // assignor
               type: "workspace_added",
               entity_type: "workspace",
               entity_id: createdId,
               workspace_id: createdId,
               title: "Joined workspace",
               description: `added you in ${variables.workspace_name}`,
+            
             }),
           );
 
@@ -72,11 +73,11 @@ export const useEditWorkspace = () => {
         const members = variables.members || [];
 
         const notifPromise = members
-          ?.filter((memId) => memId !== variables.creator_id)
+          ?.filter((memId) => memId !== variables.creatorID)
           ?.map((memId) =>
             createNotifications({
               user_id: memId,
-              actor_id: variables.createdId, 
+              actor_id: variables.creatorID,
               type: "workspace_added",
               entity_type: "workspace",
               entity_id: createdId,

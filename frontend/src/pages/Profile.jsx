@@ -9,7 +9,7 @@ const Profile = () => {
   const initials = `${user.first_name?.[0] || ''}${user.last_name?.[0] || ''}`.toUpperCase()
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl mx-auto">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto">
       <Header header="Profile" />
 
       <div className="bg-white border border-gray-100 mt-8 rounded-3xl shadow-sm p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start md:items-center transition-all hover:shadow-md">

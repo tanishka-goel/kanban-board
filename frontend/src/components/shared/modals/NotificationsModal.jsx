@@ -9,6 +9,7 @@ const NotificationsModal = () => {
     useGetNotifications(currUser?.id);
 
   //console.log("curr user", currUser)
+  console.log("all notifs", allNotifications)
 
   if(notificationLoading) return (
     <div className="absolute p-2 right-0 mt-3 w-120 max-w-4xl bg-white rounded-xl shadow-xl z-50 border border-gray-200 overflow-hidden">
@@ -57,7 +58,7 @@ const NotificationsModal = () => {
                       <div className={`${notif.entity_type === "task"? "bg-purple-100":"bg-indigo-100"} rounded-xl w-14 h-14 flex items-center justify-center`}>
                         <p className={`font-bold ${notif.entity_type === "task"? "text-purple-600":"text-indigo-600"}  text-lg`}>
                           {" "}
-                          {notif.actor?.first_name?.[0]?.toUpperCase() || "?"}
+                          {notif.actor?.first_name.slice(0,1) ?? notif?.creatorName}  
                         </p>
                       </div>
                       <div className="">

@@ -28,9 +28,10 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [serverErrors, setServerErrors] = useState({});
 
  
-  console.log("all ws", workspaces)
+  //console.log("all ws", workspaces)
 
   const users = data?.filter((user) => user.role === "user");
 
@@ -42,15 +43,17 @@ const ManageUsers = () => {
  const getActiveWorkspaces = (userId) => {
   return workspaces?.filter((ws) => ws.creatorID === userId || ws.members?.includes(userId));
 };
-  console.log("gaws", getActiveWorkspaces)
+  //console.log("gaws", getActiveWorkspaces)
 
   const handleAddClick = () => {
     setSelectedUser(null);
+    setServerErrors({});
     setOpenUserModal(true);
   };
 
   const handleEditClick = (user) => {
     setSelectedUser(user);
+    setServerErrors({});
     setOpenUserModal(true);
   };
 
@@ -85,6 +88,7 @@ const filteredUsers = useMemo(() => {
       </div>
       {openUserModal && (
         <AddUserFormModal
+        serverErrors={serverErrors}
           selectedUser={selectedUser}
           closeModal={() => setOpenUserModal(false)}
           onUserAddition={(formData) => {
@@ -97,13 +101,16 @@ const filteredUsers = useMemo(() => {
                 {
                   onSuccess: () => {
                     toast.success("User updated successfully");
+                    setServerErrors({});
                     setOpenUserModal(false);
                   },
                   onError: (error) => {
-                    toast.error(
-                      error?.response?.data?.error ||
-                        "Failed to update user. Please try again.",
-                    );
+                    const message = error?.response?.data?.error || "Failed to edit user. Please try again."
+                  if(message?.toLowerCase()?.includes("username")){
+                    setServerErrors({username:message})
+                  } else{
+                    toast.error(message);
+                  }
                   },
                 },
               );
@@ -114,10 +121,12 @@ const filteredUsers = useMemo(() => {
                   setOpenUserModal(false);
                 },
                 onError: (error) => {
-                  toast.error(
-                    error?.response?.data?.error ||
-                      "Failed to add user. Please try again.",
-                  );
+                  const message = error?.response?.data?.error || "Failed to add user. Please try again."
+                  if(message?.toLowerCase()?.includes("username")){
+                    setServerErrors({username:message})
+                  } else{
+                    toast.error(message);
+                  }
                 },
               });
             }

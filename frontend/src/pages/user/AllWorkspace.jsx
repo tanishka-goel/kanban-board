@@ -98,7 +98,8 @@ const AllWorkspace = () => {
                   },
                 );
               } else {
-                createWorkspace(formdata, {
+                createWorkspace(formdata, 
+                  {
                   onSuccess: () => {
                     toast.success("Workspace added successfully");
                     setOpenWorkspaceModal(false);

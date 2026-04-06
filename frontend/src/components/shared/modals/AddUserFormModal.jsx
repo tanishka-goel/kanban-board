@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { userSchema } from "@/validation/schemas/userSchema";
 import WarningModal from "./WarningModal";
 
-const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser }) => {
+const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser, serverErrors }) => {
   const [formdata, setFormdata] = useState({
     role: "",
     email: "",
@@ -33,11 +33,23 @@ const [isChanged, setIsChanged]=useState(false)
     }
   }, [selectedUser]);
 
+  useEffect(() => {
+  if (serverErrors?.username) {
+    setErrors((prev) => ({
+      ...prev,
+      username: serverErrors.username,
+    }));
+  }
+}, [serverErrors]);
+
    const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
     setIsChanged(true)
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (name === "username" && serverErrors?.username) {
+  setErrors((prev) => ({ ...prev, username: "" }));
+}
   };
 
   const handleSubmit = (e) => {
