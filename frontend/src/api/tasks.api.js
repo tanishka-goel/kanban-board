@@ -4,13 +4,16 @@ import { createNotifications } from "./notifications.api";
 
 export async function getTasks() {
   const res = await BaseApi.get("/rest/v1/tasks?select=*");
-  console.log("Task records : ", res.data);
+  //console.log("Task records : ", res.data);
   return res.data;
 }
 
 export async function createTask(newData) {
   const response = await BaseApi.post(`/rest/v1/tasks`, newData);
+  //console.log("Task records : ", response.data);
+
   const created = response.data?.[0] ?? response.data;
+ // console.log("created activity log in task", created)
 
   await createActivityLog({
     user_id: newData.creator_id,
@@ -70,7 +73,7 @@ export async function deleteTask(id) {
   const response = await BaseApi.delete(`/rest/v1/tasks?id=eq.${id}`);
 
   await createActivityLog({
-     user_id: task.creator_id,
+    user_id: task.creator_id,
     workspace_id: task.workspace_id,
     action: "deleted",
     entity_type: "Task",

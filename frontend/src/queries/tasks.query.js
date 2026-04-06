@@ -6,6 +6,7 @@ import {
   updateTask,
   updateTaskStatus,
 } from "@/api/tasks.api";
+import { buildDescription, getTaskChanges } from "@/lib/notificationHelper";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -26,28 +27,30 @@ export const useCreateTask = () => {
     onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["activity"] });
-      toast.success("Task created Successfully")
+      toast.success("Task created Successfully");
       //console.log("notif data", data)
 
-     try{
-         if (variables.assigned_user_id && variables.assigned_user_id !== variables.creator_id) {
-        await createNotifications({
-          user_id: variables.assigned_user_id, // assignee
-          actor_id: variables.creator_id, // assignor
-          type: "task_assigned",
-          entity_type: "task",
-          entity_id: data?.id || data?.[0]?.id,
-          workspace_id: variables.workspace_id,
-          title: "Task assigned",
-          description: `assigned you "${variables.title}"`,
-        });
-        queryClient.invalidateQueries({queryKey:["notifications"]})
+      try {
+        if (
+          variables.assigned_user_id &&
+          variables.assigned_user_id !== variables.creator_id
+        ) {
+          await createNotifications({
+            user_id: variables.assigned_user_id, // assignee
+            actor_id: variables.creator_id, // assignor
+            type: "task_assigned",
+            entity_type: "task",
+            entity_id: data?.id || data?.[0]?.id,
+            workspace_id: variables.workspace_id,
+            title: "Task assigned",
+            description: `assigned you "${variables.title}"`,
+          });
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        }
+      } catch (err) {
+        console.log("Error in notif creation from create task query fn", err);
       }
-     } catch (err){
-        console.log("Error in notif creation from create task query fn", err)
-     }
-// console.log("notif data", data)
-
+      // console.log("notif data", data)
     },
   });
 };
@@ -55,29 +58,37 @@ export const useCreateTask = () => {
 export const useEditTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: updateTask,
-    onSuccess: async (data,variables) => {
+    mutationFn: ({ previousTask, ...taskData }) => updateTask(taskData),
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["activity"] });
       toast.success("Task updated successfully");
 
-      try{
-         if (variables.assigned_user_id && variables.assigned_user_id !== variables.creator_id) {
-        await createNotifications({
-          user_id: variables.assigned_user_id, // assignee
-          actor_id: variables.creator_id, // assignor
-          type: "task_updated",
-          entity_type: "task",
-          entity_id: data?.id || data?.[0]?.id,
-          workspace_id: variables.workspace_id,
-          title: "Task updated",
-          description: `assigned you "${variables.title}"`,
-        });
-        queryClient.invalidateQueries({queryKey:["notifications"]})
+      try {
+        const changes = getTaskChanges(variables.previousTask, variables);
+
+        if (
+          variables.assigned_user_id &&
+          variables.assigned_user_id !== variables.creator_id &&
+          changes.length > 0
+        ) {
+          await createNotifications({
+            user_id: variables.assigned_user_id, // assignee
+            actor_id: variables.creator_id, // assignor
+            type: "task_updated",
+            entity_type: "task",
+            entity_id: data?.id || data?.[0]?.id,
+            workspace_id: variables.workspace_id,
+            title: "Task updated",
+            description: buildDescription(changes, variables.title),
+          });
+          queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        }
+      } catch (err) {
+        console.log("Error in notif edit from edit task query fn", err);
       }
-     } catch (err){
-        console.log("Error in notif creation from create task query fn", err)
-     }
+
+      console.log("notif data in task", data)
     },
     onError: (error) => {
       toast.error("Failed to update task");

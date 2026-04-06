@@ -11,7 +11,7 @@ import { format } from "date-fns";
 
 const Activity = () => {
   const { activities, loading: activityLoading } = useActivityDetails();
-  console.log("Activity: ", activities);
+  //console.log("Activity: ", activities);
 
   const activityActionsColors = {
     created: {

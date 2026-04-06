@@ -2,7 +2,7 @@ import { BaseApi } from "./instance/api";
 
 export async function getUsers(){
     const response = await BaseApi.get("/rest/v1/profiles?select=*");
-    console.log("Get User response",response.data)
+    //console.log("Get User response",response.data)
     return response.data
     
 }

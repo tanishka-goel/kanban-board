@@ -51,11 +51,11 @@ const NotificationsModal = () => {
               <div key={notif.id}>
                 
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center hover:bg-gray-50 px-2 transition-transform duration-300 ease-in justify-between">
                   <div className="">
                     <div className="my-3 flex items-center gap-2">
-                      <div className="bg-purple-100 rounded-xl w-14 h-14 flex items-center justify-center">
-                        <p className="font-bold text-purple-600 text-lg">
+                      <div className={`${notif.entity_type === "task"? "bg-purple-100":"bg-indigo-100"} rounded-xl w-14 h-14 flex items-center justify-center`}>
+                        <p className={`font-bold ${notif.entity_type === "task"? "text-purple-600":"text-indigo-600"}  text-lg`}>
                           {" "}
                           {notif.actor?.first_name?.[0]?.toUpperCase() || "?"}
                         </p>

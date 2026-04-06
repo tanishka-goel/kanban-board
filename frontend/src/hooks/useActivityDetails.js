@@ -100,11 +100,11 @@ export const useActivityDetails = () => {
 }
 
     if (activity.action === "deleted") {              
-        description = `Deleted ${activity.entity_type}`;
+        description = `Deleted ${activity.entity_type} "${activity.details.workspace_name}"`;
       }
 
     if (activity.details?.workspace_name) {
-      description += ` "${activity.details.workspace_name}"`;
+      description += ` "${activity.details.workspace_name}" `;
     }
 
     const date = activity.created_at;

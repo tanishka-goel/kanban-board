@@ -293,11 +293,12 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
 
               <Select
                 value={formdata.assigned_user_id}
-               onValueChange={(value) => {
-  setFormdata((prev) => ({ ...prev, status: value }));
-  setIsChanged(true);
-  if (errors.status) setErrors((prev) => ({ ...prev, status: "" }));
-}}
+                onValueChange={(value) =>
+                  setFormdata((prev) => ({
+                    ...prev,
+                    assigned_user_id: value,
+                  }))
+                }
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Assignee" />
@@ -311,7 +312,6 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
                   ))}
                 </SelectContent>
               </Select>
-              {errors.status && <p className="text-red-500 text-xs mt-1">{errors.status}</p>}
             </div>
           </div>
 

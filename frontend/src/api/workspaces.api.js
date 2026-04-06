@@ -2,9 +2,9 @@ import { BaseApi } from "./instance/api";
 import { createActivityLog } from "./activity.api";
 
 export async function getWorkspaces(){
-    const res = await BaseApi.get("/rest/v1/workspaces?select=*");
-    console.log("Supabase response",res.data)
-    return res.data
+    const response = await BaseApi.get("/rest/v1/workspaces?select=*");
+    //console.log("Supabase response",res.data)
+    return response.data
 }
 
 export async function createWorkspace(newData){
@@ -42,8 +42,9 @@ export async function updateWorkspace({id,newData}){
 
 export async function deleteWorkspace(id){
     const response = await BaseApi.delete(`/rest/v1/workspaces?id=eq.${id}`);
-
     const deletedWorkspace = response?.data?.[0];
+
+    console.log("delete ws", response.data)
     if (deletedWorkspace?.creatorID) {
       await createActivityLog({
         user_id: deletedWorkspace.creatorID,
@@ -51,6 +52,9 @@ export async function deleteWorkspace(id){
         action: "deleted",
         entity_type: "Workspace",
         entity_id: id,
+         details: {
+        workspace_name: deletedWorkspace.workspace_name,
+      },
       });
     }
       

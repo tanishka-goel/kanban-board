@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import { WorkflowIcon } from "lucide-react";
@@ -14,6 +14,7 @@ import {
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import { useSelector } from "react-redux";
+import Search from "@/components/shared/Search";
 
 const AllWorkspace = () => {
   const { user } = useSelector((state) => state.auth);
@@ -27,6 +28,7 @@ const AllWorkspace = () => {
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(null);
+  const [searchTerm, setSearchTerm] = useState()
 
   // console.log("Current user ID : ", user.id);
   // console.log("Current user role : ", user.role);
@@ -40,6 +42,14 @@ const AllWorkspace = () => {
     setOpenWorkspaceModal(true);
     setSelectedWorkspace(ws);
   };
+
+
+  const filteredWorkspaces = useMemo(()=>{
+    if(!searchTerm) return visibleWorkspaces;
+
+    return visibleWorkspaces?.filter((vws)=> 
+      vws.workspace_name.toLowerCase().includes(searchTerm.toLowerCase()))
+  },[searchTerm, visibleWorkspaces])
 
   if (pageLoading)
     return (
@@ -57,6 +67,7 @@ const AllWorkspace = () => {
         <div className="flex items-center justify-around gap-4">
           {/* <p>Search</p>
           <p>Sort</p> */}
+          <Search onSearchChange={(val)=>setSearchTerm(val)}/>
           <NewButton
             onClick={handleAddWorkspace}
             text={"Create New Workspace"}
@@ -107,25 +118,28 @@ const AllWorkspace = () => {
 
       <div className="p-4 md:mx-5">
         <div className="h-screen overflow-y-auto pr-2 custom-scrollbar">
-          {visibleWorkspaces.length === 0 && (
+          {filteredWorkspaces.length === 0 && (
             <div>Create a Workspace to get started</div>
           )}
-          {visibleWorkspaces.map((ws) =>{
-            const hasAccess = user.role === "admin" || ws.creatorID === user.id;
 
-            return (
-              <WorkspaceCard
-                hasAccess = {hasAccess}
-                onDelete={() => {
-                  setOpenDeleteModal(ws.id);
-                }}
-                onClick={() => handleEditWorkspace(ws)}
-                key={ws.id}
-                data={ws}
-              />
-            )
-          }
-          )}
+          <div className="grid grid-cols-3 ">
+            {filteredWorkspaces.map((ws) => {
+              const hasAccess =
+                user.role === "admin" || ws.creatorID === user.id;
+
+              return (
+                <WorkspaceCard
+                  hasAccess={hasAccess}
+                  onDelete={() => {
+                    setOpenDeleteModal(ws.id);
+                  }}
+                  onClick={() => handleEditWorkspace(ws)}
+                  key={ws.id}
+                  data={ws}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
       {openDeleteModal && (

@@ -2,7 +2,7 @@ import { BaseApi } from "./instance/api";
 
 export async function getActivityLogs() {
   const res = await BaseApi.get("/rest/v1/activity?select=*");
-  console.log("Get All activity", res);
+  //console.log("Get All activity", res);
   return res;
 }
 

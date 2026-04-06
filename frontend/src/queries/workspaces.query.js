@@ -36,7 +36,7 @@ export const useCreateWorkspace = () => {
           ?.map((memId) =>
             createNotifications({
               user_id: memId,
-              actor_id: variables.createdId, // assignor
+              actor_id: variables.creator_id, // assignor
               type: "workspace_added",
               entity_type: "workspace",
               entity_id: createdId,
@@ -109,7 +109,7 @@ export const useDeleteWorkspace = () => {
       toast.success("Workspace Deleted successfully");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.error || "Failed to delete workspace");
+      toast.error(error?.response?.data?.error || "Failed to delete workspace. Please ensure there are no tasks in workspace. ");
     },
   });
 };
