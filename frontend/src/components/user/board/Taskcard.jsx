@@ -53,7 +53,7 @@ const Taskcard = ({ data, taskId }) => {
   const dueDate = data?.due_date ? new Date(data.due_date) : null;
   const dueDateLabel = dueDate && isValid(dueDate)
     ? format(dueDate, "MMM do, yyyy")
-    : "Unassigned";
+    : "No due date assigned";
 
   return (
     <>

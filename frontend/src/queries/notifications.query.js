@@ -1,4 +1,4 @@
-import { createNotifications, getNotifications } from "@/api/notifications.api"
+import { createNotifications, getNotifications, markNotificationAsRead } from "@/api/notifications.api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -22,6 +22,16 @@ export const useCreateNotifications = () => {
     },
     onError: (err) => {
       console.log("Error in notification creation : ", err);
+    },
+  });
+};
+
+export const useMarkAsRead = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => markNotificationAsRead(id), 
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };

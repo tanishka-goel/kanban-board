@@ -8,9 +8,21 @@ export async function getUsers(){
 }
 
 export async function createUsers(newData){
-    const response = await BaseApi.post(`/rest/v1/profiles`,newData);
+   try{
+     const response = await BaseApi.post(`/rest/v1/profiles`,newData);
     console.log("Create user response",response.data)
     return response.data 
+   } catch (error){
+    const supabaseError = error?.response?.data
+
+    if (supabaseError?.code === "23505") {
+        const details = supabaseError?.details || ""
+        if (details.toLowerCase().includes("email")) {
+        throw { response: { data: { error: "Email already exists." } } };
+      }
+    }
+    throw error
+   }
 }
 
 export async function updateUsers({id,newData}){

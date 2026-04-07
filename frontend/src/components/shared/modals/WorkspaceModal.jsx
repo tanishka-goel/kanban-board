@@ -185,6 +185,9 @@ const WorkspaceModal = ({
                 </option>
               ))}
             </select>
+             {errors.members && (
+    <p className="text-red-500 text-xs mt-1">{errors.members}</p>
+  )}
 
             <div className="flex flex-wrap gap-2 mt-2">
               {formdata.members.map((memberId) => {

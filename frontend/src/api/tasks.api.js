@@ -13,7 +13,7 @@ export async function createTask(newData) {
   //console.log("Task records : ", response.data);
 
   const created = response.data?.[0] ?? response.data;
- // console.log("created activity log in task", created)
+ console.log("created activity log in task", created)
 
   await createActivityLog({
     user_id: newData.creator_id,
@@ -35,7 +35,6 @@ export async function updateTask({ id, newData }) {
     `/rest/v1/tasks?id=eq.${id}&select=*&limit=1`
   );
   const previousData = previousTaskRes.data?.[0] ?? {};
-
   const response = await BaseApi.patch(`/rest/v1/tasks?id=eq.${id}`, newData);
 
   const changesField = Object.keys(newData).reduce((acc, key) => {
@@ -60,6 +59,9 @@ export async function updateTask({ id, newData }) {
   } catch (error) {
     console.error("Failed to log task update activity:", error);
   }
+
+  console.log("get previous activity log", previousData)
+  console.log("get activity log", newData)
 
   console.log(response.data);
   return response.data;

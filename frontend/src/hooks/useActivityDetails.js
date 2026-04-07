@@ -3,6 +3,15 @@ import { useUsers } from "@/queries/users.query";
 import { useWorkspaces } from "@/queries/workspaces.query";
 import { useTasks } from "@/queries/tasks.query";
 
+const fieldLabels = {
+  title: "Title",
+  description: "Description",
+  status: "Status",
+  priority: "Priority",
+  due_date: "Due Date",
+  assigned_user_id: "Assignee",
+};
+
 export const useActivityDetails = () => {
   const { data: activityLogs, isLoading: isActivityLogsLoading } =
     useActivityLogs();
@@ -10,6 +19,9 @@ export const useActivityDetails = () => {
   const { data: allWorkspaces, isLoading: isWorkspacesLoading } =
     useWorkspaces();
   const { data: allTasks, isLoading: isTasksLoading } = useTasks();
+
+  // console.log("get activity logs", activityLogs.data)
+  // console.log("get all users", allUsers)
 
   const loading =
     isActivityLogsLoading ||
@@ -21,6 +33,7 @@ export const useActivityDetails = () => {
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     ?.map((activity) => {
       const user = allUsers?.find((u) => u.id === activity.user_id);
+      const date = activity.created_at;
 
       const username = user
         ? `${user.first_name} ${user.last_name}`
@@ -39,12 +52,43 @@ export const useActivityDetails = () => {
       }
 
       let description = "";
+      let changes = [];
 
       if (activity.action === "created") {
         description = `created ${activity.entity_type}`;
       }
 
       if (activity.action === "updated") {
+        changes = Object.entries(activity.details ?? {})
+          .filter(
+            ([key, val]) =>
+              fieldLabels[key] &&
+              val?.from !== undefined &&
+              val?.to !== undefined,
+          )
+          .map(([key, val]) => {
+            let fromVal = val.from ?? "None";
+            let toVal = val.to ?? "None";
+
+            if (key === "assigned_user_id") {
+              const fromUser = allUsers?.find((u) => u.id === val.from);
+              const toUser = allUsers?.find((u) => u.id === val.to);
+
+              fromVal = fromUser
+                ? `${fromUser.first_name} ${fromUser.last_name}`
+                : "Unassigned";
+
+              toVal = toUser
+                ? `${toUser.first_name} ${toUser.last_name}`
+                : "Unassigned";
+            }
+
+            return {
+              field: fieldLabels[key],
+              from: fromVal,
+              to: toVal,
+            };
+          });
         description = `Updated ${activity.entity_type}`;
       }
 
@@ -56,14 +100,13 @@ export const useActivityDetails = () => {
         description += ` "${activity.details.workspace_name}" `;
       }
 
-      const date = activity.created_at;
-
       return {
         id: activity.id,
         user: username,
         action: activity.action,
         item: itemName,
         description,
+        changes,
         date,
       };
     });

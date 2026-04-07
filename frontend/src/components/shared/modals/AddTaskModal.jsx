@@ -16,21 +16,27 @@ import { useSelector } from "react-redux";
 import { useUsers } from "@/queries/users.query";
 import { taskSchema } from "@/validation/schemas/taskSchema";
 import { toast } from "sonner";
-import { createPortal } from "react-dom"
+import { createPortal } from "react-dom";
 import WarningModal from "./WarningModal";
 
-const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembers, workspaceId }) => {
+const AddTaskModal = ({
+  onTaskAddition,
+  closeModal,
+  selectedTask,
+  workspaceMembers,
+  workspaceId,
+}) => {
   // const { data:allTasks } = useTasks()
   const { data: workspaces } = useWorkspaces();
   const { user: currentUser } = useSelector((state) => state.auth);
   const { data: allUsers } = useUsers();
   const [errors, setErrors] = useState({});
-    const [showWarning, setShowWarning] = useState(false)
-    const [isChanged, setIsChanged]=useState(false)
+  const [showWarning, setShowWarning] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
 
   const assignableUsers = workspaceMembers
-    ? allUsers?.filter(user => workspaceMembers.includes(user.id))
-    : allUsers; 
+    ? allUsers?.filter((user) => workspaceMembers.includes(user.id))
+    : allUsers;
 
   // console.log("WS", allUsers)
 
@@ -42,7 +48,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
     status: "todo",
     due_date: "",
     priority: "medium",
-    workspace_id: workspaceId|| "",
+    workspace_id: workspaceId || "",
     assigned_user_id: "",
   });
 
@@ -82,7 +88,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
-    setIsChanged(true)
+    setIsChanged(true);
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
@@ -94,18 +100,18 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
       due_date: formdata.due_date
         ? new Date(formdata.due_date).toISOString()
         : null,
-      assigned_user_id:formdata.assigned_user_id || null
+      assigned_user_id: formdata.assigned_user_id || null,
     };
 
     const res = taskSchema.safeParse(formattedData);
 
     if (!res.success) {
       const fieldErrors = {};
-      
-     res.error?.issues?.forEach((err) => {
-  const field = err.path[0];
-  if (field) fieldErrors[field] = err.message;
-});
+
+      res.error?.issues?.forEach((err) => {
+        const field = err.path[0];
+        if (field) fieldErrors[field] = err.message;
+      });
       setErrors(fieldErrors);
       toast.error("Please fill the fields correctly");
       return;
@@ -114,13 +120,13 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
     onTaskAddition?.(res.data);
   };
 
-   const handleClose = () =>{
-    if(isChanged){
-      setShowWarning(true)
-    } else{
-      closeModal()
+  const handleClose = () => {
+    if (isChanged) {
+      setShowWarning(true);
+    } else {
+      closeModal();
     }
-  }
+  };
 
   return createPortal(
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -136,8 +142,12 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
 
         {showWarning && (
           <WarningModal
-          onConfirm={()=>{setShowWarning(false), closeModal()}}
-          onCancel={()=>{setShowWarning(false)}}
+            onConfirm={() => {
+              (setShowWarning(false), closeModal());
+            }}
+            onCancel={() => {
+              setShowWarning(false);
+            }}
           />
         )}
 
@@ -235,10 +245,22 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
                 <SelectContent>
                   <SelectGroup className={"bg-white"}>
                     <SelectLabel>Priority</SelectLabel>
-                    <SelectItem value="urgent"><span className="rounded-full bg-red-500 w-2.5 h-2.5"></span>Urgent</SelectItem>
-                    <SelectItem value="high"><span className="rounded-full bg-orange-500 w-2.5 h-2.5"></span>High</SelectItem>
-                    <SelectItem value="medium"><span className="rounded-full bg-blue-500 w-2.5 h-2.5"></span>Medium</SelectItem>
-                    <SelectItem value="low"><span className="rounded-full bg-emerald-500 w-2.5 h-2.5"></span>Low</SelectItem>
+                    <SelectItem value="urgent">
+                      <span className="rounded-full bg-red-500 w-2.5 h-2.5"></span>
+                      Urgent
+                    </SelectItem>
+                    <SelectItem value="high">
+                      <span className="rounded-full bg-orange-500 w-2.5 h-2.5"></span>
+                      High
+                    </SelectItem>
+                    <SelectItem value="medium">
+                      <span className="rounded-full bg-blue-500 w-2.5 h-2.5"></span>
+                      Medium
+                    </SelectItem>
+                    <SelectItem value="low">
+                      <span className="rounded-full bg-emerald-500 w-2.5 h-2.5"></span>
+                      Low
+                    </SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -256,6 +278,9 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
                 className="w-full border rounded-md p-2"
               />
             </div>
+            {errors.due_date && (
+              <p className="text-red-500 text-xs mt-1">{errors.due_date}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -293,12 +318,11 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
 
               <Select
                 value={formdata.assigned_user_id}
-                onValueChange={(value) =>
-                  setFormdata((prev) => ({
-                    ...prev,
-                    assigned_user_id: value,
-                  }))
-                }
+                onValueChange={(value) => {
+                  setFormdata((prev) => ({ ...prev, assigned_user_id: value }));
+                  if (errors.assigned_user_id)
+                    setErrors((prev) => ({ ...prev, assigned_user_id: "" }));
+                }}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Assignee" />
@@ -312,6 +336,11 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
                   ))}
                 </SelectContent>
               </Select>
+              {errors.assigned_user_id && (
+                <p className="text-red-500 text-xs mt-1">
+                 Please select an assignee
+                </p>
+              )}
             </div>
           </div>
 
@@ -340,7 +369,7 @@ const AddTaskModal = ({ onTaskAddition, closeModal, selectedTask, workspaceMembe
         </form>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

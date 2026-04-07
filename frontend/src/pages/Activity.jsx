@@ -7,8 +7,6 @@ import { usePagination } from "@/hooks/usePagination";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { format } from "date-fns";
 
-
-
 const Activity = () => {
   const { activities, loading: activityLoading } = useActivityDetails();
   //console.log("Activity: ", activities);
@@ -28,28 +26,29 @@ const Activity = () => {
     },
   };
 
-  
-const activityActions = useMemo(() =>
-  activities?.map((act) => {
-    const style = activityActionsColors[act.action] || {
-      text: "text-gray-600",
-      bg: "bg-gray-100",
-    };
-    return { ...act, textColor: style.text, bgColor: style.bg };
-  })||[],
-[activities]);
-
-
-
-   const { currentData, currentPage, totalPages, nextPage, prevPage } =
-      usePagination(activityActions, 20);
-
-  if (activityLoading) return (
-   <div className="p-4">
-    <HeaderSkeleton/><br />
-     <TableSkeleton/>
-   </div>
+  const activityActions = useMemo(
+    () =>
+      activities?.map((act) => {
+        const style = activityActionsColors[act.action] || {
+          text: "text-gray-600",
+          bg: "bg-gray-100",
+        };
+        return { ...act, textColor: style.text, bgColor: style.bg };
+      }) || [],
+    [activities],
   );
+
+  const { currentData, currentPage, totalPages, nextPage, prevPage } =
+    usePagination(activityActions, 20);
+
+  if (activityLoading)
+    return (
+      <div className="p-4">
+        <HeaderSkeleton />
+        <br />
+        <TableSkeleton />
+      </div>
+    );
   return (
     <div className="p-5">
       <Header header={"Activity Logs"} />
@@ -64,10 +63,10 @@ const activityActions = useMemo(() =>
 
       <div className="p-4">
         {currentData?.map((act) => (
-          
           <div
-  key={act.id}
-  className="grid grid-cols-5 py-4 border-b transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-md hover:bg-gray-100">
+            key={act.id}
+            className="grid grid-cols-5 py-4 border-b transform transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-md hover:bg-gray-100"
+          >
             <div className="flex items-center gap-4">
               <div className="bg-black w-10 h-10 flex items-center justify-center rounded-full">
                 <div className="font-semibold text-white text-sm">
@@ -86,13 +85,50 @@ const activityActions = useMemo(() =>
               </span>
             </div>
             <div className="font-semibold text-sm">{act.item}</div>
-            <div className="font-semibold mr-3 text-sm">{act.description}</div>
-            <div className="font-semibold  text-gray-400 text-sm">{format(new Date(act.date), "do MMM,yyyy · h:mma")}</div>
+            {/* <div className="font-semibold mr-3 text-sm">{act.description } {act?.change?.field}: <s>{act?.change?.from}</s> → {act?.change?.to}</div> */}
+            <div className="font-semibold mr-3 text-sm">
+              {act.description}
+              {act.changes?.length > 0 && (
+                <div className="flex flex-col gap-1 mt-1">
+                  {act.changes.map((change) => (
+                    <span key={change.field} className="text-xs text-gray-500">
+                      {change.field}: {" "}
+                      {change.field === "Due Date" ? (
+                        <s className="text-red-400">
+                          {change.from && !isNaN(new Date(change.from))
+                            ? format(
+                                new Date(change.from),
+                                "MMM do, yyyy · h:mma",
+                              )
+                            : "None"}
+                        </s>
+                      ) : (
+                        <s className="text-red-400">{change.from}</s>
+                      )}
+                      {" "}→{" "}
+                      <span className="text-green-600">
+                        {change.field === "Due Date"
+                          ? change.to && !isNaN(new Date(change.to))
+                            ? format(
+                                new Date(change.to),
+                                "MMM do, yyyy · h:mma",
+                              )
+                            : "None"
+                          : change.to}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="font-semibold  text-gray-400 text-sm">
+              {format(new Date(act.date), "do MMM,yyyy · h:mma")}
+            </div>
           </div>
         ))}
       </div>
 
-       <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
+      <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
         <button
           disabled={currentPage === 1}
           className={`px-3 py-3 rounded-full 

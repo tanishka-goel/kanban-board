@@ -121,7 +121,7 @@ const filteredUsers = useMemo(() => {
                   setOpenUserModal(false);
                 },
                 onError: (error) => {
-                  const message = error?.response?.data?.error || "Failed to add user. Please try again."
+                  const message = error?.response?.data?.error || "Failed to add user. A user with these details already exists. Please try again."
                   if(message?.toLowerCase()?.includes("username")){
                     setServerErrors({username:message})
                   } else{

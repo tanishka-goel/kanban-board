@@ -1,5 +1,5 @@
-import { useGetNotifications } from "@/queries/notifications.query";
-import { ClipboardCheck, Loader2Icon, Meh, MessageCircle } from "lucide-react";
+import { useGetNotifications, useMarkAsRead } from "@/queries/notifications.query";
+import { ClipboardCheck, Loader2Icon, Meh, MessageCircle, X } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -7,9 +7,15 @@ const NotificationsModal = () => {
   const { user: currUser } = useSelector((state) => state.auth);
   const { data: allNotifications = [], isLoading: notificationLoading } =
     useGetNotifications(currUser?.id);
+  
+    const {mutate:markAsRead} = useMarkAsRead()
+
+    const handleRead = (notifId) =>{
+      markAsRead(notifId)
+    }
 
   //console.log("curr user", currUser)
-  console.log("all notifs", allNotifications)
+  //console.log("all notifs", allNotifications)
 
   if(notificationLoading) return (
     <div className="absolute p-2 right-0 mt-3 w-120 max-w-4xl bg-white rounded-xl shadow-xl z-50 border border-gray-200 overflow-hidden">
@@ -82,7 +88,11 @@ const NotificationsModal = () => {
                     </div>
                   </div>
 
-                  <div className="rounded-full h-2 w-2 bg-emerald-500 animate-pulse"></div>
+                  <button 
+                  onClick={()=>handleRead(notif.id)}
+                  className="bg-gray-100 p-1 hover:bg-gray-200 rounded-full">
+                    <X size={15}/>
+                  </button>
                 </div>
               </div>
             ))}
