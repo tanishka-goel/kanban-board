@@ -15,6 +15,7 @@ import DeleteModal from "@/components/shared/modals/DeleteModal";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import { useSelector } from "react-redux";
 import Search from "@/components/shared/Search";
+import { useGetReadNotifications } from "@/queries/notifications.query";
 
 const AllWorkspace = () => {
   const { user } = useSelector((state) => state.auth);
@@ -29,9 +30,6 @@ const AllWorkspace = () => {
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(null);
   const [searchTerm, setSearchTerm] = useState()
-
-  // console.log("Current user ID : ", user.id);
-  // console.log("Current user role : ", user.role);
 
   const handleAddWorkspace = () => {
     setOpenWorkspaceModal(true);

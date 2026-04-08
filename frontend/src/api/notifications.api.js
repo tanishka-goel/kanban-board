@@ -18,3 +18,12 @@ export const markNotificationAsRead = async (id) => {
   });
   return response.data;
 };
+
+export async function getReadNotifications(currUserId) {
+  const response = await BaseApi.get(
+    `/rest/v1/notifications?user_id=eq.${currUserId}&is_read=eq.true&select=*,actor:actor_id(first_name,last_name)&order=created_at.desc`
+
+  );
+  console.log("read notifs by user", response.data)
+  return response.data;
+}
