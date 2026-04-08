@@ -29,7 +29,8 @@ export const userSchema = z.object({
 
   role: z.enum(["user", "admin"], {
     errorMap: (issue) => {
-      if (issue.code === "invalid_type") return { message: "Please select a role" };
+      if (issue.code === "invalid_type")
+        return { message: "Please select a role" };
       return { message: "Invalid role selected" };
     },
   }),

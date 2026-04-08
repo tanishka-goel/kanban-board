@@ -19,7 +19,6 @@ export const useAddUser = () =>{
     return useMutation({
         mutationFn: async (userdata) =>{
           const hashedpass = SHA256(userdata.password).toString();
-
           return createUsers({...userdata, password:hashedpass})
         },
         onSuccess:() =>{

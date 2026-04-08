@@ -31,20 +31,11 @@ const ManageUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [serverErrors, setServerErrors] = useState({});
 
- 
-  //console.log("all ws", workspaces)
-
   const users = data?.filter((user) => user.role === "user");
-
-  // console.log("users in mu", users)
-
-  // const getuserid = users?.map((us) => us.id)
-  //  console.log("users in mu", getuserid)
 
  const getActiveWorkspaces = (userId) => {
   return workspaces?.filter((ws) => ws.creatorID === userId || ws.members?.includes(userId));
 };
-  //console.log("gaws", getActiveWorkspaces)
 
   const handleAddClick = () => {
     setSelectedUser(null);
@@ -135,8 +126,6 @@ const filteredUsers = useMemo(() => {
         />
       )}
       
-
-{/* <TableSkeleton/> */}
       <div className="hidden md:grid grid-cols-5 px-6 ml-13 py-3 text-sm font-semibold text-gray-500">
         <p>Name</p>
         <p>Active Workspaces</p>

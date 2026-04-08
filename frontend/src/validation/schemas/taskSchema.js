@@ -8,16 +8,16 @@ export const taskSchema = z.object({
   creator_id: z.string().min(1, "Creator ID is required"),
   creator_name: z.string().min(1, "Creator name is required"),
   workspace_id: z.string().min(1, "Workspace is required"),
-  
-  assigned_user_id: z.string().min(1, "Please select an assignee").nullable().optional(),
+
+  assigned_user_id: z
+    .string()
+    .min(1, "Please select an assignee")
+    .nullable()
+    .optional(),
 
   due_date: z
     .string()
     .nullable()
     .optional()
-    .refine(
-      (val) => 
-        !val || !isNaN(Date.parse(val)),
-      "Invalid date format"
-    ),
+    .refine((val) => !val || !isNaN(Date.parse(val)), "Invalid date format"),
 });

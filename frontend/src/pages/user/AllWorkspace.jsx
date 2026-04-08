@@ -65,8 +65,6 @@ const AllWorkspace = () => {
       <div className="flex p-2 px-4 items-center justify-between">
         <Header header={"Your Workspaces"} />
         <div className="flex items-center justify-around gap-4">
-          {/* <p>Search</p>
-          <p>Sort</p> */}
           <Search onSearchChange={(val)=>setSearchTerm(val)}/>
           <NewButton
             onClick={handleAddWorkspace}

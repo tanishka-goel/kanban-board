@@ -18,13 +18,3 @@
   background-size: 200% 100%;
   animation: shimmer 2.5s infinite;
 }
-
-@keyframes slideOut {
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-.slide-out {
-  animation: slideOut 0.3s ease-in forwards;
-}

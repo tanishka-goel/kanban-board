@@ -7,7 +7,6 @@ export const useGetNotifications = (userId) =>{
         queryKey:["notifications", userId],
         queryFn:()=>getNotifications(userId),
         enabled: !!userId
-
     })
 }
 

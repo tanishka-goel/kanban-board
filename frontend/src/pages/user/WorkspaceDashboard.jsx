@@ -124,7 +124,6 @@ const WorkspaceDashboard = () => {
         </h2>
       </div> */}
 
-{/* <BoardSkeleton/> */}
       <div className="p-2 mt-4 bg-gray-100 h-screen rounded-2xl">
         <DndContext onDragEnd={handleDrag}>
           <div className="grid md:grid-cols-4 gap-4">

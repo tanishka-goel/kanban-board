@@ -18,7 +18,7 @@ const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const notifRef = useRef(null);
   const profileRef = useRef(null);
-  const {data:allNotifs} = useGetNotifications(user.id)
+  const { data: allNotifs } = useGetNotifications(user.id);
 
   //console.log("notifs from header", allNotifs)
 
@@ -75,10 +75,10 @@ const Header = () => {
         <div ref={notifRef} className="relative group w-fit">
           <button onClick={() => setOpenNotifications((prev) => !prev)}>
             <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-secondary/80">
-           
               <Bell size={20} className="text-white" />
-               {allNotifs?.length > 0 && 
-             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse border border-red-600" />}
+              {allNotifs?.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse border border-red-600" />
+              )}
             </div>
           </button>
           {openNotifications && <NotificationsModal />}

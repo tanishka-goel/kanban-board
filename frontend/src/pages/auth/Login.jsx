@@ -15,8 +15,6 @@ const Login = () => {
   const [isVisible, setIsVisible] = useState(false)
   const navigate = useNavigate()
 
-  //console.log("password",SHA256("user3j").toString());
-
   const toggleVisibility = () =>{
     setIsVisible(!isVisible)
   }

@@ -87,7 +87,6 @@ const Activity = () => {
             </div>
 
             <div className="font-semibold text-sm">{act.item}</div>
-            {/* <div className="font-semibold mr-3 text-sm">{act.description } {act?.change?.field}: <s>{act?.change?.from}</s> → {act?.change?.to}</div> */}
             <div className="font-semibold mr-3 text-sm">
               {act.description}
               {act.changes?.length > 0 && (

@@ -12,14 +12,11 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-   <ErrorBoundary
-  fallbackRender={({ error, resetErrorBoundary }) => (
-    <ErrorFallback
-      error={error}
-      resetErrorBoundary={resetErrorBoundary}
-    />
-  )}
->
+    <ErrorBoundary
+      fallbackRender={({ error, resetErrorBoundary }) => (
+        <ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
+      )}
+    >
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <App />

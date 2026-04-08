@@ -88,7 +88,6 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
-
       <div className="flex items-center mt-6 mb-6 px-4 overflow-hidden">
         <Link
           to={role === "admin" ? "/admin/dashboard" : "/for-you"}
@@ -176,14 +175,15 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
               {pg.name === "Workspaces" && openWorkspaceDropdown && (
                 <div className="">
                   {visibleWorkspaces.map((ws) => (
-                   <NavLink key={ws.id} to={`/your-workspaces/${ws.id}`}>
+                    <NavLink key={ws.id} to={`/your-workspaces/${ws.id}`}>
                       <div className="md:ml-5 text-white md:p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
-                      {isCollapsed
-                        ? <SquareCenterlineDashedVerticalIcon/>
-                        : ws?.workspace_name}
-                    </div>
+                        {isCollapsed ? (
+                          <SquareCenterlineDashedVerticalIcon />
+                        ) : (
+                          ws?.workspace_name
+                        )}
+                      </div>
                     </NavLink>
-                    
                   ))}
                 </div>
               )}

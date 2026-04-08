@@ -1,11 +1,13 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const workspaceSchema = z.object({
-  workspace_name: z.string().min(2, "Workspace name must be at least 2 characters"),
+  workspace_name: z
+    .string()
+    .min(2, "Workspace name must be at least 2 characters"),
   description: z.string().min(2, "Description must be at least 2 words"),
   creatorName: z.string().min(1),
   creatorID: z.string().min(1),
   members: z
-  .array(z.string().min(1))
-  .min(1, "Please select at least one member")
+    .array(z.string().min(1))
+    .min(1, "Please select at least one member"),
 });
