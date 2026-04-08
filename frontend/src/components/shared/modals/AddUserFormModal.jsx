@@ -4,19 +4,26 @@ import NewButton from "../NewButton";
 import { toast } from "sonner";
 import { userSchema } from "@/validation/schemas/userSchema";
 import WarningModal from "./WarningModal";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
-const AddUserFormModal = ({ onUserAddition, closeModal, selectedUser, serverErrors }) => {
+const AddUserFormModal = ({
+  onUserAddition,
+  closeModal,
+  selectedUser,
+  serverErrors,
+}) => {
   const [formdata, setFormdata] = useState({
-    role: "",
+    role: "user",
     email: "",
     password: "",
     username: "",
     first_name: "",
     last_name: "",
   });
-const [errors, setErrors] = useState({});
- const [showWarning, setShowWarning] = useState(false)
-const [isChanged, setIsChanged]=useState(false)
+  const [errors, setErrors] = useState({});
+  const [showWarning, setShowWarning] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
   const isEditMode = !!selectedUser;
 
   useEffect(() => {
@@ -34,22 +41,22 @@ const [isChanged, setIsChanged]=useState(false)
   }, [selectedUser]);
 
   useEffect(() => {
-  if (serverErrors?.username) {
-    setErrors((prev) => ({
-      ...prev,
-      username: serverErrors.username,
-    }));
-  }
-}, [serverErrors]);
+    if (serverErrors?.username) {
+      setErrors((prev) => ({
+        ...prev,
+        username: serverErrors.username,
+      }));
+    }
+  }, [serverErrors]);
 
-   const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormdata((prev) => ({ ...prev, [name]: value }));
-    setIsChanged(true)
+    setIsChanged(true);
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
     if (name === "username" && serverErrors?.username) {
-  setErrors((prev) => ({ ...prev, username: "" }));
-}
+      setErrors((prev) => ({ ...prev, username: "" }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -69,7 +76,10 @@ const [isChanged, setIsChanged]=useState(false)
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
       const firstErrors = Object.fromEntries(
-        Object.entries(fieldErrors).map(([key, msgs]) => [key, msgs?.[0] ?? ""])
+        Object.entries(fieldErrors).map(([key, msgs]) => [
+          key,
+          msgs?.[0] ?? "",
+        ]),
       );
       setErrors(firstErrors);
       toast.error("Please fill all the fields correctly");
@@ -83,14 +93,13 @@ const [isChanged, setIsChanged]=useState(false)
     });
   };
 
-   const handleClose = () =>{
-    if(isChanged){
-      setShowWarning(true)
-    } else{
-      closeModal()
+  const handleClose = () => {
+    if (isChanged) {
+      setShowWarning(true);
+    } else {
+      closeModal();
     }
-  }
-
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -107,11 +116,15 @@ const [isChanged, setIsChanged]=useState(false)
         </div>
 
         {showWarning && (
-                  <WarningModal
-                  onConfirm={()=>{setShowWarning(false), closeModal()}}
-                  onCancel={()=>{setShowWarning(false)}}
-                  />
-                )}
+          <WarningModal
+            onConfirm={() => {
+              (setShowWarning(false), closeModal());
+            }}
+            onCancel={() => {
+              setShowWarning(false);
+            }}
+          />
+        )}
 
         <form noValidate onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
@@ -122,7 +135,7 @@ const [isChanged, setIsChanged]=useState(false)
               required
               inputValue={formdata.first_name}
               onChange={handleChange}
-              error={errors.first_name} 
+              error={errors.first_name}
             />
             <FormInput
               labelTitle={"Last Name"}
@@ -167,7 +180,7 @@ const [isChanged, setIsChanged]=useState(false)
             error={errors.password}
           />
 
-          <FormInput
+          {/* <FormInput
             labelTitle={"User Role"}
             placeholder={"Enter role (e.g. user/admin)"}
             name="role"
@@ -175,7 +188,33 @@ const [isChanged, setIsChanged]=useState(false)
             inputValue={formdata.role}
             onChange={handleChange}
             error={errors.role}
-          />
+          /> */}
+
+          <div className="flex items-center justify-between">
+            <Label htmlFor="role">User Role</Label>
+
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-600">User</span>
+
+              <Switch
+                className={"bg-black"}
+                id="role"
+                checked={formdata.role === "admin"}
+                onCheckedChange={(checked) =>
+                  setFormdata((prev) => ({
+                    ...prev,
+                    role: checked ? "admin" : "user",
+                  }))
+                }
+              />
+
+              <span className="text-sm text-gray-600">Admin</span>
+            </div>
+          </div>
+
+          {errors.role && (
+            <p className="text-red-500 text-sm mt-1">{errors.role}</p>
+          )}
 
           <div className="pt-4 flex justify-end">
             <NewButton

@@ -16,7 +16,8 @@ export const taskSchema = z.object({
     .nullable()
     .optional()
     .refine(
-      (val) => !val || !isNaN(Date.parse(val)),
+      (val) => 
+        !val || !isNaN(Date.parse(val)),
       "Invalid date format"
     ),
 });

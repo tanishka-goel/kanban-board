@@ -17,8 +17,8 @@ export async function createUsers(newData){
 
     if (supabaseError?.code === "23505") {
         const details = supabaseError?.details || ""
-        if (details.toLowerCase().includes("email")) {
-        throw { response: { data: { error: "Email already exists." } } };
+        if (details.toLowerCase().includes("username")) {
+        throw { response: { data: { error: "Username already exists." } } };
       }
     }
     throw error

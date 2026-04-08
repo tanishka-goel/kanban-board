@@ -1,4 +1,5 @@
 import { useGetNotifications, useMarkAsRead } from "@/queries/notifications.query";
+import { format } from "date-fns";
 import { ClipboardCheck, Loader2Icon, Meh, MessageCircle, X } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -76,7 +77,7 @@ const NotificationsModal = () => {
                           {notif.description}
                         </p>
                         <div className="flex items-center gap-2">
-                          <p className="text-gray-400 text-sm">2m ago</p>
+                          <p className="text-gray-400 text-sm">{format(notif.created_at,"MMM do • hh:mm a")}</p>
                           <div className="bg-blue-100 p-1 px-3 rounded-2xl">
                             {" "}
                             <p className="text-xs font-medium text-gray-800">

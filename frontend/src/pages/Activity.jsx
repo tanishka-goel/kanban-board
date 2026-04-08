@@ -41,6 +41,7 @@ const Activity = () => {
   const { currentData, currentPage, totalPages, nextPage, prevPage } =
     usePagination(activityActions, 20);
 
+    
   if (activityLoading)
     return (
       <div className="p-4">
@@ -84,6 +85,7 @@ const Activity = () => {
                 {act.action}
               </span>
             </div>
+
             <div className="font-semibold text-sm">{act.item}</div>
             {/* <div className="font-semibold mr-3 text-sm">{act.description } {act?.change?.field}: <s>{act?.change?.from}</s> → {act?.change?.to}</div> */}
             <div className="font-semibold mr-3 text-sm">

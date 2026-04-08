@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-   
+  
    <TooltipProvider>
     <Toaster position="bottom-right" richColors />
       <AppRoutes/>

@@ -11,7 +11,8 @@ import AdminAllWorkspaces from "@/pages/admin/AdminAllWorkspaces";
 import React, { Suspense } from "react";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import ChatLayout from "@/pages/chatRoom/ChatLayout";
-import Notifications from "@/pages/Notifications";
+import Notifications from "@/pages/Test";
+import Test from "@/pages/Test";
 
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Activity = React.lazy(() => import("../pages/Activity"));
@@ -42,6 +43,7 @@ const AppRoutes = () => {
               }
             />
 
+            <Route path="/test" element={<Test/>}/>
             <Route path="/chats" element={<ChatLayout />} />
             <Route path="/chats/:userId" element={<ChatLayout />} />
             <Route element={<ProtectedRoute allowedRole="admin" />}>

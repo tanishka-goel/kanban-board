@@ -9,14 +9,17 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import AddTaskModal from "../../shared/modals/AddTaskModal";
-import { useDeleteTask, useEditTask } from "@/queries/tasks.query";
+import { useDeleteTask, useEditTask, useTasks } from "@/queries/tasks.query";
 import { toast } from "sonner";
 import { format, isValid } from "date-fns";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import TaskDetailsModal from "@/components/shared/modals/TaskDetailsModal";
+import { useSelector } from "react-redux";
 
 const Taskcard = ({ data, taskId }) => {
   const [editTaskModal, setEditTaskModal] = useState(false);
+  const {user} = useSelector((state)=>state.auth)
+  const {data:allTasks} = useTasks()
   const { mutate: editTask } = useEditTask();
   const { mutate: deleteTask } = useDeleteTask();
   const [deleteTaskModal, setDeleteTaskModal] = useState(false);
@@ -24,6 +27,9 @@ const Taskcard = ({ data, taskId }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: taskId,
   });
+
+ const isCreator = data?.creator_id === user?.id;
+
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -86,14 +92,21 @@ const Taskcard = ({ data, taskId }) => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40 bg-white" align="start">
-                <DropdownMenuItem onClick={() => setEditTaskModal(true)}>
+                {isCreator && 
+                 <DropdownMenuItem onClick={() => setEditTaskModal(true)}>
                   <Edit className="mr-2 h-4 w-4 text-green-500" />
                   Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setDeleteTaskModal(data.id)}>
+                }
+                
+                {
+                  isCreator &&
+                  <DropdownMenuItem onClick={() => setDeleteTaskModal(data.id)}>
                   <Trash2 className="mr-2 h-4 w-4 text-red-500" />
                   Delete
                 </DropdownMenuItem>
+                }
+                
 
                  <DropdownMenuItem onClick={() => setOpenTaskDetailsModal(data.id)}>
                   <Info className="mr-2 h-4 w-4 text-blue-500" />

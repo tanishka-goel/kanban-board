@@ -17,6 +17,7 @@ import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 import { useWorkspaces } from "@/queries/workspaces.query";
 import { usePagination } from "@/hooks/usePagination";
+import { format } from "date-fns";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
@@ -169,8 +170,8 @@ const filteredUsers = useMemo(() => {
 
             <p className="text-sm md:ml-20 text-gray-600">{getActiveWorkspaces(user.id)?.length || 0}</p>
 
-            <p className="text-sm md:ml-5 font-medium  text-gray-600">
-              {user.created_at.slice(0, 10) ?? "—"}
+            <p className="text-sm  font-medium  text-gray-600">
+               {format(user.created_at,"MMM do yyyy • hh:mm a")}
             </p>
 
             <p className="uppercase md:ml-2 font-semibold border border-purple-700 text-purple-500 text-xs bg-purple-300/20 px-3 py-1 rounded-2xl w-fit">
