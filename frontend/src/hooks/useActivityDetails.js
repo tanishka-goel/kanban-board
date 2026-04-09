@@ -12,6 +12,24 @@ const fieldLabels = {
   assigned_user_id: "Assignee",
 };
 
+const normalizeDetailValue = (value) => {
+  if (value === null || value === undefined) return "None";
+
+  if (typeof value === "object") {
+    if ("to" in value && value.to !== undefined && value.to !== null) {
+      return normalizeDetailValue(value.to);
+    }
+
+    if ("from" in value && value.from !== undefined && value.from !== null) {
+      return normalizeDetailValue(value.from);
+    }
+
+    return "None";
+  }
+
+  return String(value);
+};
+
 export const useActivityDetails = () => {
   const { data: activityLogs, isLoading: isActivityLogsLoading } =
     useActivityLogs();
@@ -48,7 +66,11 @@ export const useActivityDetails = () => {
 
       if (activity.entity_type === "Task") {
         const task = allTasks?.find((t) => t.id === activity.entity_id);
-        itemName = task?.title ?? activity.details?.title ?? "Deleted Task";
+        itemName = task?.title ?? normalizeDetailValue(activity.details?.title);
+
+        if (!itemName || itemName === "None") {
+          itemName = "Deleted Task";
+        }
       }
 
       let description = "";
@@ -67,12 +89,16 @@ export const useActivityDetails = () => {
               val?.to !== undefined,
           )
           .map(([key, val]) => {
-            let fromVal = val.from ?? "None";
-            let toVal = val.to ?? "None";
+            let fromVal = normalizeDetailValue(val.from);
+            let toVal = normalizeDetailValue(val.to);
 
             if (key === "assigned_user_id") {
-              const fromUser = allUsers?.find((u) => u.id === val.from);
-              const toUser = allUsers?.find((u) => u.id === val.to);
+              const fromUser = allUsers?.find(
+                (u) => String(u.id) === String(normalizeDetailValue(val.from)),
+              );
+              const toUser = allUsers?.find(
+                (u) => String(u.id) === String(normalizeDetailValue(val.to)),
+              );
 
               fromVal = fromUser
                 ? `${fromUser.first_name} ${fromUser.last_name}`

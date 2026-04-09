@@ -96,7 +96,29 @@ export async function updateTaskStatus({
     ...existingData,
     status: updatedTaskId,
   };
+
+  const changesField = {
+    status:{
+      from:existingData.status ?? null,
+      to:updatedTaskId ?? null
+    }
+  }
   const res = await BaseApi.patch(`/rest/v1/tasks?id=eq.${taskId}`, payload);
+
+  try {
+    await createActivityLog({
+      user_id: existingData.creator_id ?? null,
+      workspace_id: existingData.workspace_id ?? null,
+      action: "updated",
+      entity_type: "Task",
+      entity_id: taskId,
+      details: changesField,
+    });
+  } catch (error) {
+    console.error("Failed to log task status activity:", error);
+  }
+
+
   //console.log("Task updated : ",res.data)
   return res.data;
 }

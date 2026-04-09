@@ -5,7 +5,6 @@ import { useDragCardMutation, useTasks } from "@/queries/tasks.query";
 import { useUsers } from "@/queries/users.query";
 import { DndContext } from "@dnd-kit/core";
 import BoardColumns from "@/components/user/board/BoardColumns";
-import Header from "@/components/shared/Header";
 import BoardSkeleton from "@/components/shared/skeletons/BoardSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import { ChevronRight } from "lucide-react";
@@ -32,13 +31,6 @@ const WorkspaceDashboard = () => {
     }),
   );
 
-  // console.log("Tasks", taskData);
-  // console.log("Tasks 1 data", taskData?.[0]?.data);
-
-  //const memberDetails = useMemberDetails()
-  //   console.log("vw in wd", visibleWorkspaces);
-  //   console.log("user in wd", user);
-  //   console.log("ID from URL:", workspaceId);
 
   const workspaceList = role === "admin" ? workspace : visibleWorkspaces;
 
@@ -99,7 +91,7 @@ const WorkspaceDashboard = () => {
     updateTaskStatusMutation({
       taskId: taskId,
       updatedTaskId: updatedTaskId,
-      existingData: draggedTask?.data,
+      existingData: draggedTask,
     });
   };
 
