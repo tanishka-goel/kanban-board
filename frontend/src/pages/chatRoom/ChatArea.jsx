@@ -139,7 +139,7 @@ const ChatArea = () => {
         <div className="flex hover:scale-103 transition-transform ease-out duration-300 flex-1 items-center justify-center h-full">
           <div
             className="flex flex-col items-center justify-center gap-6 
-                  w-full max-w-4xl h-[80%]
+                  w-full max-w-3xl h-[80%]
                   bg-white/70 backdrop-blur-lg 
                   border border-gray-200 
                   shadow-2xl rounded-3xl 

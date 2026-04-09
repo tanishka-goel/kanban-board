@@ -94,7 +94,7 @@ const WorkspaceDashboard = () => {
       taskId: taskId,
       updatedTaskId: updatedTaskId,
       existingData: draggedTask,
-      x:currUser.id
+      movedBy:currUser.id
     });
   };
 

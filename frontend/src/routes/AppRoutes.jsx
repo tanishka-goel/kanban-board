@@ -13,6 +13,7 @@ import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import ChatLayout from "@/pages/chatRoom/ChatLayout";
 import Notifications from "@/pages/Test";
 import Test from "@/pages/Test";
+import PageNotFound from "@/pages/PageNotFound";
 
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Activity = React.lazy(() => import("../pages/Activity"));
@@ -21,10 +22,12 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <Route path="*" element={<PageNotFound/>}/> */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
+           <Route path="*" element={<PageNotFound/>}/>
           <Route path="/notifications" element={<Notifications/>}/>
             <Route
               path="/profile"

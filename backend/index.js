@@ -7,11 +7,16 @@ import cors from "cors";
 
 dotenv.config();
 
+const allowedOrigins = [
+  "http://localhost:5173"
+];
+
 const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
+    credentials:true
   }),
 );
 
