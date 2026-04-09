@@ -12,11 +12,17 @@ import ChatAreaSkeleton from "@/components/shared/skeletons/chatSkeletons/ChatAr
 const CHAT_SERVER_URL =
   import.meta.env.VITE_CHAT_SERVER_URL || "http://localhost:3000";
 
+  console.log("CHAT SERVER URL:", CHAT_SERVER_URL);
+
 let socket = null;
 
 const getSocket = () => {
   if (!socket) {
-    socket = io(CHAT_SERVER_URL);
+    socket = io(CHAT_SERVER_URL,{
+      transports: ["websocket"], 
+      reconnection: true,
+      reconnectionAttempts: 5,
+    });
   }
   return socket;
 };
