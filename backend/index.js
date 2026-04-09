@@ -8,7 +8,7 @@ import cors from "cors";
 dotenv.config();
 
 const allowedOrigins = [
-  "http://localhost:5173","https://kanbar-board.vercel.app/"
+  "http://localhost:5173","https://kanbar-board.vercel.app"
 ];
 
 const app = express();
