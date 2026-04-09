@@ -91,6 +91,7 @@ export async function updateTaskStatus({
   taskId,
   updatedTaskId,
   existingData,
+  movedBy
 }) {
   const payload = {
     ...existingData,
@@ -107,7 +108,7 @@ export async function updateTaskStatus({
 
   try {
     await createActivityLog({
-      user_id: existingData.creator_id ?? null,
+      user_id: movedBy ?? existingData.creator_id,
       workspace_id: existingData.workspace_id ?? null,
       action: "updated",
       entity_type: "Task",

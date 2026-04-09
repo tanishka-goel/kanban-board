@@ -8,8 +8,10 @@ import BoardColumns from "@/components/user/board/BoardColumns";
 import BoardSkeleton from "@/components/shared/skeletons/BoardSkeleton";
 import HeaderSkeleton from "@/components/shared/skeletons/HeaderSkeleton";
 import { ChevronRight } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const WorkspaceDashboard = () => {
+  const {user:currUser} = useSelector((state)=>state.auth)
   const { workspaceId } = useParams();
   const { user, role, visibleWorkspaces, workspace, workspaceLoading } =
     useVisibleWorkspace();
@@ -92,6 +94,7 @@ const WorkspaceDashboard = () => {
       taskId: taskId,
       updatedTaskId: updatedTaskId,
       existingData: draggedTask,
+      x:currUser.id
     });
   };
 
