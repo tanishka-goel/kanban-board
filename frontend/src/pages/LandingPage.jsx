@@ -55,7 +55,7 @@ const LandingPage = () => {
       <div className="scroll">
         <p className="scroll-div">Scroll</p>
         <div className="arrow">
-          <ChevronDown className="text-gray-500" />
+          <ChevronDown size={20} className="text-gray-500" />
         </div>
       </div>
 
@@ -114,6 +114,10 @@ const LandingPage = () => {
         />
         <hr />
       </section>
+
+      <footer className="footer-sec">
+       <h2>© 2026 TaskForge. All rights reserved</h2>
+      </footer>
     </div>
   );
 };

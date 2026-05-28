@@ -24,8 +24,8 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<PageNotFound/>}/>
-         <Route path="/" element={<LandingPage />} />
-        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
+         {/* <Route path="/" element={<LandingPage />} /> */}
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>

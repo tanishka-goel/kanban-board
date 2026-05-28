@@ -1,6 +1,6 @@
 :root{
-    background: linear-gradient(to right,  #020617, #004c4c);
-    color: white;
+    /* background: linear-gradient(to right,  #020617, #004c4c); */
+    /* olor: white;c */
 }
 
 #main-header{
@@ -33,7 +33,7 @@
     width:fit-content;
     border: 1.5px solid #006666;
     padding: 13px;
-     border-radius: 999px;
+    border-radius: 999px;
     display: flex;
     gap: 5px;
     margin-left: 80px;
@@ -51,7 +51,6 @@
 
 .subline-div h2:hover{
     color: #4ed8d8;
-    
 }
 
 .content-div p{
@@ -66,7 +65,7 @@
 .content-div li{
     font-size: 15px;
     margin-left: 35px;
-   font-family: monospace;
+    font-family: monospace;
     padding: 10px 5px;
     line-height: 32px;
 }
@@ -160,9 +159,9 @@
     justify-content: center;
     text-align: center;
     align-items: center;
+    font-size: 10px;
 }
 .arrow{
-
     display: flex;
     justify-content: center;
     text-align: center;
@@ -199,4 +198,12 @@ hr {
   );
   width: 60%;
   margin: 1rem auto;
+}
+
+.footer-sec{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 15px;
+    color: rgb(182, 180, 180);
+    font-size: small;
 }
