@@ -118,9 +118,9 @@ export const useDragCardMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["activity"] });
       toast.success("Task status updated successfully");
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
+      queryClient.setQueryData(["tasks"],context.previousTasks)
       toast.error("Failed to update task status");
-      console.error("Error updating task status:", error);
     },
 
     onSettled: () => {

@@ -89,6 +89,7 @@ const AdminAllWorkspaces = () => {
                 {
                   id: selectedWorkspace.id,
                   newData: formdata,
+                  previousMembers:selectedWorkspace.members
                 },
                 {
                   onSuccess: () => {

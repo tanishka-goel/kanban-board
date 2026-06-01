@@ -25,7 +25,7 @@ export async function createUsers(newData){
 }
 
 export async function updateUsers({id,newData}){
-    const response = await BaseApi.put(`/rest/v1/profiles?id=eq.${id}`, newData);
+    const response = await BaseApi.patch(`/rest/v1/profiles?id=eq.${id}`, newData);
     console.log("Update User response",response.data)
     return response.data
     

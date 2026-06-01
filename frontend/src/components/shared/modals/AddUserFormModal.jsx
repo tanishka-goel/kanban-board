@@ -169,16 +169,19 @@ const AddUserFormModal = ({
             error={errors.username}
           />
 
-          <FormInput
+{!isEditMode &&
+<FormInput
             labelTitle={"Password"}
             placeholder={"Enter password"}
             name="password"
-            required={!isEditMode}
+            required
             type="password"
             inputValue={formdata.password}
             onChange={handleChange}
             error={errors.password}
           />
+}
+          
 
           {/* <FormInput
             labelTitle={"User Role"}

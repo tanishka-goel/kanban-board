@@ -48,7 +48,7 @@ export const useActivityDetails = () => {
     isTasksLoading;
 
   const formattedActivities = activityLogs?.data
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     ?.map((activity) => {
       const user = allUsers?.find((u) => u.id === activity.user_id);
       const date = activity.created_at;

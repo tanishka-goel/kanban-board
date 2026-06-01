@@ -14,7 +14,6 @@ const BoardColumns = ({ header, columnTasks, assigneeById, workspaceName, worksp
   const handleTaskAddition = (taskData) => {
     createTask(taskData, {
       onSuccess: () => {
-        toast.success("Task created successfully");
         setOpenTaskModal(false);
       },
       onError: (error) => {

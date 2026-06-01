@@ -94,7 +94,7 @@ const WorkspaceModal = ({
       toast.error("Please fill the fields correctly");
       return;
     }
-   onWorkspaceAddition?.(formdata);
+   onWorkspaceAddition?.(res.data);
       
   };
 

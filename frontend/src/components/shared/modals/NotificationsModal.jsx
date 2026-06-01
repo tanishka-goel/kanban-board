@@ -87,7 +87,7 @@ const NotificationsModal = () => {
       <div></div>
 
       <div className="max-h-180 h-auto overflow-y-auto">
-        {notifications.length === 0 && allReadNotifications === 0 ? (
+        {notifications.length === 0 && allReadNotifications.length === 0 ? (
           <div className="p-4  text-sm text-center text-gray-600">
             <div className="bg-gray-200 flex items-center flex-col p-2 rounded-lg">
               <br />

@@ -74,6 +74,8 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
 
   const pagesToDisplay = role === "admin" ? AdminPages : UserPages;
 
+  const dropdownWSPaths = role ==="admin" ? "/admin/all-workspaces" : "/your-workspaces"
+
   return (
     <div
       className={`fixed left-0 top-0 z-30 flex flex-col h-screen bg-[#001919] transition-[width] duration-300 ease-in-out ${
@@ -167,7 +169,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
               {pg.name === "Workspaces" && openWorkspaceDropdown && (
                 <div className="">
                   {visibleWorkspaces.map((ws) => (
-                    <NavLink key={ws.id} to={`/your-workspaces/${ws.id}`}>
+                    <NavLink key={ws.id} to={`${dropdownWSPaths}/${ws.id}`}>
                       <div className="md:ml-5 text-white md:p-3  mt-3 font-semibold rounded-2xl bg-primary/20 hover:bg-secondary">
                         {isCollapsed ? (
                           <SquareCenterlineDashedVerticalIcon />

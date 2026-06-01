@@ -88,7 +88,7 @@ const WorkspaceDashboard = () => {
     const updatedTaskId = over.id;
 
     const draggedTask = taskData?.find((t) => t.id === taskId);
-    if (draggedTask?.data?.status === updatedTaskId) return;
+    if (draggedTask?.status === updatedTaskId) return;
 
     updateTaskStatusMutation({
       taskId: taskId,

@@ -12,10 +12,10 @@ export async function createWorkspace(newData){
 
     await createActivityLog({
         user_id: newData.creatorID,
-        workspace_id: createWorkspace.id,
+        workspace_id: response.data?.[0]?.id,
         action: "created",
         entity_type: "Workspace",
-        entity_id: newData.id,
+        entity_id: response.data?.[0]?.id,
         details:  {
         workspace_name: newData.workspace_name
     }
