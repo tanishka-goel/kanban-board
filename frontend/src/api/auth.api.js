@@ -1,53 +1,46 @@
 import { toast } from "sonner";
-import { BaseApi } from "./instance/api";
-import { SHA256 } from "crypto-js";
+import { supabase } from "@/lib/supabase";
 
 export async function loginUser({ username, password }) {
-  try {
-    const cleanUsername = username.trim().toLowerCase();
-    const res = await BaseApi.get(
-      `/rest/v1/profiles?username=eq.${cleanUsername}&select=*`
-    );
-    // console.log("Response:", res.data);
-    // console.log("looking for this username:", username);
-    //console.log("Raw data", res)
-    // const allUsers = res;
-    // console.log(" data", allUsers)
-    const user = res.data[0];
-    console.log("User :", user)
-    // console.log("db pass", password);
-    
 
-    if (!user) {
-      toast.error("User not found");
-      throw new Error("User not found");
+  try{
+
+    const {data:profile, error:profileError} = await supabase
+    .from("profiles")
+    .select("email, username, first_name, last_name, role")
+    .eq("username", username.trim().toLowerCase())
+    .single()
+
+    if(!profile || profileError){
+      toast.error("No matching profile found")
+      throw new Error("User not found")
     }
 
-    const hashedpass = SHA256(password).toString();
+    const {data, error} = await supabase.auth.signInWithPassword({
+      email:profile.email,
+      password:password
+    })
 
-    // console.log("db pass", password);
-    //  console.log("hashed pass", hashedpass);
-
-    if (hashedpass !== user.password) {
+    if (error) {
       toast.error("Incorrect password");
-      throw new Error("Incorrect password");
+      throw new Error(error.message);
     }
 
-    const token = `mock-jwt-${user.id}-${Date.now()}`;
-
-    return {
+    return{
+      token:data.session.access_token,
       user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
+        id: data.user.id,
+        username: profile.username,
+        role: profile.role,
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        email: data.user.email,
       },
-      token: token,
-    };
-  } catch (err) {
-    toast.error(`Error in Login API - ${err?.message}`);
-    throw err
+    }
+
+  } catch(err){
+    toast.error(`Login Error: ${err?.message}`);
+    throw err;
   }
+
 }

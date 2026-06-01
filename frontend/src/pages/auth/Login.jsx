@@ -1,10 +1,10 @@
 import { Lock, User2,EyeOff, EyeIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, replace, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { loginThunk } from "../../features/auth/authSlice";
-import { SHA256} from "crypto-js";
+
 
 const Login = () => {
   const usernameRef = useRef(null);

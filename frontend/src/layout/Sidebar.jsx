@@ -7,18 +7,15 @@ import {
   ChevronDown,
   SquareCenterlineDashedVerticalIcon,
   MessageCircle,
-  BellRing,
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
-  const { user, role, visibleWorkspaces } = useVisibleWorkspace();
+  const { role, visibleWorkspaces } = useVisibleWorkspace();
   const [openWorkspaceDropdown, setOpenWorkspaceDropdown] = useState(false);
 
-  // console.log("user", user)
-  // console.log("VW", visibleWorkspaces)
 
   const handleWorkspaceToggle = () => {
     setOpenWorkspaceDropdown((prev) => !prev);
@@ -73,11 +70,6 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
       icon: <MessageCircle size={20} />,
       link: "/chats",
     },
-    // {
-    //   name: "Notifications",
-    //   icon: <BellRing size={20} />,
-    //   link: "/notifications",
-    // },
   ];
 
   const pagesToDisplay = role === "admin" ? AdminPages : UserPages;

@@ -1,4 +1,5 @@
 import { logout } from "@/features/auth/authSlice";
+import { supabase } from "@/lib/supabase";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,7 +8,8 @@ const ProfileDialog = ({ user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     dispatch(logout());
     navigate("/");
   };

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
 import { BaseApi } from "@/api/instance/api";
 import { ArrowRight, MoveRight } from "lucide-react";
 import { format } from "date-fns";

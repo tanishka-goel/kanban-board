@@ -47,7 +47,7 @@ export const useCreateWorkspace = () => {
             }),
           );
 
-          console.log(" notif data in ws ", data)
+          
 
         await Promise.all(notifPromise);
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
@@ -92,10 +92,7 @@ export const useEditWorkspace = () => {
         await Promise.all(notifPromise);
         queryClient.invalidateQueries({ queryKey: ["notifications"] });
       } catch (err) {
-        console.log(
-          "Error in workspace addition from create workspace query fn",
-          err,
-        );
+        toast.error("Error in workspace addition from create workspace query fn", err?.message)
       }
     },
   });

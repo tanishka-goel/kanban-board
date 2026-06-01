@@ -1,4 +1,3 @@
-import NewButton from "@/components/shared/NewButton";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -25,10 +24,7 @@ const PageNotFound = () => {
           >
             Go to Login
           </Link>
-
-         
         </div>
-
       </div>
     </div>
   );

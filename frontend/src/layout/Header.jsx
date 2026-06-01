@@ -1,20 +1,14 @@
 import ProfileDialog from "@/components/ProfileDialog";
-import NewButton from "@/components/shared/NewButton";
-import AddTaskModal from "@/components/shared/modals/AddTaskModal";
 import NotificationsModal from "@/components/shared/modals/NotificationsModal";
-import { useCreateTask } from "@/queries/tasks.query";
 import { Bell } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { toast } from "sonner";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useGetNotifications } from "@/queries/notifications.query";
 
 const Header = () => {
   const [openProfileDialog, setOpenProfileDialog] = useState(false);
-  const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const [openNotifications, setOpenNotifications] = useState(false);
-  const { mutateAsync: createTask } = useCreateTask();
   const { user } = useSelector((state) => state.auth);
   const notifRef = useRef(null);
   const profileRef = useRef(null);
@@ -22,23 +16,8 @@ const Header = () => {
 
   //console.log("notifs from header", allNotifs)
 
-  const handleTaskToggle = () => {
-    setOpenTaskDialog((prev) => !prev);
-  };
-
   const handleProfileToggle = () => {
     setOpenProfileDialog((prev) => !prev);
-  };
-
-  const handleTaskAddition = async (taskData) => {
-    try {
-      await createTask(taskData);
-      toast.success("Task created successfully");
-      setOpenTaskDialog(false);
-    } catch (error) {
-      console.error("Failed to create task", error);
-      toast.error("Failed to create task");
-    }
   };
 
   useClickOutside(
@@ -59,19 +38,6 @@ const Header = () => {
       </h1>
 
       <div className="flex items-center mr-4 gap-4">
-        {/* <NewButton
-          onClick={handleTaskToggle}
-          text={"Create Task"}
-          className="bg-white text-black hover:bg-gray-200 transition-all"
-        />
-
-        {openTaskDialog && (
-          <AddTaskModal
-            closeModal={() => setOpenTaskDialog(false)}
-            onTaskAddition={handleTaskAddition}
-          />
-        )} */}
-
         <div ref={notifRef} className="relative group w-fit">
           <button onClick={() => setOpenNotifications((prev) => !prev)}>
             <div className="bg-secondary w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-secondary/80">
