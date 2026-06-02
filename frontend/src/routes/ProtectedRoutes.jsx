@@ -8,7 +8,7 @@ const ProtectedRoute = ({allowedRole}) => {
     }
 
     if(allowedRole && role!==allowedRole){
-      return <Navigate to="/login" replace />;
+      return <Navigate to={role ==="admin"?"/admin/dashboard":"/for-you"} replace />;
     }
 
   return <Outlet/>

@@ -88,7 +88,7 @@ const AllWorkspace = () => {
                     onError: (error) => {
                       toast.error(
                         error?.response?.data?.error ||
-                          "Failed to Workspace user. Please try again.",
+                          "Failed to update Workspace. Please try again.",
                       );
                     },
                   },
@@ -103,7 +103,7 @@ const AllWorkspace = () => {
                   onError: (error) => {
                     toast.error(
                       error?.response?.data?.error ||
-                        "Failed to Workspace user. Please try again.",
+                        "Failed to create Workspace. Please try again.",
                     );
                   },
                 });

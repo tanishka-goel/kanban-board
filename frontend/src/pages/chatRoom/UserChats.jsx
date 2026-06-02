@@ -17,7 +17,10 @@ const UserChats = ({ onToggle, isCollapsed }) => {
 
   const filteredUsers = useMemo(()=>{
      if (!searchTerm) return userChats;
-    return userChats?.filter((uc)=> uc?.first_name?.toLowerCase().includes(searchTerm.toLowerCase()))
+    return userChats?.filter(
+      (uc)=> uc?.first_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  || uc?.last_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
   },[userChats, searchTerm])
 
     if (isLoading) {
@@ -61,8 +64,8 @@ const UserChats = ({ onToggle, isCollapsed }) => {
                     {ucs?.last_name.slice(0, 1)}
                   </span>
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 
-                                 border-2 border-white rounded-full" />
+                {/* <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 
+                                 border-2 border-white rounded-full" /> */}
               </div>
 
             

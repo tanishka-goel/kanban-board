@@ -52,9 +52,10 @@ const AddTaskModal = ({
     assigned_user_id: "",
   });
 
-  //console.log("All tasks", allTasks)
+  
 
   const isEditMode = !!selectedTask;
+  const formTitle = isEditMode ? "Edit Task" : "Add Task"
 
   useEffect(() => {
     if (selectedTask) {
@@ -132,7 +133,7 @@ const AddTaskModal = ({
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-8 relative">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-semibold text-gray-800">Add Task</h1>
+          <h1 className="text-xl font-semibold text-gray-800">{formTitle}</h1>
           <NewButton
             className="bg-red-600 hover:bg-red-700 text-white h-8 w-8 flex items-center justify-center rounded-md"
             text={"X"}

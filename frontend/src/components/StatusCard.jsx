@@ -13,7 +13,7 @@ const StatusCard = ({ status, icon, color, stats, col }) => {
         </div>
         <div className="flex flex-col items-center text-center">
           <h1 className={`${col} text-3xl font-extrabold tracking-tight`}>
-            {stats ?? 6}
+            {stats ?? 0}
           </h1>
           <h2 className="text-sm text-gray-500 font-semibold uppercase tracking-wide mt-1">
             {status}

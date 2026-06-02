@@ -18,7 +18,7 @@ const PageNotFound = () => {
 
         <div className="mt-6 flex items-center justify-center gap-3">
           <Link
-            to="/"
+            to="/login"
             className="px-5 py-2.5 rounded-lg bg-linear-to-r from-black to-darkest  text-white text-sm font-medium
             hover:bg-gray-800 transition-all duration-200"
           >

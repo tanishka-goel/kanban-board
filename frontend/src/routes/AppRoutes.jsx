@@ -11,8 +11,6 @@ import AdminAllWorkspaces from "@/pages/admin/AdminAllWorkspaces";
 import React, { Suspense } from "react";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import ChatLayout from "@/pages/chatRoom/ChatLayout";
-import Notifications from "@/pages/Test";
-import Test from "@/pages/Test";
 import PageNotFound from "@/pages/PageNotFound";
 // import LandingPage from "@/pages/LandingPage";
 
@@ -30,7 +28,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
   
-          <Route path="/notifications" element={<Notifications/>}/>
+          
             <Route
               path="/profile"
               element={
@@ -48,7 +46,7 @@ const AppRoutes = () => {
               }
             />
 
-            <Route path="/test" element={<Test/>}/>
+           
             <Route path="/chats" element={<ChatLayout />} />
             <Route path="/chats/:userId" element={<ChatLayout />} />
             <Route element={<ProtectedRoute allowedRole="admin" />}>
