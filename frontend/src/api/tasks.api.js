@@ -1,10 +1,8 @@
 import { BaseApi } from "./instance/api";
 import { createActivityLog } from "./activity.api";
-import { createNotifications } from "./notifications.api";
 
 export async function getTasks() {
   const res = await BaseApi.get("/rest/v1/tasks?select=*");
-  //console.log("Task records : ", res.data);
   return res.data;
 }
 
@@ -13,7 +11,7 @@ export async function createTask(newData) {
   //console.log("Task records : ", response.data);
 
   const created = response.data?.[0] ?? response.data;
- console.log("created activity log in task", created)
+
 
   await createActivityLog({
     user_id: newData.creator_id,
@@ -26,7 +24,6 @@ export async function createTask(newData) {
     },
   });
 
-  console.log(response.data);
   return response.data;
 }
 
@@ -59,11 +56,6 @@ export async function updateTask({ id, newData }) {
   } catch (error) {
     console.error("Failed to log task update activity:", error);
   }
-
-  console.log("get previous activity log", previousData)
-  console.log("get activity log", newData)
-
-  console.log(response.data);
   return response.data;
 }
 
@@ -119,7 +111,5 @@ export async function updateTaskStatus({
     console.error("Failed to log task status activity:", error);
   }
 
-
-  //console.log("Task updated : ",res.data)
   return res.data;
 }

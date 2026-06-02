@@ -24,6 +24,5 @@ export async function getReadNotifications(currUserId) {
     `/rest/v1/notifications?user_id=eq.${currUserId}&is_read=eq.true&select=*,actor:actor_id(first_name,last_name)&order=created_at.desc`
 
   );
-  console.log("read notifs by user", response.data)
   return response.data;
 }

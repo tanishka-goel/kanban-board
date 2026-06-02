@@ -44,9 +44,7 @@ const Login = () => {
       }
     } catch (error) {
       toast.error(error || "No user found. Please try again");
-      console.log(`Login Error:`, error);
-    } finally {
-      console.log("Login flow executed");
+      console.error(`Login Error:`, error);
     }
   };
 

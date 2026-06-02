@@ -23,6 +23,6 @@ export async function createActivityLog({
       details,
     });
   } catch (err) {
-    console.log("Log error", err?.message);
+    console.error("Log error", err?.message);
   }
 }

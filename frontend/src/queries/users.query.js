@@ -5,7 +5,6 @@ import {
   getUsers,
   updateUsers,
 } from "@/api/users.api";
-import { SHA256 } from "crypto-js";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 

@@ -1,5 +1,4 @@
 import React from "react";
-import NewButton from "../NewButton";
 import { format } from "date-fns";
 
 const TaskDetailsModal = ({ closeModal, data }) => {

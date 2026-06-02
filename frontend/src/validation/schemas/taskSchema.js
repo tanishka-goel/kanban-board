@@ -11,7 +11,6 @@ export const taskSchema = z.object({
 
   assigned_user_id: z
     .string()
-    .min(1, "Please select an assignee")
     .nullable()
     .optional(),
 

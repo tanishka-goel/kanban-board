@@ -9,8 +9,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import AddTaskModal from "../../shared/modals/AddTaskModal";
-import { useDeleteTask, useEditTask, useTasks } from "@/queries/tasks.query";
-import { toast } from "sonner";
+import { useDeleteTask, useEditTask } from "@/queries/tasks.query";
 import { format, isValid } from "date-fns";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import TaskDetailsModal from "@/components/shared/modals/TaskDetailsModal";
@@ -19,7 +18,6 @@ import { useSelector } from "react-redux";
 const Taskcard = ({ data, taskId }) => {
   const [editTaskModal, setEditTaskModal] = useState(false);
   const {user} = useSelector((state)=>state.auth)
-  const {data:allTasks} = useTasks()
   const { mutate: editTask } = useEditTask();
   const { mutate: deleteTask } = useDeleteTask();
   const [deleteTaskModal, setDeleteTaskModal] = useState(false);

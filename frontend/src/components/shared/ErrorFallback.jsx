@@ -2,9 +2,6 @@ import { Frown } from "lucide-react";
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
 
-    console.log("error in ef", error)
-     console.log("resetErrorBoundary in ef", resetErrorBoundary)
-
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="text-center space-y-6">

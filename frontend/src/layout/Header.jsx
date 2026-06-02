@@ -14,7 +14,6 @@ const Header = () => {
   const profileRef = useRef(null);
   const { data: allNotifs } = useGetNotifications(user.id);
 
-  //console.log("notifs from header", allNotifs)
 
   const handleProfileToggle = () => {
     setOpenProfileDialog((prev) => !prev);

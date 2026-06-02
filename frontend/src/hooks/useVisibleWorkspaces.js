@@ -12,15 +12,9 @@ export const useVisibleWorkspace = () => {
   const { data: workspace, isLoading: workspaceLoading } = useWorkspaces();
   const { data: allUsers } = useUsers();
 
-  const getMemberIds = workspace?.map((ws) => {
-    return ws.members;
-  });
+ 
   const currentUserID = user?.id;
-  //console.log("cu", currentUserID)
 
-  const showMembers = allUsers
-    ?.filter((au) => getMemberIds?.flat().includes(au.id))
-    ?.map((au) => ` ${au.first_name} ${au.last_name} ,`);
 
 
   const visibleWorkspaces =
@@ -38,7 +32,6 @@ export const useVisibleWorkspace = () => {
     error,
     user,
     role,
-    showMembers,
     workspace,
   };
 };

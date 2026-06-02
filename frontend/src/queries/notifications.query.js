@@ -18,20 +18,6 @@ export const useGetReadNotifications = (userId) =>{
     })
 }
 
-export const useCreateNotifications = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createNotifications,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      toast.success("Notification created successfully");
-    },
-    onError: (err) => {
-      console.log("Error in notification creation : ", err);
-    },
-  });
-};
 
 export const useMarkAsRead = () => {
   const queryClient = useQueryClient();

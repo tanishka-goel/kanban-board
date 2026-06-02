@@ -12,8 +12,6 @@ import ChatAreaSkeleton from "@/components/shared/skeletons/chatSkeletons/ChatAr
 const CHAT_SERVER_URL =
   import.meta.env.VITE_CHAT_SERVER_URL || "http://localhost:3000";
 
-  console.log("CHAT SERVER URL:", CHAT_SERVER_URL);
-
 let socket = null;
 
 const getSocket = () => {
@@ -55,16 +53,22 @@ const ChatArea = () => {
       setReadBy((prev) => ({ ...prev, [by]: true }));
     };
 
+    const onMessageError = ({ error }) => {
+  toast.error(error || "Failed to send message");
+};
+
     if (currUser?.id) {
       socket.emit("registerUser", currUser.id);
     }
 
     socket.on("receiveMessage", onReceiveMessage);
     socket.on("seen", onSeen);
+    socket.on("messageError", onMessageError);
 
     return () => {
       socket.off("receiveMessage", onReceiveMessage);
       socket.off("seen", onSeen);
+      socket.off("messageError", onMessageError);
      // socket.disconnect();
     };
   }, [currUser?.id]);

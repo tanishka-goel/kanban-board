@@ -4,12 +4,11 @@ import { createServer } from "node:http";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
-const allowedOrigins = [
-  "http://localhost:5173","https://kanbar-board.vercel.app"
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [ "http://localhost:3000"]
 
 const app = express();
 app.use(express.json());
@@ -35,10 +34,10 @@ const io = new Server(server, {
 });
 
 const onlineUsers = new Map();
-console.log("Online Users:", onlineUsers);
+// console.log("Online Users:", onlineUsers);
 
 io.on("connection", (socket) => {
-  console.log("User Connected with ID : ", socket.id);
+  // console.log("User Connected with ID : ", socket.id);
 
   socket.on("registerUser", (userId) => {
     onlineUsers.set(userId, socket.id);
@@ -58,6 +57,7 @@ io.on("connection", (socket) => {
 
     if (error) {
       console.error("Error saving message:", error);
+      socket.emit("messageError", { error: "Failed to send message" })
       return;
     }
 
@@ -94,7 +94,13 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/api/messages", async (req, res) => {
+const messageLimiter = rateLimit({
+  windowMs:15*60*1000,
+  max:100,
+  message: { error: "Too many requests, please try again later." }
+})
+
+app.get("/api/messages",messageLimiter, async (req, res) => {
   const { sender_id, receiver_id } = req.query;
 
   if (!sender_id || !receiver_id) {
@@ -114,10 +120,6 @@ app.get("/api/messages", async (req, res) => {
   if (error) return res.status(500).json({ error });
   res.json(data);
 });
-
-// app.get('/', (req, res) => {
-//   res.send('<h1>Hello world</h1>');
-// });
 
 const PORT = process.env.PORT || 3000;
 

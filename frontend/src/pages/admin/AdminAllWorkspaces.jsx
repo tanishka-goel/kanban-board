@@ -1,12 +1,11 @@
 import Header from "@/components/shared/Header";
 import WorkspaceCard from "@/components/shared/WorkspaceCard";
-import { useUsers } from "@/queries/users.query";
-import { useDeleteWorkspace, useWorkspaces } from "@/queries/workspaces.query";
 import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   useCreateWorkspace,
   useEditWorkspace,
+  useDeleteWorkspace, useWorkspaces
 } from "@/queries/workspaces.query";
 import NewButton from "@/components/shared/NewButton";
 import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
@@ -53,7 +52,6 @@ const AdminAllWorkspaces = () => {
 
   const getWorkspaceName = allWorkspaces?.find((wsn) => wsn.id === openDeleteModal)?.workspace_name
 
-    //console.log("current data", getWorkspaceName)
 
   if (workspaceLoading)
     return (
@@ -142,7 +140,7 @@ const AdminAllWorkspaces = () => {
         {openDeleteModal && 
         <DeleteModal
         closeModal={()=>{setOpenDeleteModal(null)}}
-        title={allWorkspaces?.find((wsn) => wsn.id === openDeleteModal)?.workspace_name}
+        title={getWorkspaceName}
         deleteEntity={() => {
             deleteWorkspace(openDeleteModal, {
               onSuccess: () => {

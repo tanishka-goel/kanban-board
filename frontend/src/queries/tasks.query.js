@@ -28,7 +28,6 @@ export const useCreateTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["activity"] });
       toast.success("Task created Successfully");
-      //console.log("notif data", data)
 
       try {
         if (
@@ -48,9 +47,8 @@ export const useCreateTask = () => {
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }
       } catch (err) {
-        console.log("Error in notif creation from create task query fn", err);
+        console.error("Error in notif creation from create task query fn", err);
       }
-      // console.log("notif data", data)
     },
   });
 };
@@ -85,10 +83,8 @@ export const useEditTask = () => {
           queryClient.invalidateQueries({ queryKey: ["notifications"] });
         }
       } catch (err) {
-        console.log("Error in notif edit from edit task query fn", err);
+        console.error("Error in notif edit from edit task query fn", err);
       }
-
-      console.log("notif data in task", data)
     },
     onError: (error) => {
       toast.error("Failed to update task");

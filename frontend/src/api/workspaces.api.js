@@ -21,7 +21,6 @@ export async function createWorkspace(newData){
     }
       });
 
-    console.log("Created new record : ",response.data)
     return response.data 
 }
 
@@ -36,7 +35,7 @@ export async function updateWorkspace({id,newData}){
         entity_id: id,
         details:  newData
       });
-    console.log(response.data)
+    // console.log(response.data)
     return response.data
 }
 
@@ -44,7 +43,6 @@ export async function deleteWorkspace(id){
     const response = await BaseApi.delete(`/rest/v1/workspaces?id=eq.${id}`);
     const deletedWorkspace = response?.data?.[0];
 
-    console.log("delete ws", response.data)
     if (deletedWorkspace?.creatorID) {
       await createActivityLog({
         user_id: deletedWorkspace.creatorID,
@@ -58,6 +56,6 @@ export async function deleteWorkspace(id){
       });
     }
       
-    console.log(response.data)
+    // console.log(response.data)
     return response.data
 }
