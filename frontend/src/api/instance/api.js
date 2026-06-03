@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -12,18 +13,19 @@ export const BaseApi = axios.create({
 });
 
 BaseApi.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-
+  async (config) => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const token = session?.access_token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // console.log("Request sent : ",config.url )
     return config;
   },
 
   (error) => {
-    // console.log("Request Error", error);
+    console.error("Request Error", error);
     return Promise.reject(error);
   },
 );
@@ -36,7 +38,7 @@ BaseApi.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // console.log("API Error :", error.message);
+    console.error("API Error :", error.message);
     toast.error(`Network Error: Couldn't fetch details - ${error.message}`);
     return Promise.reject(error);
   },

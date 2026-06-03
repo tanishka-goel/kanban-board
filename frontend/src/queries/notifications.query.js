@@ -1,6 +1,5 @@
-import { createNotifications, getNotifications, getReadNotifications, markNotificationAsRead } from "@/api/notifications.api"
+import { getNotifications, getReadNotifications, markNotificationAsRead } from "@/api/notifications.api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
 
 export const useGetNotifications = (userId) =>{
     return useQuery({

@@ -5,9 +5,9 @@ import {
   useEditUser,
   useDeleteUser,
 } from "@/queries/users.query";
-import { Edit, Trash2,ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { Edit, Trash2, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import NewButton from "@/components/shared/NewButton";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AddUserFormModal from "@/components/shared/modals/AddUserFormModal";
 import { toast } from "sonner";
 import Header from "@/components/shared/Header";
@@ -21,7 +21,7 @@ import { format } from "date-fns";
 
 const ManageUsers = () => {
   const { data, isLoading, error } = useUsers();
-  const {data:workspaces} = useWorkspaces()
+  const { data: workspaces } = useWorkspaces();
   const { mutate: addUser } = useAddUser();
   const { mutate: editUser } = useEditUser();
   const { mutate: deleteUser } = useDeleteUser();
@@ -33,9 +33,11 @@ const ManageUsers = () => {
 
   const users = data?.filter((user) => user.role === "user");
 
- const getActiveWorkspaces = (userId) => {
-  return workspaces?.filter((ws) => ws.creatorID === userId || ws.members?.includes(userId));
-};
+  const getActiveWorkspaces = (userId) => {
+    return workspaces?.filter(
+      (ws) => ws.creatorID === userId || ws.members?.includes(userId),
+    );
+  };
 
   const handleAddClick = () => {
     setSelectedUser(null);
@@ -49,23 +51,29 @@ const ManageUsers = () => {
     setOpenUserModal(true);
   };
 
+  const filteredUsers = useMemo(() => {
+    return users?.filter(
+      (user) =>
+        user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.last_name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [searchTerm, users]);
 
-const filteredUsers = useMemo(() => {
-  return users?.filter((user) =>
-    user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||  user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) 
-  )
-}, [searchTerm, users])
-
-
- const { currentData, currentPage, totalPages, nextPage, prevPage } =
+  const { currentData, currentPage, totalPages, nextPage, prevPage, goToPage } =
     usePagination(filteredUsers, 10);
 
- if (isLoading) return (
-    <div className="p-4">
-      <HeaderSkeleton rightpart/><br />
-      <TableSkeleton />
-    </div>
-  );
+  useEffect(() => {
+    goToPage(1);
+  }, [searchTerm]);
+
+  if (isLoading)
+    return (
+      <div className="p-4">
+        <HeaderSkeleton rightpart />
+        <br />
+        <TableSkeleton />
+      </div>
+    );
   if (error) return <p>Error fetching users</p>;
 
   return (
@@ -74,13 +82,13 @@ const filteredUsers = useMemo(() => {
         <Header header={"MANAGE ALL USERS"} />
 
         <div className="flex justify-around items-center gap-4">
-          <Search onSearchChange={setSearchTerm}/>
+          <Search onSearchChange={setSearchTerm} />
           <NewButton onClick={handleAddClick} text={"Add Users"} />
         </div>
       </div>
       {openUserModal && (
         <AddUserFormModal
-        serverErrors={serverErrors}
+          serverErrors={serverErrors}
           selectedUser={selectedUser}
           closeModal={() => setOpenUserModal(false)}
           onUserAddition={(formData) => {
@@ -97,12 +105,14 @@ const filteredUsers = useMemo(() => {
                     setOpenUserModal(false);
                   },
                   onError: (error) => {
-                    const message = error?.response?.data?.error || "Failed to edit user. Please try again."
-                  if(message?.toLowerCase()?.includes("username")){
-                    setServerErrors({username:message})
-                  } else{
-                    toast.error(message);
-                  }
+                    const message =
+                      error?.response?.data?.error ||
+                      "Failed to edit user. Please try again.";
+                    if (message?.toLowerCase()?.includes("username")) {
+                      setServerErrors({ username: message });
+                    } else {
+                      toast.error(message);
+                    }
                   },
                 },
               );
@@ -113,10 +123,12 @@ const filteredUsers = useMemo(() => {
                   setOpenUserModal(false);
                 },
                 onError: (error) => {
-                  const message = error?.response?.data?.error || "Failed to add user. A user with these details already exists. Please try again."
-                  if(message?.toLowerCase()?.includes("username")){
-                    setServerErrors({username:message})
-                  } else{
+                  const message =
+                    error?.response?.data?.error ||
+                    "Failed to add user. A user with these details already exists. Please try again.";
+                  if (message?.toLowerCase()?.includes("username")) {
+                    setServerErrors({ username: message });
+                  } else {
                     toast.error(message);
                   }
                 },
@@ -125,7 +137,7 @@ const filteredUsers = useMemo(() => {
           }}
         />
       )}
-      
+
       <div className="hidden md:grid grid-cols-5 px-6 ml-13 py-3 text-sm font-semibold text-gray-500">
         <p>Name</p>
         <p>Active Workspaces</p>
@@ -157,10 +169,12 @@ const filteredUsers = useMemo(() => {
               </div>
             </div>
 
-            <p className="text-sm md:ml-20 text-gray-600">{getActiveWorkspaces(user.id)?.length || 0}</p>
+            <p className="text-sm md:ml-20 text-gray-600">
+              {getActiveWorkspaces(user.id)?.length || 0}
+            </p>
 
             <p className="text-sm  font-medium  text-gray-600">
-               {format(user.created_at,"MMM do yyyy • hh:mm a")}
+              {format(user.created_at, "MMM do yyyy • hh:mm a")}
             </p>
 
             <p className="uppercase md:ml-2 font-semibold border border-purple-700 text-purple-500 text-xs bg-purple-300/20 px-3 py-1 rounded-2xl w-fit">
@@ -181,25 +195,24 @@ const filteredUsers = useMemo(() => {
                 <Trash2 size={18} />
               </button>
             </div>
-            
           </div>
         ))}
       </div>
       {openDeleteModal && (
-              <DeleteModal
-                title={users?.find(u => u.id === openDeleteModal)?.first_name}
-                deleteEntity={()=>{
-                  deleteUser(openDeleteModal,{
-                    onSuccess:() =>{setOpenDeleteModal(null)
-                    }
-                  })
-                }}
-                closeModal={() => setOpenDeleteModal(null)}
-              />
-            )}
+        <DeleteModal
+          title={users?.find((u) => u.id === openDeleteModal)?.first_name}
+          deleteEntity={() => {
+            deleteUser(openDeleteModal, {
+              onSuccess: () => {
+                setOpenDeleteModal(null);
+              },
+            });
+          }}
+          closeModal={() => setOpenDeleteModal(null)}
+        />
+      )}
 
-
-             <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
+      <div className="flex bottom-1  justify-center items-center text-center gap-10  md:p-10">
         <button
           disabled={currentPage === 1}
           className={`px-3 py-3 rounded-full 
@@ -229,7 +242,6 @@ const filteredUsers = useMemo(() => {
         </button>
       </div>
     </div>
-    
   );
 };
 

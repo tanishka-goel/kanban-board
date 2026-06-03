@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import WorkspaceCard from "@/components/shared/WorkspaceCard";
 import { useVisibleWorkspace } from "@/hooks/useVisibleWorkspaces";
-import { WorkflowIcon } from "lucide-react";
 import Header from "@/components/shared/Header";
 import NewButton from "@/components/shared/NewButton";
 import WorkspaceModal from "@/components/shared/modals/WorkspaceModal";
@@ -15,7 +14,7 @@ import DeleteModal from "@/components/shared/modals/DeleteModal";
 import WorkspaceSkeleton from "@/components/shared/skeletons/WorkspaceSkeleton";
 import { useSelector } from "react-redux";
 import Search from "@/components/shared/Search";
-import { useGetReadNotifications } from "@/queries/notifications.query";
+
 
 const AllWorkspace = () => {
   const { user } = useSelector((state) => state.auth);
@@ -29,7 +28,7 @@ const AllWorkspace = () => {
   const [openWorkspaceModal, setOpenWorkspaceModal] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(null);
-  const [searchTerm, setSearchTerm] = useState()
+  const [searchTerm, setSearchTerm] = useState("")
 
   const handleAddWorkspace = () => {
     setOpenWorkspaceModal(true);
@@ -79,6 +78,7 @@ const AllWorkspace = () => {
                   {
                     id: selectedWorkspace.id,
                     newData: formdata,
+                    previousMembers: selectedWorkspace.members,
                   },
                   {
                     onSuccess: () => {

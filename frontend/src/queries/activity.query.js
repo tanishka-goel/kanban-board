@@ -5,7 +5,7 @@ export const useActivityLogs = () =>{
     return useQuery({
         queryKey:["activity"],
         queryFn:getActivityLogs,
-        staleTime: Infinity,
+        staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
         refetchOnMount: false,
 

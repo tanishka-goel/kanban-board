@@ -33,7 +33,7 @@ const Login = () => {
 
     try {
       const responseData = await dispatch(loginThunk(credentials)).unwrap();
-      if (responseData.user.role === "admin" ||responseData.user.role === "Admin"  ) {
+      if (responseData.user.role === "admin") {
         navigate("/admin/dashboard", {replace:true})
        // console.log(`Welcome ${responseData.user.first_name}`);
         toast.success(`Welcome ${responseData.user.first_name}`)

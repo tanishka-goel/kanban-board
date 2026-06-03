@@ -2,12 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../../api/auth.api";
 
 const initialState = {
-  isAuthenticated: !!localStorage.getItem("token")|| false,
+  isAuthenticated: !!localStorage.getItem("token") || false,
   error: null,
   isLoading: false,
-  token: localStorage.getItem("token")|| null,
-  user: JSON.parse(localStorage.getItem("user"))||null,
-  role: localStorage.getItem("role") ||null,
+  token: localStorage.getItem("token") || null,
+  user: (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || null;
+    } catch {
+      return null;
+    }
+  })(),
+  role: localStorage.getItem("role") || null,
 };
 
 export const loginThunk = createAsyncThunk(
@@ -27,21 +33,21 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
 
-  reducers:{
-    logout :(state)=>{
-      localStorage.removeItem("token")
-      localStorage.removeItem("user")
-      localStorage.removeItem("role")
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
 
-      state.error=null;
-      state.isAuthenticated= false;
+      state.error = null;
+      state.isAuthenticated = false;
       state.isLoading = false;
-      state.user=null;
-      state.token=null;
-      state.role=null;
-    }
+      state.user = null;
+      state.token = null;
+      state.role = null;
+    },
   },
-    extraReducers: (builder) => {
+  extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
         state.error = null;
@@ -56,9 +62,9 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.role = action.payload.user.role;
 
-        localStorage.setItem("token", action.payload.token)
+        localStorage.setItem("token", action.payload.token);
         localStorage.setItem("user", JSON.stringify(action.payload.user));
-        localStorage.setItem("role", action.payload.user.role)
+        localStorage.setItem("role", action.payload.user.role);
       })
 
       .addCase(loginThunk.rejected, (state, action) => {
@@ -68,5 +74,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {logout} = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

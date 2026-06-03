@@ -1,4 +1,3 @@
-import { useTasks } from "@/queries/tasks.query";
 import React, { useEffect, useState } from "react";
 import NewButton from "@/components/shared/NewButton";
 import FormInput from "@/components/shared/FormInput";
@@ -74,7 +73,7 @@ const AddTaskModal = ({
         assigned_user_id: taskData.assigned_user_id || "",
       });
     }
-  }, []);
+  }, [selectedTask]);
 
   useEffect(() => {
     if (currentUser && !isEditMode) {

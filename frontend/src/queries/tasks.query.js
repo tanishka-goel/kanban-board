@@ -14,7 +14,7 @@ export const useTasks = () => {
   return useQuery({
     queryKey: ["tasks"],
     queryFn: getTasks,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -110,8 +110,6 @@ export const useDragCardMutation = () => {
       return { previousTasks };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      queryClient.invalidateQueries({ queryKey: ["activity"] });
       toast.success("Task status updated successfully");
     },
     onError: (error, variables, context) => {

@@ -12,7 +12,7 @@ export const useWorkspaces = () => {
   return useQuery({
     queryKey: ["workspaces"],
     queryFn: getWorkspaces,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
