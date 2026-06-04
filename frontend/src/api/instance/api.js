@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import axios from "axios";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 export const BaseApi = axios.create({
   baseURL: import.meta.env.VITE_SUPABASE_URL,
@@ -32,14 +32,11 @@ BaseApi.interceptors.request.use(
 
 BaseApi.interceptors.response.use(
   (response) => {
-    if (response.status !== 200 && response.status !== 201) {
-      console.error("Error in API");
-    }
     return response;
   },
   async (error) => {
     console.error("API Error :", error.message);
-    toast.error(`Network Error: Couldn't fetch details - ${error.message}`);
+    // toast.error(`Network Error: Couldn't fetch details - ${error.message}`);
     return Promise.reject(error);
   },
 );
